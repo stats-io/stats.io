@@ -154,8 +154,77 @@ class TMBDApi:
         pass
 
 
-class NetflixMainScreen(Screen):
-    pass
+class SpotifyUserScreen(Screen):
+    spotifyData = None
+    historyData = None
+
+    def changeScreen(self, name):
+        pass
+
+    def backToMainScreen(self):
+        pass
+
+
+class SpotifyMainScreen(MDBottomNavigationItem):
+    def countMinutes(self):
+        pass
+
+    def chooseDayOdWeek(self):
+        pass
+
+
+class SpotifyTopListScreen(MDBottomNavigationItem):
+    topArtists = None
+    topTracks = None
+    recommendations = None
+
+    def createTopLists(self):
+        pass
+
+
+class NetflixUserScreen(Screen):
+    netflixData = None
+
+    def changeScreen(self, name):
+        pass
+
+    def retrieveDataFromDb(self):
+        pass
+
+    def backToMainScreen(self):
+        pass
+
+
+class NetflixMainScreen(MDBottomNavigationItem):
+    def countMovies(self):
+        pass
+
+    def countSeries(self):
+        pass
+
+
+class NetflixChartsScreen(MDBottomNavigationItem):
+    charts = None
+
+    def createCharts(self):
+        pass
+
+    def createCardsWithCharts(self):
+        pass
+
+
+class NetflixTopListScreen(MDBottomNavigationItem):
+    topActors = None
+    topGenres = None
+    topSeries = None
+    mostPopularWatched = None
+    leastPopularWatched = None
+
+    def findTop(self):
+        pass
+
+    def createTopLists(self):
+        pass
 
 
 class setUp(MDApp):
