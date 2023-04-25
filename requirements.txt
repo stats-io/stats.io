@@ -1,0 +1,4 @@
+Kivy==2.1.0
+kivymd==1.1.1
+pandas==2.0.0
+spotipy==2.23.0
