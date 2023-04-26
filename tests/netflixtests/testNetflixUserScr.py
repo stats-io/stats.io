@@ -6,13 +6,21 @@ class TestNetflixUserScreen(unittest.TestCase):
     app = setUp()
     app.screen_manager = app.build()
 
-    def test_change_screen(self):
+    def test_change_screen_to_netflix_history_screen(self):
         netflix_user_screen = NetflixUserScreen()
-        self.app.screen_manager.current = 'Netflix_Main_Screen'
+        self.app.screen_manager.current = "Netflix_Main_Screen"
         netflix_user_screen.changeScreen("Netflix_History_Screen")
         self.assertEqual(self.app.screen_manager.current, "Netflix_History_Screen")
+
+    def test_change_screen_to_netflix_charts_screen(self):
+        netflix_user_screen = NetflixUserScreen()
+        self.app.screen_manager.current = "Netflix_Main_Screen"
         netflix_user_screen.changeScreen("Netflix_Charts_Screen")
         self.assertEqual(self.app.screen_manager.current, "Netflix_Charts_Screen")
+
+    def test_change_screen_to_netflix_main_screen(self):
+        netflix_user_screen = NetflixUserScreen()
+        self.app.screen_manager.current = "Netflix_Charts_Screen"
         netflix_user_screen.changeScreen("Netflix_Main_Screen")
         self.assertEqual(self.app.screen_manager.current, "Netflix_Main_Screen")
 
