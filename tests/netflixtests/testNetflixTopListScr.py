@@ -1,8 +1,11 @@
 import unittest
-from aplication.app import NetflixTopListScreen
+from aplication.app import NetflixTopListScreen, setUp
 
 
 class TestNetflixTopListScreen(unittest.TestCase):
+    app = setUp()
+    app.screen_manager = app.build()
+
     def test_find_top(self):
         netflix_top_lists_screen = NetflixTopListScreen()
         netflix_top_lists_screen.findTop()
