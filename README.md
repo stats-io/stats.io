@@ -11,11 +11,12 @@ git clone https://github.com/stats-io/stats.io.git
 
 then navigate to the stats.io folder and install requirements
 ```CMD
-cd stats.io/tests
+cd stats.io
 pip3 install -r ./requirements.txt
 ```
 
 and run tests using command
 ```CMD
-python3 tests/tester.py
+cd tests
+python3 tester.py
 ```
