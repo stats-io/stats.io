@@ -49,7 +49,7 @@ class TMBDApi:
 
         self.dataArray['TMBDid'] = self.dataArray['TMBDid'].astype(int)
         self.getGenres()
-        self.dataArray.to_csv('pies.csv',index=False)
+        self.dataArray.to_csv('FinalData.csv',index=False)
 
 
     def getActors(self):
