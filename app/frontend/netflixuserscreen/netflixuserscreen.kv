@@ -1,0 +1,96 @@
+<NetflixUserScreen>:
+    name: 'netflixuserscreen'
+
+    MDFloatLayout:
+
+        MDBottomNavigation:
+            panel_color: '#E0E0E0'
+            text_color_active: '#080808'
+            use_text: False
+
+            MDBottomNavigationItem:
+                name: 'netflixmainscreen'
+                md_bg_color: '#080808'
+                text: 'main'
+                icon: 'home'
+
+                MDLabel:
+                    text: 'General info about'
+                    font_size: root.height * 0.045
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.8}
+                    halign: 'center'
+                    color: '#E0E0E0'
+                    bold: True
+
+                MDLabel:
+                    text: 'your viewing history'
+                    font_size: root.height * 0.025
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.75}
+                    halign: 'center'
+                    color: '#E0E0E0'
+
+                MDCard:
+                    size_hint: 0.8, 0.2
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.45}
+                    md_bg_color: '#A7F500'
+
+                    BoxLayout:
+                        orientation: 'vertical'
+
+                        MDLabel:
+                            text: 'Total movies watched'
+                            font_size: root.height * 0.025
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            halign: 'center'
+
+                MDCard:
+                    size_hint: 0.8, 0.2
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+                    line_color: '#A7F500'
+                    line_width: 1.0
+                    md_bg_color: '#080808'
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+
+                        MDLabel:
+                            text: 'Total series watched'
+                            color: '#A7F500'
+                            font_size: root.height * 0.025
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            halign: 'center'
+
+
+            MDBottomNavigationItem:
+                name: 'netflixhistoryscreen'
+                md_bg_color: '#080808'
+                text: 'History'
+                icon: 'history'
+
+                MDLabel:
+                    text: 'It is history screen!'
+                    halign: 'center'
+                    color: '#E0E0E0'
+
+            MDBottomNavigationItem:
+                name: 'netflixchartsscreen'
+                md_bg_color: '#080808'
+                text: 'Charts'
+                icon: 'chart-line'
+
+                MDLabel:
+                    text: 'It is charts screen!'
+                    halign: 'center'
+                    color: '#E0E0E0'
+
+            MDBottomNavigationItem:
+                name: 'netflixtoplistscreen'
+                md_bg_color: '#080808'
+                text: 'Top List'
+                icon: 'arrow-top-right'
+
+                MDLabel:
+                    text: 'It is top list screen!'
+                    halign: 'center'
+                    color: '#E0E0E0'
+

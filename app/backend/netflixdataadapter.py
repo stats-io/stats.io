@@ -1,12 +1,10 @@
-import json
-from ast import literal_eval
 import pandas as pd
 import numpy as np
-import requests
+
 
 class NetflixDataAdapter:
 
-    def __init__(self,path):
+    def __init__(self, path):
         self.csvFile = path
 
     def remakeFile(self):
@@ -24,7 +22,6 @@ class NetflixDataAdapter:
         self.data = self.data.groupby('title', sort=False)[['SumOfTime', 'row_num']].sum().reset_index()
         self.data = self.data.sort_values('row_num').drop('row_num', axis=1)
         self.data.to_csv('kotek.csv', index=False)
-
 
     def remakeFileShort(self):
         self.tab = []

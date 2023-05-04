@@ -1,0 +1,38 @@
+<NetflixLoadingScreen>:
+    name: 'netflixloadingscreen'
+    md_bg_color: '#080808'
+
+    MDFloatLayout:
+
+        MDSpinner:
+            size_hint: None, None
+            size: root.height * 0.3, root.height * 0.3
+            line_width: root.height * 0.005
+            color: '#A7F500'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+            active: True
+
+        MDLabel:
+            id: loadinglabel
+            text: ''
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+            color: '#E0E0E0'
+            font_size: root.height * 0.075
+            halign: 'center'
+
+        MDLabel:
+            text: 'We are processing your\ndata!'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.35}
+            theme_text_color: 'Custom'
+            text_color: '#E0E0E0'
+            font_size: root.height * 0.035
+            halign: 'center'
+            bold: True
+
+        MDLabel:
+            text: 'Estimated time: 60s'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.25}
+            theme_text_color: 'Custom'
+            text_color: '#E0E0E0'
+            font_size: root.height * 0.025
+            halign: 'center'
