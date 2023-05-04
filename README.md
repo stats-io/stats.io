@@ -1,7 +1,7 @@
 # stats.io
 All your stats from streaming portals in one place! More specifically, the stats.io app for android, which we are currently developing!
 
-## Instalation
+## Installation
 To run all application tests from our repository:
 
 clone the repository to the destination folder using command
