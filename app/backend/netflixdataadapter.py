@@ -1,8 +1,6 @@
-import json
-import datetime
 import pandas as pd
 import numpy as np
-import requests
+import datetime
 
 class NetflixDataAdapter:
 
@@ -118,8 +116,8 @@ class NetflixDataAdapter:
         self.df.insert(7, 'TMBDid', value=np.nan)
         self.df.insert(8, 'Release Date', value=np.nan)
         self.df.insert(5, 'actress', value=np.nan)
-        self.df.to_csv('adapted_data.csv', index=False)
-        self.csvFile = 'adapted_data.csv'
+        self.df.to_csv('./adapted_data.csv', index=False)
+        self.csvFile = './adapted_data.csv'
 
 
     def remakeFileShort(self):
@@ -141,5 +139,5 @@ class NetflixDataAdapter:
         self.df.insert(6, 'SumOfTime', value=np.nan)
         self.df.insert(8, 'TMBDid', value=np.nan)
         self.df.insert(9, 'Release Date', value=np.nan)
-        self.df.to_csv('adapted_data.csv', index=False)
-        self.csvFile = 'adapted_data.csv'
+        self.df.to_csv('./adapted_data.csv', index=False)
+        self.csvFile = './adapted_data.csv'
