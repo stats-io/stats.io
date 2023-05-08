@@ -2,7 +2,7 @@ import pandas as pd
 
 class NetflixMainScreen:
 
-    def __init__(self,file):
+    def __init__(self,file = './Final_Data.csv'):
         self.csvFile = file
         self.TotalMoviesWatched = self.CountMovies()
         self.TotalSeriesWatched = self.CountSeries()
