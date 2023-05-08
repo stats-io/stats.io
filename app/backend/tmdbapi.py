@@ -6,14 +6,14 @@ import requests
 
 class TMBDApi:
 
-    def __init__(self, path):
-        self.dataArray = pd.read_csv(path)
+    def __init__(self, path = None, get_act_and_gen = 0, daAtarray = None):
+        if path == '':
+            self.dataArray = daAtarray
+        else:
+            self.dataArray = pd.read_csv(path)
+        self.get_act_and_gen = get_act_and_gen
 
     def getMovieData(self):
-
-        self.dataArray.insert(3, 'genres', value=np.nan)
-        self.dataArray.insert(4, 'popularity', value=np.nan)
-        self.dataArray.insert(7, 'TMBDid', value=np.nan)
         self.dataArray['genres'] = self.dataArray['genres'].apply(lambda x: [] if pd.isna(x) else eval(x))
 
         SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
@@ -53,13 +53,11 @@ class TMBDApi:
             self.dataArray.at[i, 'genres'] = result['genre_ids']
             self.dataArray.loc[i, 'popularity'] = result['popularity']
         self.dataArray = self.dataArray.dropna(subset=['TMBDid'])
-        self.getGenres()
-        self.dataArray.to_csv('FinalData.csv',index=False)
+        if self.get_act_and_gen == 1:
+            self.getGenres()
 
     def getActors(self):
-
-        self.dataArray.insert(5,'actress',value=np.nan)
-        self.dataArray['actress'] = self.dataArray['actress'].apply(lambda x: [] if pd.isna(x) else eval(x))
+        self.dataArray.loc[:,('actress')] = self.dataArray.loc[:,('actress')].apply(lambda x: [] if pd.isna(x) else eval(x))
 
         SeriesURL = "https://api.themoviedb.org/3/tv/"
         MovieURL = "https://api.themoviedb.org/3/movie/"
