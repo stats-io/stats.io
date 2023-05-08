@@ -37,7 +37,7 @@ class NetflixDataAdapter:
                 self.title_final[vkey] = self.title[key]
         return self.title_final
 
-    def FilmOrSeriesLong(self,data):
+    def FilmOrSeries(self,data):
         self.film_tab = {}
         self.series_tab = {}
         for row in data.iterrows():
@@ -51,21 +51,34 @@ class NetflixDataAdapter:
                 self.film_tab[title] = self.film_tab.get(title, 0) + 1
         return self.film_tab, self.series_tab
 
-    def FilmOrSeriesShort(self, data):
+    def FilmOrSeriesDatesShort(self, data):
         self.film_tab = {}
         self.series_tab = {}
+        self.film_tab_dates = {}
+        self.series_tab_dates = {}
         for row in data.iterrows():
             title = row[1][0]
             if ':' in title:
                 self.type = 'series'
                 title = row[1][0].split(':')[0]
+                if title in self.series_tab_dates:
+                    self.series_tab_dates[title].append(row[1][1])
+                else:
+                    self.series_tab_dates[title] = []
+                    self.series_tab_dates[title].append(row[1][1])
                 self.series_tab[title] = self.series_tab.get(title, 0) + 1
             else:
                 self.type = 'film'
+                if title in self.film_tab_dates:
+                    self.film_tab_dates[title].append(row[1][1])
+                else:
+                    self.film_tab_dates[title] = []
+                    self.film_tab_dates[title].append(row[1][1])
                 self.film_tab[title] = self.film_tab.get(title, 0) + 1
-        return self.film_tab, self.series_tab
+        return self.film_tab, self.series_tab, self.film_tab_dates, self.series_tab_dates
 
     def GetData(self,data):
+
         self.title = {}
         for row in data.iterrows():
             title = row[1][4].split(':')[0]
@@ -90,7 +103,7 @@ class NetflixDataAdapter:
         self.data = self.data.loc[self.data['Supplemental Video Type'].isna()]
         self.TotalData = self.GetData(self.data)
         self.TotalTime = self.GetTotalTime(self.data)
-        self.film_ep , self.series_ep = self.FilmOrSeriesLong(self.data)
+        self.film_ep , self.series_ep = self.FilmOrSeries(self.data)
         self.adapted_data = []
         for key, value in self.film_ep.items():
             new = ({'title': f'{key}', 'type': 'film', 'number_of_episodes': value, 'SumOfTime': self.TotalTime[key], 'Dates': self.TotalData[key]})
@@ -103,6 +116,7 @@ class NetflixDataAdapter:
         self.df.insert(3, 'genres', value=np.nan)
         self.df.insert(4, 'popularity', value=np.nan)
         self.df.insert(7, 'TMBDid', value=np.nan)
+        self.df.insert(8, 'Release Date', value=np.nan)
         self.df.insert(5, 'actress', value=np.nan)
         self.df.to_csv('adapted_data.csv', index=False)
         self.csvFile = 'adapted_data.csv'
@@ -110,22 +124,22 @@ class NetflixDataAdapter:
 
     def remakeFileShort(self):
         self.data = pd.read_csv(self.csvFile)
-        self.film_ep, self.series_ep = self.FilmOrSeriesShort(self.data)
+        self.film_ep, self.series_ep, self.film_dates, self.series_dates = self.FilmOrSeriesDatesShort(self.data)
         self.adapted_data = []
 
         for key, value in self.film_ep.items():
-            new = ({'title': f'{key}', 'type': 'film', 'number_of_episodes': value})
+            new = ({'title': f'{key}', 'type': 'film', 'number_of_episodes': value, 'Dates': self.film_dates[key]})
             self.adapted_data.append(new)
         for key, value in self.series_ep.items():
-            new = ({'title': f'{key}', 'type': 'series', 'number_of_episodes': value})
+            new = ({'title': f'{key}', 'type': 'series', 'number_of_episodes': value, 'Dates': self.series_dates[key]})
             self.adapted_data.append(new)
 
         self.df = pd.DataFrame(self.adapted_data)
-        self.df.insert(3, 'SumOfTime', value=np.nan)
-        self.df.insert(4, 'Dates', value=np.nan)
         self.df.insert(3, 'genres', value=np.nan)
         self.df.insert(4, 'popularity', value=np.nan)
-        self.df.insert(7, 'TMBDid', value=np.nan)
         self.df.insert(5, 'actress', value=np.nan)
+        self.df.insert(6, 'SumOfTime', value=np.nan)
+        self.df.insert(8, 'TMBDid', value=np.nan)
+        self.df.insert(9, 'Release Date', value=np.nan)
         self.df.to_csv('adapted_data.csv', index=False)
         self.csvFile = 'adapted_data.csv'
