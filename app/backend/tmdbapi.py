@@ -27,12 +27,14 @@ class TMBDApi:
                 Series_data_dic = json.loads(Series_response.content)
                 try:
                     result = Series_data_dic['results'][00]
+                    self.dataArray.loc[i, 'Release Date'] = result['first_air_date']
                 except IndexError:
                     Film_response = requests.get(f'{MovieURL}{title}')
                     Film_data_dic = json.loads(Film_response.content)
                     try:
                         result = Film_data_dic['results'][00]
                         self.dataArray.loc[i,'type'] = 'film'
+                        self.dataArray.loc[i, 'Release Date'] = result['release_date']
                     except IndexError:
                         continue
             else:
@@ -40,12 +42,14 @@ class TMBDApi:
                 Film_data_dic = json.loads(Film_response.content)
                 try:
                     result = Film_data_dic['results'][00]
+                    self.dataArray.loc[i, 'Release Date'] = result['release_date']
                 except IndexError:
                     Series_response = requests.get(f'{SeriesURL}{title}')
                     Series_data_dic = json.loads(Series_response.content)
                     try:
                         result = Series_data_dic['results'][00]
                         self.dataArray.loc[i,'type'] = 'series'
+                        self.dataArray.loc[i, 'Release Date'] = result['first_air_date']
                     except IndexError:
                         continue
 
