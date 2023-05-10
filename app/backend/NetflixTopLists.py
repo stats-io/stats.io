@@ -130,15 +130,15 @@ class NetflixTopLists:
                                 title[row2['title']] = title.get(row2['title'], 0) + 1
             Dates.at[ind1, 'titles'] = title
         y = Dates.index
-        test = 0
+        BigCsv = 0
         tmp = pd.DataFrame(columns =['date'])
         for i,date in enumerate(y):
             try:
                 date_obj = datetime.strptime(date, '%m/%d/%y')
                 tmp.loc[i] = date_obj.strftime('%d-%m-%Y')
             except ValueError:
-                test = 1
+                BigCsv = 1
                 break
-        if test == 0:
+        if BigCsv == 0:
             Dates.index = tmp['date']
         return Dates
