@@ -14,7 +14,9 @@ class NetflixCharts:
         self.GenresChart()
         self.Favourite_year()
         DataArray = pd.read_csv(self.csvFile)
-        if ~np.isnan(DataArray.iloc[0,6]):
+        if np.isnan(DataArray.iloc[0,6]):
+            pass
+        else:
             self.TimeAtSeries()
 
     def DatesChart(self):
@@ -57,7 +59,6 @@ class NetflixCharts:
                 tmp.loc[i] = data[0:-12]
             else:
                 tmp.loc[i] = data[0:-3]
-        print(tmp)
         Dates.index = tmp['date']
         Dates = Dates.groupby(Dates.index).sum()
 
