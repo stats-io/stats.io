@@ -15,6 +15,10 @@ class NetflixNewDataScreen(MDScreen):
         self.parent.get_screen("netflixloadingscreen").start_animation()
         self.parent.current = "netflixloadingscreen"
 
+    def skip_processing_data(self):
+        self.parent.get_screen("netflixloadingscreen").skip_animation()
+        self.parent.current = "netflixuserscreen"
+
     def _show_banner(self):
         self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
         self.parent.get_screen("netflixnewdatascreen").ids.bannericon.icon = "chevron-up"

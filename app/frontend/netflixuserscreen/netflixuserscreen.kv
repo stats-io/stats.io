@@ -37,11 +37,26 @@
                     BoxLayout:
                         orientation: 'vertical'
 
-                        MDLabel:
-                            text: 'Total movies watched'
-                            font_size: root.height * 0.025
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            halign: 'center'
+                        MDBoxLayout:
+                            size_hint_y: 0.25
+
+                        MDBoxLayout:
+                            size_hint_y: 0.5
+                            orientation: 'vertical'
+                            MDLabel:
+                                text: 'Total movies watched'
+                                font_size: root.height * 0.03
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                halign: 'center'
+
+                            MDLabel:
+                                text: str(root.netflix_main_screen.TotalMoviesWatched)
+                                font_size: root.height * 0.025
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                halign: 'center'
+
+                        MDBoxLayout:
+                            size_hint_y: 0.25
 
                 MDCard:
                     size_hint: 0.8, 0.2
@@ -53,24 +68,44 @@
                     MDBoxLayout:
                         orientation: 'vertical'
 
-                        MDLabel:
-                            text: 'Total series watched'
-                            color: '#A7F500'
-                            font_size: root.height * 0.025
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            halign: 'center'
+                        MDBoxLayout:
+                            size_hint_y: 0.25
+
+                        MDBoxLayout:
+                            size_hint_y: 0.5
+                            orientation: 'vertical'
+                            MDLabel:
+                                text: 'Total series watched'
+                                color: '#A7F500'
+                                font_size: root.height * 0.03
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                halign: 'center'
+                            
+                            MDLabel:
+                                text: str(root.netflix_main_screen.TotalSeriesWatched)
+                                color: '#A7F500'
+                                font_size: root.height * 0.025
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+                                halign: 'center'
+                        
+                        MDBoxLayout:
+                            size_hint_y: 0.25
 
 
             MDBottomNavigationItem:
-                name: 'netflixhistoryscreen'
                 md_bg_color: '#080808'
                 text: 'History'
                 icon: 'history'
 
-                MDLabel:
-                    text: 'It is history screen!'
-                    halign: 'center'
-                    color: '#E0E0E0'
+                MDFloatLayout:
+                    MDScrollView:
+                        MDList:
+                            id: netflixhistoryscreen
+                            divider_color: "#E0E0E0"
+                            divider: "Full"
+                            spacing: dp(10)
+                            padding: dp(20)
+
 
             MDBottomNavigationItem:
                 name: 'netflixchartsscreen'
@@ -78,10 +113,42 @@
                 text: 'Charts'
                 icon: 'chart-line'
 
-                MDLabel:
-                    text: 'It is charts screen!'
-                    halign: 'center'
-                    color: '#E0E0E0'
+                MDBoxLayout:
+
+                    MDSwiper:
+                        size_hint: None, None
+                        width: root.width
+                        height: root.height
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                        MDSwiperItem:
+                            MDCard:
+                                id: box
+                                size_hint_y: None
+                                height: root.height
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                        MDSwiperItem:
+                            MDCard:
+                                id: boxik
+                                size_hint_y: None
+                                height: root.height
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                        MDSwiperItem:
+                            MDCard:
+                                id: boxer
+                                size_hint_y: None
+                                height: root.height
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                        MDSwiperItem:
+                            MDCard:
+                                id: boks
+                                size_hint_y: None
+                                height: root.height
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
 
             MDBottomNavigationItem:
                 name: 'netflixtoplistscreen'
@@ -94,3 +161,13 @@
                     halign: 'center'
                     color: '#E0E0E0'
 
+
+<CustomThreeLineListItem>:
+    theme_text_color: "Custom"
+    secondary_theme_text_color: "Custom"
+    tertiary_theme_text_color: "Custom"
+    text_color: "#A7F500"
+    secondary_text_color: "#E0E0E0"
+    tertiary_text_color: "#E0E0E0"
+    secondary_font_style: "Caption"
+    tertiary_font_style: "Caption"

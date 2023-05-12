@@ -3,10 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 
+
 class NetflixCharts:
 
-    def __init__(self,file = './Final_Data.csv'):
-        self.csvFile = file
+    def __init__(self, file = ''):
+        self.csvFile = 'app/backend/BigFile.csv'
 
     def VisualizeCharts(self):
         self.DatesChart()
@@ -14,9 +15,7 @@ class NetflixCharts:
         self.GenresChart()
         self.Favourite_year()
         DataArray = pd.read_csv(self.csvFile)
-        if np.isnan(DataArray.iloc[0,6]):
-            pass
-        else:
+        if ~np.isnan(DataArray.iloc[0,6]):
             self.TimeAtSeries()
 
     def DatesChart(self):
@@ -59,6 +58,7 @@ class NetflixCharts:
                 tmp.loc[i] = data[0:-12]
             else:
                 tmp.loc[i] = data[0:-3]
+        print(tmp)
         Dates.index = tmp['date']
         Dates = Dates.groupby(Dates.index).sum()
 
@@ -83,6 +83,7 @@ class NetflixCharts:
 
     def GenresChart(self):
         genres_counter = {}
+        self.DataArray = pd.read_csv(self.csvFile)
         for ind, row in self.DataArray.iterrows():
             genres = row['genres']
             genres = eval(genres)
@@ -96,13 +97,26 @@ class NetflixCharts:
         other_row = pd.DataFrame({'value': [other_rows]}, index=['Others'])
         Genres = pd.concat([Genres, other_row])
 
-        fig, ax = plt.subplots()
-        ax.pie(Genres['value'], labels=Genres.index)
-        ax.set_title('Wykres kołowy oglądanych gatunków')
+        fig, ax = plt.subplots(facecolor='none')
+        # ax.pie(Genres['value'], labels=Genres.index)
+        ax.pie(Genres['value'], labels=None)
+
+        fig.patch.set_facecolor('#080808')
+        # plt.rcParams['text.color'] = '#E0E0E0'
+        # plt.rcParams.update({'font.size': 22})
+
+        # ax.set_title('Wykres kołowy oglądanych gatunków')
         ax.set_xlabel(None)
-        ax.legend(Genres.index, title='Gatunki', loc='center left', bbox_to_anchor=(1.14, 0.5),fontsize=7)
-        plt.subplots_adjust(left=-0.05)
-        plt.show()
+        ''' title='Gatunki' '''
+        leg = ax.legend(Genres.index, loc='upper center', bbox_to_anchor=(0.5, -0.1), fontsize=8, ncol=2, edgecolor="#080808")
+        for text in leg.get_texts():
+            text.set_color("#E0E0E0")
+        leg._legend_title_box._text.set_color('#E0E0E0')
+        leg.get_frame().set_facecolor('#080808')
+        # ax.legend(Genres.index, title='Gatunki', loc='lower center', fontsize=7)
+        plt.subplots_adjust(bottom=0.5)
+        # plt.subplots_adjust(left=-0.05)
+        return plt.gcf()
 
     def Favourite_year(self):
         Release_year = pd.read_csv(self.csvFile)
@@ -137,7 +151,7 @@ class NetflixCharts:
         plt.show()
 
     def TimeAtSeries(self):
-        DataArray = pd.read_csv('./Final_Data.csv')
+        DataArray = pd.read_csv('app/backend/BigFile.csv')
         DataArray = DataArray.sort_values('SumOfTime').tail(100)
         Result = DataArray[['title', 'SumOfTime']].copy()
         Result = Result[Result['SumOfTime'] >= 600]
@@ -148,3 +162,12 @@ class NetflixCharts:
         ax.set_ylabel('Tytuły')
         ax.tick_params(axis='y',labelsize = 5)
         plt.show()
+
+
+# nt = NetflixCharts()
+# nt.VisualizeCharts()
+# nt.DatesChart()
+# nt.SeriesvsFilmChart()
+# nt.GenresChart()
+# nt.Favourite_year()
+# nt.TimeAtSeries()

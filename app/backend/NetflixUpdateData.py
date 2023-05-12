@@ -1,6 +1,6 @@
 import pandas as pd
-import NetflixDataAdapter as adapter
-import TMBDApi as TMBD
+import netflixdataadapter as adapter
+import tmdbapi as TMBD
 import numpy as np
 
 class NetflixUpdateData():
