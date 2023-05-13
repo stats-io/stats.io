@@ -60,15 +60,19 @@ class NetflixCharts:
                 tmp.loc[i] = data[0:-3]
         Dates.index = tmp['date']
         Dates = Dates.groupby(Dates.index).sum()
-
+        Dates.index = pd.to_datetime(Dates.index)
+        Dates = Dates.resample('2M').sum()
+        Dates.index = pd.to_datetime(Dates.index).strftime('%Y-%m')
         fig, ax = plt.subplots(figsize=(10, 5))
         Dates.plot(kind='bar', ax=ax)
+        ax.set_xticks(ax.get_xticks()[::3])
         ax.set_title('Wykres wartości w czasie')
         ax.set_xlabel('Data')
         ax.set_ylabel('Wartość')
-        plt.xticks(fontsize=6.5)
-        plt.xticks(rotation=90)
+        plt.xticks(fontsize=8)
+        plt.xticks(rotation=0)
         return plt.gcf()
+
 
     def SeriesvsFilmChart(self):
         film_counter = len(self.DataArray[self.DataArray['type'] == 'film'])
