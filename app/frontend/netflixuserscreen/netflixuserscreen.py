@@ -6,8 +6,6 @@ from app.backend.NetflixCharts import NetflixCharts
 from app.backend.NetflixMainScreen import NetflixMainScreen
 import pandas as pd
 
-import time
-
 
 class CustomThreeLineListItem(ThreeLineListItem):
     pass

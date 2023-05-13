@@ -76,7 +76,18 @@ class NetflixCharts:
         sizes = [film_counter, series_counter]
         colors = ['#A7F500', '#E0E0E0']
         fig, ax = plt.subplots()
-        ax.pie(sizes, colors=colors, autopct='%1.1f%%', startangle=90)
+        pie_wedge_collection, texts, autotexts = ax.pie(
+            sizes, 
+            colors=colors, 
+            autopct='%1.1f%%', 
+            startangle=90, 
+            textprops={
+                'color': '#080808', 
+                'fontsize': 8, 
+                'horizontalalignment': 'center', 
+                'verticalalignment': 'center',
+            }
+        )
         labels = ['Films', 'Series']
         leg = ax.legend(labels, loc='upper center', bbox_to_anchor=(0.5, -0.1), fontsize=8, ncol=2, edgecolor="#080808")
         fig.patch.set_facecolor('#080808')
@@ -86,6 +97,7 @@ class NetflixCharts:
         leg.get_frame().set_facecolor('#080808')
         plt.subplots_adjust(bottom=0.5)
         return plt.gcf()
+
 
     def GenresChart(self):
         genres_counter = {}
@@ -103,8 +115,10 @@ class NetflixCharts:
         other_row = pd.DataFrame({'value': [other_rows]}, index=['Others'])
         Genres = pd.concat([Genres, other_row])
 
+        colors = ['#A7F500', '#C2F52B', '#DFF55C', '#F5F218', '#F5C118', '#F58B18', '#F55B18', '#F53518', '#F51818', '#E01B4F', '#E04F6F', '#E0828F', '#E0B5AF', '#E0E0CF', '#B5E0AF', '#82E082', '#4FE052', '#4FB56F', '#4FE0A3', '#4FE0CF', '#4FB5CF', '#4F82CF', '#4F4FCF', '#824FCF', '#B54FCF', '#E04FCF', '#E04F8F', '#E0B5CF', '#B5B5E0', '#8282E0', '#4F4FE0', '#666666']
+
         fig, ax = plt.subplots(facecolor='none')
-        ax.pie(Genres['value'], labels=None)
+        ax.pie(Genres['value'], labels=None, colors=colors)
 
         fig.patch.set_facecolor('#080808')
         ax.set_xlabel(None)
