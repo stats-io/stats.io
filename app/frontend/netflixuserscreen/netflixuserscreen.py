@@ -16,14 +16,13 @@ class NetflixUserScreen(MDScreen):
     charts = NetflixCharts()
 
     def generate_charts(self):
-        creator = self.manager.get_screen("netflixuserscreen").ids.box
-        creator.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
-        creator = self.manager.get_screen("netflixuserscreen").ids.boxik
-        creator.add_widget(FigureCanvasKivyAgg(self.charts.SeriesvsFilmChart()))
-        creator = self.manager.get_screen("netflixuserscreen").ids.boxer
-        creator.add_widget(FigureCanvasKivyAgg(self.charts.DatesChart()))
-        creator = self.manager.get_screen("netflixuserscreen").ids.boks
-        creator.add_widget(FigureCanvasKivyAgg(self.charts.Favourite_year()))
+        charts_screen = self.manager.get_screen("netflixuserscreen").ids
+        charts_screen.genres_chart.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
+        charts_screen.movies_series_chart.add_widget(FigureCanvasKivyAgg(self.charts.SeriesvsFilmChart()))
+        charts_screen.years_chart.add_widget(FigureCanvasKivyAgg(self.charts.Favourite_year()))
+        charts_screen.watch_count_chart.add_widget(FigureCanvasKivyAgg(self.charts.DatesChart()))
+        charts_screen.time_at_series.add_widget(FigureCanvasKivyAgg(self.charts.TimeAtSeries()))
+
         self.generate_history()
 
 
