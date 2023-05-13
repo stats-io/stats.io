@@ -11,8 +11,8 @@ class NetflixLoadingScreen(MDScreen):
             self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{self._counter}%"
         else:
             self.clock_variable.cancel()
-            self.manager.get_screen("netflixuserscreen").generate_charts()
             self.manager.current = "netflixuserscreen"
+            self.manager.get_screen("netflixuserscreen").generate_charts()
 
     def _animation(self, *args):
         self.clock_variable = Clock.schedule_interval(self._update_label, 0.001)

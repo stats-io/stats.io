@@ -58,7 +58,6 @@ class NetflixCharts:
                 tmp.loc[i] = data[0:-12]
             else:
                 tmp.loc[i] = data[0:-3]
-        print(tmp)
         Dates.index = tmp['date']
         Dates = Dates.groupby(Dates.index).sum()
 
@@ -69,17 +68,24 @@ class NetflixCharts:
         ax.set_ylabel('Wartość')
         plt.xticks(fontsize=6.5)
         plt.xticks(rotation=90)
-        plt.show()
+        return plt.gcf()
 
     def SeriesvsFilmChart(self):
         film_counter = len(self.DataArray[self.DataArray['type'] == 'film'])
         series_counter = len(self.DataArray[self.DataArray['type'] == 'series'])
         sizes = [film_counter, series_counter]
-        colors = ['#006400', '#008000']  # ciemnozielony, zielony
-        fig1, ax1 = plt.subplots()
-        ax1.pie(sizes, colors=colors, labels=['films', 'series'], autopct='%1.1f%%', startangle=90)
-        ax1.set_title('Proporcje filmów i seriali')
-        plt.show()
+        colors = ['#A7F500', '#E0E0E0']
+        fig, ax = plt.subplots()
+        ax.pie(sizes, colors=colors, autopct='%1.1f%%', startangle=90)
+        labels = ['Films', 'Series']
+        leg = ax.legend(labels, loc='upper center', bbox_to_anchor=(0.5, -0.1), fontsize=8, ncol=2, edgecolor="#080808")
+        fig.patch.set_facecolor('#080808')
+        for text in leg.get_texts():
+            text.set_color("#E0E0E0")
+        leg._legend_title_box._text.set_color('#E0E0E0')
+        leg.get_frame().set_facecolor('#080808')
+        plt.subplots_adjust(bottom=0.5)
+        return plt.gcf()
 
     def GenresChart(self):
         genres_counter = {}
@@ -98,24 +104,16 @@ class NetflixCharts:
         Genres = pd.concat([Genres, other_row])
 
         fig, ax = plt.subplots(facecolor='none')
-        # ax.pie(Genres['value'], labels=Genres.index)
         ax.pie(Genres['value'], labels=None)
 
         fig.patch.set_facecolor('#080808')
-        # plt.rcParams['text.color'] = '#E0E0E0'
-        # plt.rcParams.update({'font.size': 22})
-
-        # ax.set_title('Wykres kołowy oglądanych gatunków')
         ax.set_xlabel(None)
-        ''' title='Gatunki' '''
         leg = ax.legend(Genres.index, loc='upper center', bbox_to_anchor=(0.5, -0.1), fontsize=8, ncol=2, edgecolor="#080808")
         for text in leg.get_texts():
             text.set_color("#E0E0E0")
         leg._legend_title_box._text.set_color('#E0E0E0')
         leg.get_frame().set_facecolor('#080808')
-        # ax.legend(Genres.index, title='Gatunki', loc='lower center', fontsize=7)
         plt.subplots_adjust(bottom=0.5)
-        # plt.subplots_adjust(left=-0.05)
         return plt.gcf()
 
     def Favourite_year(self):
@@ -140,7 +138,7 @@ class NetflixCharts:
         Years = pd.DataFrame.from_dict(years_counter, orient='index', columns=['value'])
         Years = Years.sort_index(axis = 0)
         Years = Years.rename(index={1999: '<2000'})
-        fig, ax = plt.subplots(figsize=(10, 5))
+        fig, ax = plt.subplots(figsize=(5, 10))
         Years.plot(kind='bar', ax=ax)
         ax.set_title('Lata z których obejrzano najwięcej tytułów')
         ax.set_xlabel('Data')
@@ -148,7 +146,7 @@ class NetflixCharts:
         plt.yticks(range(int(min(Years['value'])), int(max(Years['value']))+1,2))
         plt.xticks(fontsize=9)
         plt.xticks(rotation=90)
-        plt.show()
+        return plt.gcf()
 
     def TimeAtSeries(self):
         DataArray = pd.read_csv('app/backend/BigFile.csv')

@@ -21,11 +21,11 @@ class NetflixUserScreen(MDScreen):
         creator = self.manager.get_screen("netflixuserscreen").ids.box
         creator.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
         creator = self.manager.get_screen("netflixuserscreen").ids.boxik
-        creator.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
+        creator.add_widget(FigureCanvasKivyAgg(self.charts.SeriesvsFilmChart()))
         creator = self.manager.get_screen("netflixuserscreen").ids.boxer
-        creator.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
+        creator.add_widget(FigureCanvasKivyAgg(self.charts.DatesChart()))
         creator = self.manager.get_screen("netflixuserscreen").ids.boks
-        creator.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
+        creator.add_widget(FigureCanvasKivyAgg(self.charts.Favourite_year()))
         self.generate_history()
 
 
@@ -39,10 +39,11 @@ class NetflixUserScreen(MDScreen):
     def create_list(self, data_array):
         lista = self.manager.get_screen("netflixuserscreen").ids.netflixhistoryscreen
         for row in range(len(data_array)):
+            third = ', '.join(list(set(data_array[row]['Dates'].replace('[', '').replace(']', '').replace('\'', '').split(', '))))
             lista.add_widget(
                 CustomThreeLineListItem(
                     text = data_array[row]['title'],
                     secondary_text = data_array[row]['genres'].replace('[', '').replace(']', '').replace('\'', ''),
-                    tertiary_text =data_array[row]['Dates'].replace('[', '').replace(']', '').replace('\'', ''),
+                    tertiary_text = third,
                 )
             )
