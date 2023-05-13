@@ -1,22 +1,18 @@
-# stats.io
-All your stats from streaming portals in one place! More specifically, the stats.io app for android, which we are currently developing!
-
-## Installation
-To run all application tests from our repository:
-
-clone the repository to the destination folder using command
+## Install and run the app
+Navigate to the target folder and run the following commands in terminal (python and git required):
 ```CMD
 git clone https://github.com/stats-io/stats.io.git
-```
-
-then navigate to the stats.io folder and install requirements
-```CMD
 cd stats.io
 pip3 install -r ./requirements.txt
+python3 main.py
 ```
 
-and run tests using command
+## How to run unittests for our app
+To run all application tests from our repository run the following commands while in the target folder if installed already only last two commands needed (python and git required):
 ```CMD
+git clone https://github.com/stats-io/stats.io.git
+cd stats.io
+pip3 install -r ./requirements.txt
 cd tests
 python3 tester.py
 ```
