@@ -65,7 +65,7 @@ class NetflixCharts:
         Dates.index = pd.to_datetime(Dates.index).strftime('%Y-%m')
         fig, ax = plt.subplots(figsize=(10, 5))
         Dates.plot(kind='bar', ax=ax)
-        ax.set_xticks(ax.get_xticks()[::3])
+        ax.set_xticks(ax.get_xticks()[0::3])
         ax.set_title('Wykres wartości w czasie')
         ax.set_xlabel('Data')
         ax.set_ylabel('Wartość')
@@ -156,14 +156,13 @@ class NetflixCharts:
         Years = pd.DataFrame.from_dict(years_counter, orient='index', columns=['value'])
         Years = Years.sort_index(axis = 0)
         Years = Years.rename(index={1999: '<2000'})
-        fig, ax = plt.subplots(figsize=(5, 10))
-        Years.plot(kind='bar', ax=ax)
+        fig, ax = plt.subplots()
+        Years.plot(kind='barh', ax=ax)
+        ax.set_yticks(ax.get_yticks()[-1::-2])
         ax.set_title('Lata z których obejrzano najwięcej tytułów')
         ax.set_xlabel('Data')
         ax.set_ylabel('Ilość obejrzanych filmów/seriali')
-        plt.yticks(range(int(min(Years['value'])), int(max(Years['value']))+1,2))
-        plt.xticks(fontsize=9)
-        plt.xticks(rotation=90)
+
         return plt.gcf()
 
     def TimeAtSeries(self):
