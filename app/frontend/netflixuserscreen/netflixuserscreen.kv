@@ -156,11 +156,133 @@
                 text: 'Top List'
                 icon: 'arrow-top-right'
 
-                MDLabel:
-                    text: 'It is top list screen!'
-                    halign: 'center'
-                    color: '#E0E0E0'
+                MDScrollView:
+                    size_hint: 1, 1
+                    pos_hint: {'center_x': .5, 'center_y': .5}
 
+                    MDList:
+                        id: netflixtoplistscreen
+                        divider_color: "#E0E0E0"
+                        divider: "Full"
+                        spacing: dp(30)
+                        padding: dp(30)
+
+                        OneLineListItem:
+                            height: root.height * 0.1
+                            MDCard:
+                                size_hint: 0.8, 0.8
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+                                line_color: '#A7F500'
+                                line_width: 1.0
+                                md_bg_color: '#080808'
+
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+
+                                    MDLabel:
+                                        text: 'Top actors'
+                                        color: '#A7F500'
+                                        font_size: root.height * 0.04
+                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                        halign: 'center'
+
+                        MDWidget:
+                            height: root.height * 0.5
+
+                        OneLineListItem:
+                            height: root.height * 0.1
+                            MDCard:
+                                size_hint: 0.8, 0.8
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.45}
+                                md_bg_color: '#A7F500'
+
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+
+                                    MDLabel:
+                                        text: 'Top genres'
+                                        font_size: root.height * 0.04
+                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                        halign: 'center'
+
+                        MDWidget:
+                            height: root.height * 0.05
+
+                        OneLineListItem:
+                            height: root.height * 0.1
+                            MDCard:
+                                size_hint: 0.8, 0.8
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+                                line_color: '#A7F500'
+                                line_width: 1.0
+                                md_bg_color: '#080808'
+
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+
+                                    MDLabel:
+                                        text: 'Top series'
+                                        color: '#A7F500'
+                                        font_size: root.height * 0.04
+                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                        halign: 'center'
+
+                        MDWidget:
+                            height: root.height * 0.05
+
+                        OneLineListItem:
+                            height: root.height * 0.2
+                            MDCard:
+                                size_hint: 0.8, 0.8
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.45}
+                                md_bg_color: '#A7F500'
+
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+
+                                    MDLabel:
+                                        text: 'Most popular \nwatched'
+                                        font_size: root.height * 0.04
+                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                        halign: 'center'
+
+                        MDWidget:
+                            height: root.height * 0.5
+
+                        OneLineListItem:
+                            height: root.height * 0.2
+                            MDCard:
+                                size_hint: 0.8, 0.8
+                                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+                                line_color: '#A7F500'
+                                line_width: 1.0
+                                md_bg_color: '#080808'
+
+                                MDBoxLayout:
+                                    orientation: 'vertical'
+
+                                    MDLabel:
+                                        text: 'Top watched \nby day'
+                                        color: '#A7F500'
+                                        font_size: root.height * 0.04
+                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                        halign: 'center'
+
+                        MDWidget:
+                            height: root.height * 0.5
+
+
+<CustomOneLineListItem>:
+    text_color: '#E0E0E0'
+    theme_text_color: 'Custom'
+    font_style: 'H4'
+
+<CustomTwoLineListItem>:
+    text_color: '#E0E0E0'
+    theme_text_color: 'Custom'
+    font_style: 'H4'
+    secondary_theme_text_color: "Custom"
+    secondary_text_color: "#A7F500"
 
 <CustomThreeLineListItem>:
     theme_text_color: "Custom"
