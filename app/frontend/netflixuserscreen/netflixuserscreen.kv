@@ -123,31 +123,51 @@
 
                         MDSwiperItem:
                             MDCard:
-                                id: box
+                                id: genres_chart
                                 size_hint_y: None
                                 height: root.height
                                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                         MDSwiperItem:
                             MDCard:
-                                id: boxik
+                                id: movies_series_chart
                                 size_hint_y: None
                                 height: root.height
                                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                         MDSwiperItem:
                             MDCard:
-                                id: boxer
+                                id: watch_count_chart
                                 size_hint_y: None
-                                height: root.height
+                                height: root.height * 0.75
                                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
                         MDSwiperItem:
                             MDCard:
-                                id: boks
+                                id: years_chart
                                 size_hint_y: None
-                                height: root.height
+                                height: root.height * 0.75
                                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                        MDSwiperItem:
+                            MDCard:
+                                id: time_at_series
+                                size_hint_y: None
+                                height: root.height * 0.75
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                            
+                            # MDScrollView:
+                            #     size: root.width, root.height
+                            #     do_scroll_y: True
+                            #     do_scroll_x: False
+                            #     pos_hint: {"top": 1.25}
+
+                            #     GridLayout:
+                            #         id: time_at_series
+                            #         cols: 1
+                            #         size_hint_y: None
+                            #         row_default_height: 2000
+                            #         height: self.minimum_height
 
 
             MDBottomNavigationItem:

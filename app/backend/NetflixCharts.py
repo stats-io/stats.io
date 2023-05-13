@@ -58,28 +58,56 @@ class NetflixCharts:
                 tmp.loc[i] = data[0:-12]
             else:
                 tmp.loc[i] = data[0:-3]
-        print(tmp)
         Dates.index = tmp['date']
         Dates = Dates.groupby(Dates.index).sum()
-
+        Dates.index = pd.to_datetime(Dates.index)
+        Dates = Dates.resample('6M').sum()
+        Dates.index = pd.to_datetime(Dates.index).strftime('%Y-%m')
         fig, ax = plt.subplots(figsize=(10, 5))
-        Dates.plot(kind='bar', ax=ax)
+        Dates.plot(kind='bar', ax=ax, color='#A7F500', legend=False)
+        ax.set_xticks(ax.get_xticks()[::2])
         ax.set_title('Wykres wartości w czasie')
         ax.set_xlabel('Data')
         ax.set_ylabel('Wartość')
-        plt.xticks(fontsize=6.5)
+        plt.xticks(fontsize=8)
         plt.xticks(rotation=90)
-        plt.show()
+        ax.tick_params(colors='#E0E0E0')
+        fig.patch.set_facecolor('#080808')
+        ax.spines['bottom'].set_color('#A7F500')
+        ax.spines['top'].set_color('#080808')
+        ax.spines['right'].set_color('#080808')
+        ax.spines['left'].set_color('#A7F500')
+        ax.set_facecolor('#080808')
+        return plt.gcf()
 
     def SeriesvsFilmChart(self):
         film_counter = len(self.DataArray[self.DataArray['type'] == 'film'])
         series_counter = len(self.DataArray[self.DataArray['type'] == 'series'])
         sizes = [film_counter, series_counter]
-        colors = ['#006400', '#008000']  # ciemnozielony, zielony
-        fig1, ax1 = plt.subplots()
-        ax1.pie(sizes, colors=colors, labels=['films', 'series'], autopct='%1.1f%%', startangle=90)
-        ax1.set_title('Proporcje filmów i seriali')
-        plt.show()
+        colors = ['#A7F500', '#E0E0E0']
+        fig, ax = plt.subplots()
+        pie_wedge_collection, texts, autotexts = ax.pie(
+            sizes, 
+            colors=colors, 
+            autopct='%1.1f%%', 
+            startangle=90, 
+            textprops={
+                'color': '#080808', 
+                'fontsize': 8, 
+                'horizontalalignment': 'center', 
+                'verticalalignment': 'center',
+            }
+        )
+        labels = ['Films', 'Series']
+        leg = ax.legend(labels, loc='upper center', bbox_to_anchor=(0.5, -0.1), fontsize=8, ncol=2, edgecolor="#080808")
+        fig.patch.set_facecolor('#080808')
+        for text in leg.get_texts():
+            text.set_color("#E0E0E0")
+        leg._legend_title_box._text.set_color('#E0E0E0')
+        leg.get_frame().set_facecolor('#080808')
+        plt.subplots_adjust(bottom=0.5)
+        return plt.gcf()
+
 
     def GenresChart(self):
         genres_counter = {}
@@ -97,25 +125,19 @@ class NetflixCharts:
         other_row = pd.DataFrame({'value': [other_rows]}, index=['Others'])
         Genres = pd.concat([Genres, other_row])
 
+        colors = ['#A7F500', '#C2F52B', '#DFF55C', '#F5F218', '#F5C118', '#F58B18', '#F55B18', '#F53518', '#F51818', '#E01B4F', '#E04F6F', '#E0828F', '#E0B5AF', '#E0E0CF', '#B5E0AF', '#82E082', '#4FE052', '#4FB56F', '#4FE0A3', '#4FE0CF', '#4FB5CF', '#4F82CF', '#4F4FCF', '#824FCF', '#B54FCF', '#E04FCF', '#E04F8F', '#E0B5CF', '#B5B5E0', '#8282E0', '#4F4FE0', '#666666']
+
         fig, ax = plt.subplots(facecolor='none')
-        # ax.pie(Genres['value'], labels=Genres.index)
-        ax.pie(Genres['value'], labels=None)
+        ax.pie(Genres['value'], labels=None, colors=colors)
 
         fig.patch.set_facecolor('#080808')
-        # plt.rcParams['text.color'] = '#E0E0E0'
-        # plt.rcParams.update({'font.size': 22})
-
-        # ax.set_title('Wykres kołowy oglądanych gatunków')
         ax.set_xlabel(None)
-        ''' title='Gatunki' '''
         leg = ax.legend(Genres.index, loc='upper center', bbox_to_anchor=(0.5, -0.1), fontsize=8, ncol=2, edgecolor="#080808")
         for text in leg.get_texts():
             text.set_color("#E0E0E0")
         leg._legend_title_box._text.set_color('#E0E0E0')
         leg.get_frame().set_facecolor('#080808')
-        # ax.legend(Genres.index, title='Gatunki', loc='lower center', fontsize=7)
         plt.subplots_adjust(bottom=0.5)
-        # plt.subplots_adjust(left=-0.05)
         return plt.gcf()
 
     def Favourite_year(self):
@@ -140,34 +162,42 @@ class NetflixCharts:
         Years = pd.DataFrame.from_dict(years_counter, orient='index', columns=['value'])
         Years = Years.sort_index(axis = 0)
         Years = Years.rename(index={1999: '<2000'})
-        fig, ax = plt.subplots(figsize=(10, 5))
-        Years.plot(kind='bar', ax=ax)
+        fig, ax = plt.subplots()
+        Years.plot(kind='barh', ax=ax, color='#A7F500', legend=False)
+        ax.set_yticks(ax.get_yticks()[-1::-2])
         ax.set_title('Lata z których obejrzano najwięcej tytułów')
         ax.set_xlabel('Data')
         ax.set_ylabel('Ilość obejrzanych filmów/seriali')
-        plt.yticks(range(int(min(Years['value'])), int(max(Years['value']))+1,2))
-        plt.xticks(fontsize=9)
-        plt.xticks(rotation=90)
-        plt.show()
+
+        ax.tick_params(colors='#E0E0E0')
+        fig.patch.set_facecolor('#080808')
+        ax.spines['bottom'].set_color('#A7F500')
+        ax.spines['top'].set_color('#080808')
+        ax.spines['right'].set_color('#080808')
+        ax.spines['left'].set_color('#A7F500')
+        ax.set_facecolor('#080808')
+
+        return plt.gcf()
 
     def TimeAtSeries(self):
         DataArray = pd.read_csv('app/backend/BigFile.csv')
-        DataArray = DataArray.sort_values('SumOfTime').tail(100)
+        DataArray = DataArray.sort_values('SumOfTime').tail(20)
         Result = DataArray[['title', 'SumOfTime']].copy()
         Result = Result[Result['SumOfTime'] >= 600]
         Result = Result.reset_index(drop=True)
         fig, ax = plt.subplots()
-        fig.set_size_inches(16, 9)
-        ax.barh(Result['title'], Result['SumOfTime'])
+
+
+        ax.barh(Result['title'], Result['SumOfTime'] / 60, color="#A7F500", legend=False)
         ax.set_ylabel('Tytuły')
-        ax.tick_params(axis='y',labelsize = 5)
-        plt.show()
+        ax.tick_params(axis='y',labelsize = 8)
 
-
-# nt = NetflixCharts()
-# nt.VisualizeCharts()
-# nt.DatesChart()
-# nt.SeriesvsFilmChart()
-# nt.GenresChart()
-# nt.Favourite_year()
-# nt.TimeAtSeries()
+        ax.tick_params(colors='#E0E0E0')
+        fig.patch.set_facecolor('#080808')
+        ax.spines['bottom'].set_color('#A7F500')
+        ax.spines['top'].set_color('#080808')
+        ax.spines['right'].set_color('#080808')
+        ax.spines['left'].set_color('#080808')
+        ax.set_facecolor('#080808')
+        
+        return plt.gcf()
