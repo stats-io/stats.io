@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-import netflixdataadapter as adapter
-import tmdbapi as TMBD
+import app.backend.netflixdataadapter as adapter
+import app.backend.tmdbapi as TMBD
 
 
 class NetflixUpdateData():
@@ -11,7 +11,7 @@ class NetflixUpdateData():
         data = adapter.NetflixDataAdapter(path)
         data.remakeFile()
         self.csvFile = data.csvFile
-        self.dbpath = "./UserDB.csv"
+        self.dbpath = 'app/backend/files/UserDB.csv'
 
     def formatUserData(self):
         self.dataArray = pd.read_csv(self.csvFile)
@@ -28,12 +28,12 @@ class NetflixUpdateData():
         if self.DBexsist == 0:
             self.dataArray = self.lookintoTMBD(self.csvFile, 1)
             if np.isnan(self.dataArray.iloc[0, 6]):
-                self.dataArray.to_csv("./Final_Data.csv", index=False)
-                self.dataArray.to_csv("./LastSmallData.csv", index=False)
+                self.dataArray.to_csv("app/backend/files/Final_Data.csv", index=False)
+                self.dataArray.to_csv("app/backend/files/LastSmallData.csv", index=False)
                 self.fetchintoLocalDb(self.dataArray, 0)
             else:
-                self.dataArray.to_csv("./LastBigData.csv", index=False)
-                self.dataArray.to_csv("./Final_Data.csv", index=False)
+                self.dataArray.to_csv("app/backend/files/LastBigData.csv", index=False)
+                self.dataArray.to_csv("app/backend/files/Final_Data.csv", index=False)
                 self.dataArray["SumOfTime"] = np.nan
                 self.dataArray["Dates"] = np.nan
                 self.fetchintoLocalDb(self.dataArray, 0)
@@ -45,11 +45,12 @@ class NetflixUpdateData():
             self.data_from_api = self.get_Genres_and_Actors(self.data_from_api)
             self.dataArray = pd.concat([self.data_from_api, self.dataArray_from_db], ignore_index=True)
             if np.isnan(self.dataArray.iloc[0, 6]):
-                self.dataArray.to_csv("./LastSmallData.csv")
+                self.dataArray.to_csv("app/backend/files/LastSmallData.csv")
             else:
-                self.dataArray.to_csv("./LastBigData.csv")
-            self.dataArray.to_csv("./Final_Data.csv", index=False)
+                self.dataArray.to_csv("app/backend/files/LastBigData.csv")
+            self.dataArray.to_csv("app/backend/files/Final_Data.csv", index=False)
             self.fetchintoLocalDb(self.dataArray, 1)
+        return 1
 
     def get_Genres_and_Actors(self, dataArray):
         api = TMBD.TMBDApi("", 1, dataArray)
@@ -62,7 +63,7 @@ class NetflixUpdateData():
         return api.dataArray
 
     def lookintoLocalDb(self, dataArray):
-        self.data = pd.read_csv("./UserDB.csv")
+        self.data = pd.read_csv(self.dbpath)
         for ind, row in dataArray.iterrows():
             try:
                 filtered_df = self.data.loc[(self.data["title"] == row[0])]
@@ -81,9 +82,9 @@ class NetflixUpdateData():
         dataArray["popularity"] = np.nan
         dataArray["number_of_episodes"] = np.nan
         if x == 0:
-            dataArray.to_csv("./UserDB.csv", index=False)
+            dataArray.to_csv(self.dbpath, index=False)
         else:
-            dataArray.to_csv("./UserDB.csv", index=False, mode="a", header=False)
-            self.df = pd.read_csv("./UserDB.csv")
+            dataArray.to_csv(self.dbpath, index=False, mode="a", header=False)
+            self.df = pd.read_csv(self.dbpath)
             self.df = self.df.drop_duplicates(subset=["title"])
-            self.df.to_csv("./UserDB.csv", index=False, mode="w")
+            self.df.to_csv(self.dbpath, index=False, mode="w")
