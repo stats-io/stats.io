@@ -1,84 +1,84 @@
 <MainScreen>:
-    name: 'mainscreen'
-    md_bg_color: '#080808'
+    name: "mainscreen"
+    md_bg_color: "#080808"
 
     MDFloatLayout:
         
         MDCard:
             size_hint: 0.8, 0.3
-            pos_hint: {'center_x': 0.5, 'center_y': 0.75}
-            md_bg_color: '#080808'
+            pos_hint: {"center_x": 0.5, "center_y": 0.75}
+            md_bg_color: "#080808"
             border_radius: 0
 
             FitImage:
-                source: 'app/frontend/mainscreen/logo.png'
+                source: "app/frontend/mainscreen/logo.png"
 
         MDLabel:
-            text: 'Welcome to stats.io'
-            color: '#E0E0E0'
-            pos_hint: {'center_y': 0.5}
-            halign: 'center'
+            text: "Welcome to stats.io"
+            color: "#E0E0E0"
+            pos_hint: {"center_y": 0.5}
+            halign: "center"
             font_size: root.height * 0.045
             bold: True
         
         MDLabel:
-            text: 'All your stats in one place'
-            color: '#E0E0E0'
-            pos_hint: {'center_y': 0.45}
-            halign: 'center'
+            text: "All your stats in one place"
+            color: "#E0E0E0"
+            pos_hint: {"center_y": 0.45}
+            halign: "center"
             font_size: root.height * 0.025
         
         MDCard:
             size_hint: 0.8, 0.1
-            pos_hint: {'center_x': 0.5,'center_y': 0.3}
-            md_bg_color: '#A7F500'
-            line_color: '#A7F500'
+            pos_hint: {"center_x": 0.5,"center_y": 0.3}
+            md_bg_color: "#A7F500"
+            line_color: "#A7F500"
             line_width: 1.0
-            on_release: app.root.current = 'netflixnewdatascreen'
+            on_release: app.root.current = "netflixnewdatascreen"
 
             MDBoxLayout:
-                orientation: 'horizontal'
+                orientation: "horizontal"
                 size_hint: 1, 1
                 padding: dp(25)
                 spacing: dp(20)
 
                 MDLabel:
-                    text: 'Netflix stats'
-                    color: '#080808'
-                    pos_hint: {'center_y': 0.5}
+                    text: "Netflix stats"
+                    color: "#080808"
+                    pos_hint: {"center_y": 0.5}
                     font_size: root.height * 0.025
-                    halign: 'left'
+                    halign: "left"
                 
                 MDIcon:
-                    icon: 'filmstrip-box-multiple'
-                    color: '#080808'
-                    pos_hint: {'center_y': 0.5}
+                    icon: "filmstrip-box-multiple"
+                    color: "#080808"
+                    pos_hint: {"center_y": 0.5}
                     font_size: root.height * 0.03
-                    halign: 'right'
+                    halign: "right"
 
         MDCard:
             size_hint: 0.8, 0.1
-            pos_hint: {'center_x': 0.5,'center_y': 0.15}
-            md_bg_color: '#080808'
-            line_color: '#A7F500'
+            pos_hint: {"center_x": 0.5,"center_y": 0.15}
+            md_bg_color: "#080808"
+            line_color: "#A7F500"
             line_width: 1.0
 
             MDBoxLayout:
-                orientation: 'horizontal'
+                orientation: "horizontal"
                 size_hint: 1, 1
                 padding: dp(25)
                 spacing: dp(20)
 
                 MDLabel:
-                    text: 'Spotify stats'
-                    color: '#A7F500'
-                    pos_hint: {'center_y': 0.5}
+                    text: "Spotify stats"
+                    color: "#A7F500"
+                    pos_hint: {"center_y": 0.5}
                     font_size: root.height * 0.025
-                    halign: 'left'
+                    halign: "left"
                     
                 MDIcon:
-                    icon: 'music-box-multiple'
-                    color: '#A7F500'
-                    pos_hint: {'center_y': 0.5}
+                    icon: "music-box-multiple"
+                    color: "#A7F500"
+                    pos_hint: {"center_y": 0.5}
                     font_size: root.height * 0.03
-                    halign: 'right'
+                    halign: "right"

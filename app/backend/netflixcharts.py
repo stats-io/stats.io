@@ -66,13 +66,12 @@ class NetflixCharts:
         fig, ax = plt.subplots(figsize=(10, 5))
         Dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
         ax.set_xticks(ax.get_xticks()[::2])
-        ax.set_title("Wykres wartości w czasie")
-        ax.set_xlabel("Data")
-        ax.set_ylabel("Wartość")
         plt.xticks(fontsize=8)
         plt.xticks(rotation=90)
-        self._adjust_colors_candles(fig, ax)
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Value")
         ax.set_title("Number of watched shows", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+        self._adjust_colors_candles(fig, ax)
         return plt.gcf()
 
     def SeriesvsFilmChart(self):
