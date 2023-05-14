@@ -45,12 +45,11 @@ class NetflixUserScreen(MDScreen):
     def create_list(self, data_array):
         lista = self.manager.get_screen("netflixuserscreen").ids.netflixhistoryscreen
         for row in range(len(data_array)):
-            third = ", ".join(
-                list(set(data_array[row]["Dates"].replace("[", "").replace("]", "").replace("\"", "").split(", "))))
+            third = ", ".join(list(set(data_array[row]["Dates"].replace("[", "").replace("]", "").replace("'", "").split(", "))))
             lista.add_widget(
                 CustomThreeLineListItem(
                     text=data_array[row]["title"],
-                    secondary_text=data_array[row]["genres"].replace("[", "").replace("]", "").replace("\"", ""),
+                    secondary_text=data_array[row]["genres"].replace("[", "").replace("]", "").replace("'", ""),
                     tertiary_text=third,
                 )
             )
