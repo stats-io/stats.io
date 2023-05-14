@@ -16,8 +16,8 @@ class TMBDApi:
     def getMovieData(self):
         self.dataArray["genres"] = self.dataArray["genres"].apply(lambda x: [] if pd.isna(x) else eval(x))
 
-        SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=&query="
-        MovieURL = f"https://api.themoviedb.org/3/search/movie?api_key=&query="
+        SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
+        MovieURL = f"https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
 
         for i, row in self.dataArray.iterrows():
             title = row["title"].replace(" ", "+")
@@ -66,7 +66,7 @@ class TMBDApi:
 
         SeriesURL = "https://api.themoviedb.org/3/tv/"
         MovieURL = "https://api.themoviedb.org/3/movie/"
-        creditsURL = "/credits?api_key="
+        creditsURL = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
 
         for i, row in self.dataArray.iterrows():
             rows = row["TMBDid"]
@@ -86,7 +86,7 @@ class TMBDApi:
 
     def getGenres(self):
 
-        genres_df = pd.read_csv("./genres.csv")
+        genres_df = pd.read_csv("app/backend/files/genres.csv")
         genres_dict = dict(zip(genres_df["id"], genres_df["name"]))
         for i, row in self.dataArray.iterrows():
             genres = row["genres"]
