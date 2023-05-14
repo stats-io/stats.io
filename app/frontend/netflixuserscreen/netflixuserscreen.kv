@@ -197,14 +197,14 @@
                         id: netflixtoplistscreen
                         divider_color: "#E0E0E0"
                         divider: "Full"
-                        spacing: dp(30)
-                        padding: dp(30)
+                        spacing: dp(10)
+                        padding: dp(20)
 
                         OneLineListItem:
-                            height: root.height * 0.1
+                            height: root.height * 0.08
                             MDCard:
-                                size_hint: 0.8, 0.8
-                                pos_hint: {"center_x": 0.5, "center_y": 0.2}
+                                # size_hint: 0.8, 0.8
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 line_color: "#A7F500"
                                 line_width: 1.0
                                 md_bg_color: "#080808"
@@ -215,7 +215,7 @@
                                     MDLabel:
                                         text: "Top actors"
                                         color: "#A7F500"
-                                        font_size: root.height * 0.04
+                                        font_size: root.height * 0.03
                                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                         halign: "center"
 
@@ -223,10 +223,10 @@
                             height: root.height * 0.5
 
                         OneLineListItem:
-                            height: root.height * 0.1
+                            height: root.height * 0.08
                             MDCard:
-                                size_hint: 0.8, 0.8
-                                pos_hint: {"center_x": 0.5, "center_y": 0.45}
+                                # size_hint: 0.8, 0.8
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 md_bg_color: "#A7F500"
 
                                 MDBoxLayout:
@@ -234,7 +234,7 @@
 
                                     MDLabel:
                                         text: "Top genres"
-                                        font_size: root.height * 0.04
+                                        font_size: root.height * 0.03
                                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                         halign: "center"
 
@@ -242,10 +242,10 @@
                             height: root.height * 0.05
 
                         OneLineListItem:
-                            height: root.height * 0.1
+                            height: root.height * 0.08
                             MDCard:
-                                size_hint: 0.8, 0.8
-                                pos_hint: {"center_x": 0.5, "center_y": 0.2}
+                                # size_hint: 0.8, 0.8
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 line_color: "#A7F500"
                                 line_width: 1.0
                                 md_bg_color: "#080808"
@@ -256,7 +256,7 @@
                                     MDLabel:
                                         text: "Top series"
                                         color: "#A7F500"
-                                        font_size: root.height * 0.04
+                                        font_size: root.height * 0.03
                                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                         halign: "center"
 
@@ -264,18 +264,18 @@
                             height: root.height * 0.05
 
                         OneLineListItem:
-                            height: root.height * 0.2
+                            height: root.height * 0.08
                             MDCard:
-                                size_hint: 0.8, 0.8
-                                pos_hint: {"center_x": 0.5, "center_y": 0.45}
+                                # size_hint: 0.8, 0.8
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 md_bg_color: "#A7F500"
 
                                 MDBoxLayout:
                                     orientation: "vertical"
 
                                     MDLabel:
-                                        text: "Most popular \nwatched"
-                                        font_size: root.height * 0.04
+                                        text: "Most popular watched"
+                                        font_size: root.height * 0.03
                                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                         halign: "center"
 
@@ -283,10 +283,10 @@
                             height: root.height * 0.5
 
                         OneLineListItem:
-                            height: root.height * 0.2
+                            height: root.height * 0.08
                             MDCard:
-                                size_hint: 0.8, 0.8
-                                pos_hint: {"center_x": 0.5, "center_y": 0.2}
+                                # size_hint: 0.8, 0.8
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 line_color: "#A7F500"
                                 line_width: 1.0
                                 md_bg_color: "#080808"
@@ -295,9 +295,9 @@
                                     orientation: "vertical"
 
                                     MDLabel:
-                                        text: "Top watched \nby day"
+                                        text: "Top watched by day"
                                         color: "#A7F500"
-                                        font_size: root.height * 0.04
+                                        font_size: root.height * 0.03
                                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                         halign: "center"
 
@@ -308,7 +308,7 @@
 <CustomOneLineListItem>:
     text_color: "#E0E0E0"
     theme_text_color: "Custom"
-    font_style: "H6"
+    font_style: "Subtitle1"
 
 <CustomTwoLineListItem>:
     text_color: "#E0E0E0"
