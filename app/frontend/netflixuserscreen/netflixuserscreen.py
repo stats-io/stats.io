@@ -1,11 +1,11 @@
-from kivymd.uix.screen import MDScreen
-from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
-from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
-
-from app.backend.NetflixTopLists import NetflixTopLists
-from app.backend.NetflixCharts import NetflixCharts
-from app.backend.NetflixMainScreen import NetflixMainScreen
 import pandas as pd
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
+from kivymd.uix.screen import MDScreen
+
+from app.backend.netflixcharts import NetflixCharts
+from app.backend.netflixmainscreen import NetflixMainScreen
+from app.backend.netflixtoplists import NetflixTopLists
 
 
 class CustomOneLineListItem(OneLineListItem):
@@ -36,23 +36,22 @@ class NetflixUserScreen(MDScreen):
         self.generate_history()
         self.create_top_list()
 
-
     def generate_history(self):
-        with open('app/backend/BigFile.csv', 'r') as file:
+        with open("app/backend/files/BigFile.csv", "r") as file:
             df = pd.read_csv(file)
-            data_array = df.to_dict('records')
+            data_array = df.to_dict("records")
             self.create_list(data_array)
-
 
     def create_list(self, data_array):
         lista = self.manager.get_screen("netflixuserscreen").ids.netflixhistoryscreen
         for row in range(len(data_array)):
-            third = ', '.join(list(set(data_array[row]['Dates'].replace('[', '').replace(']', '').replace('\'', '').split(', '))))
+            third = ", ".join(
+                list(set(data_array[row]["Dates"].replace("[", "").replace("]", "").replace("\"", "").split(", "))))
             lista.add_widget(
                 CustomThreeLineListItem(
-                    text = data_array[row]['title'],
-                    secondary_text = data_array[row]['genres'].replace('[', '').replace(']', '').replace('\'', ''),
-                    tertiary_text = third,
+                    text=data_array[row]["title"],
+                    secondary_text=data_array[row]["genres"].replace("[", "").replace("]", "").replace("\"", ""),
+                    tertiary_text=third,
                 )
             )
 
@@ -61,7 +60,7 @@ class NetflixUserScreen(MDScreen):
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopActors.iterrows():
             list_item = CustomOneLineListItem(
-                text = str(index) + ". " + ind1
+                text=str(index) + ". " + ind1
             )
             index += 1
             custom_list.add_widget(list_item, 8)
@@ -69,7 +68,7 @@ class NetflixUserScreen(MDScreen):
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopGenres.iterrows():
             list_item = CustomOneLineListItem(
-                text = str(index) + ". " + ind1
+                text=str(index) + ". " + ind1
             )
             index += 1
             custom_list.add_widget(list_item, 6)
@@ -77,7 +76,7 @@ class NetflixUserScreen(MDScreen):
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopSeries.iterrows():
             list_item = CustomOneLineListItem(
-                text = str(index) + ". " + row1[0]
+                text=str(index) + ". " + row1[0]
             )
             index += 1
             custom_list.add_widget(list_item, 4)
@@ -85,7 +84,7 @@ class NetflixUserScreen(MDScreen):
         index = 1
         for ind1, row1 in self.netflix_top_lists.MostPopularWatched.iterrows():
             list_item = CustomOneLineListItem(
-                text = str(index) + ". " + row1[0]
+                text=str(index) + ". " + row1[0]
             )
             index += 1
             custom_list.add_widget(list_item, 2)
@@ -93,7 +92,7 @@ class NetflixUserScreen(MDScreen):
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopDayWatched.iterrows():
             list_item = CustomOneLineListItem(
-                text = str(index) + ". " + str(row1)
+                text=str(index) + ". " + str(row1)
             )
             index += 1
             custom_list.add_widget(list_item, 0)

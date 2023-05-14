@@ -1,10 +1,12 @@
 import json
+
 import pandas as pd
 import requests
 
+
 class TMBDApi:
 
-    def __init__(self, path = None, get_act_and_gen = 0, daAtarray = None):
+    def __init__(self, path=None, get_act_and_gen=0, daAtarray=None):
         if path == '':
             self.dataArray = daAtarray
         else:
@@ -18,8 +20,8 @@ class TMBDApi:
         MovieURL = f"https://api.themoviedb.org/3/search/movie?api_key=&query="
 
         for i, row in self.dataArray.iterrows():
-            title = row['title'].replace(' ','+')
-            title = title.replace('#',"")
+            title = row['title'].replace(' ', '+')
+            title = title.replace('#', "")
             if row['type'] == 'series':
                 Series_response = requests.get(f'{SeriesURL}{title}')
                 Series_data_dic = json.loads(Series_response.content)
@@ -31,7 +33,7 @@ class TMBDApi:
                     Film_data_dic = json.loads(Film_response.content)
                     try:
                         result = Film_data_dic['results'][00]
-                        self.dataArray.loc[i,'type'] = 'film'
+                        self.dataArray.loc[i, 'type'] = 'film'
                         self.dataArray.loc[i, 'Release Date'] = result['release_date']
                     except IndexError:
                         continue
@@ -46,7 +48,7 @@ class TMBDApi:
                     Series_data_dic = json.loads(Series_response.content)
                     try:
                         result = Series_data_dic['results'][00]
-                        self.dataArray.loc[i,'type'] = 'series'
+                        self.dataArray.loc[i, 'type'] = 'series'
                         self.dataArray.loc[i, 'Release Date'] = result['first_air_date']
                     except IndexError:
                         continue
@@ -59,7 +61,8 @@ class TMBDApi:
             self.getGenres()
 
     def getActors(self):
-        self.dataArray.loc[:,('actress')] = self.dataArray.loc[:,('actress')].apply(lambda x: [] if pd.isna(x) else eval(x))
+        self.dataArray.loc[:, ('actress')] = self.dataArray.loc[:, ('actress')].apply(
+            lambda x: [] if pd.isna(x) else eval(x))
 
         SeriesURL = "https://api.themoviedb.org/3/tv/"
         MovieURL = "https://api.themoviedb.org/3/movie/"
@@ -74,11 +77,11 @@ class TMBDApi:
             actress = json.loads(req.content)
             credits = []
 
-            for j,data in enumerate(actress['cast']):
+            for j, data in enumerate(actress['cast']):
                 if j >= 10:
                     break
                 credits.append(data['name'])
-            self.dataArray.at[i,'actress'] = credits
+            self.dataArray.at[i, 'actress'] = credits
 
     def getGenres(self):
 

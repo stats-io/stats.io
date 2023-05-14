@@ -1,10 +1,12 @@
-import pandas as pd
-import numpy as np
 import datetime
+
+import numpy as np
+import pandas as pd
+
 
 class NetflixDataAdapter:
 
-    def __init__(self,path):
+    def __init__(self, path):
         self.csvFile = path
 
     def remakeFile(self):
@@ -14,7 +16,7 @@ class NetflixDataAdapter:
         else:
             self.remakeFileShort()
 
-    def GetTotalTime(self,data):
+    def GetTotalTime(self, data):
         self.title = {}
         self.title_final = {}
         for row in data.iterrows():
@@ -35,7 +37,7 @@ class NetflixDataAdapter:
                 self.title_final[vkey] = self.title[key]
         return self.title_final
 
-    def FilmOrSeries(self,data):
+    def FilmOrSeries(self, data):
         self.film_tab = {}
         self.series_tab = {}
         for row in data.iterrows():
@@ -75,7 +77,7 @@ class NetflixDataAdapter:
                 self.film_tab[title] = self.film_tab.get(title, 0) + 1
         return self.film_tab, self.series_tab, self.film_tab_dates, self.series_tab_dates
 
-    def GetData(self,data):
+    def GetData(self, data):
 
         self.title = {}
         for row in data.iterrows():
@@ -101,13 +103,15 @@ class NetflixDataAdapter:
         self.data = self.data.loc[self.data['Supplemental Video Type'].isna()]
         self.TotalData = self.GetData(self.data)
         self.TotalTime = self.GetTotalTime(self.data)
-        self.film_ep , self.series_ep = self.FilmOrSeries(self.data)
+        self.film_ep, self.series_ep = self.FilmOrSeries(self.data)
         self.adapted_data = []
         for key, value in self.film_ep.items():
-            new = ({'title': f'{key}', 'type': 'film', 'number_of_episodes': value, 'SumOfTime': self.TotalTime[key], 'Dates': self.TotalData[key]})
+            new = ({'title': f'{key}', 'type': 'film', 'number_of_episodes': value, 'SumOfTime': self.TotalTime[key],
+                    'Dates': self.TotalData[key]})
             self.adapted_data.append(new)
         for key, value in self.series_ep.items():
-            new = ({'title': f'{key}', 'type': 'series', 'number_of_episodes': value, 'SumOfTime': self.TotalTime[key], 'Dates': self.TotalData[key]})
+            new = ({'title': f'{key}', 'type': 'series', 'number_of_episodes': value, 'SumOfTime': self.TotalTime[key],
+                    'Dates': self.TotalData[key]})
             self.adapted_data.append(new)
 
         self.df = pd.DataFrame(self.adapted_data)
@@ -118,7 +122,6 @@ class NetflixDataAdapter:
         self.df.insert(5, 'actress', value=np.nan)
         self.df.to_csv('./adapted_data.csv', index=False)
         self.csvFile = './adapted_data.csv'
-
 
     def remakeFileShort(self):
         self.data = pd.read_csv(self.csvFile)

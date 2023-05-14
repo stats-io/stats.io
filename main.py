@@ -8,7 +8,6 @@ from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadin
 from app.frontend.netflixnewdatascreen.netflixnewdatascreen import NetflixNewDataScreen
 from app.frontend.netflixuserscreen.netflixuserscreen import NetflixUserScreen
 
-
 Builder.load_file("main.kv")
 Builder.load_file("app/frontend/mainscreen/mainscreen.kv")
 Builder.load_file("app/frontend/netflixloadingscreen/netflixloadingscreen.kv")

@@ -1,8 +1,6 @@
-from kivymd.app import MDApp
-import pandas as pd
-from kivymd.uix.filemanager import MDFileManager
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivymd.uix.bottomnavigation import MDBottomNavigation, MDBottomNavigationItem
+from kivymd.app import MDApp
+from kivymd.uix.bottomnavigation import MDBottomNavigationItem
 
 
 class NetflixHistoryScreen(MDBottomNavigationItem):

@@ -1,101 +1,101 @@
 <NetflixUserScreen>:
-    name: 'netflixuserscreen'
+    name: "netflixuserscreen"
 
     MDFloatLayout:
 
         MDBottomNavigation:
-            panel_color: '#E0E0E0'
-            text_color_active: '#080808'
+            panel_color: "#E0E0E0"
+            text_color_active: "#080808"
             use_text: False
 
             MDBottomNavigationItem:
-                name: 'netflixmainscreen'
-                md_bg_color: '#080808'
-                text: 'main'
-                icon: 'home'
+                name: "netflixmainscreen"
+                md_bg_color: "#080808"
+                text: "main"
+                icon: "home"
 
                 MDLabel:
-                    text: 'General info about'
+                    text: "General info about"
                     font_size: root.height * 0.045
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.8}
-                    halign: 'center'
-                    color: '#E0E0E0'
+                    pos_hint: {"center_x": 0.5, "center_y": 0.8}
+                    halign: "center"
+                    color: "#E0E0E0"
                     bold: True
 
                 MDLabel:
-                    text: 'your viewing history'
+                    text: "your viewing history"
                     font_size: root.height * 0.025
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.75}
-                    halign: 'center'
-                    color: '#E0E0E0'
+                    pos_hint: {"center_x": 0.5, "center_y": 0.75}
+                    halign: "center"
+                    color: "#E0E0E0"
 
                 MDCard:
                     size_hint: 0.8, 0.2
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.45}
-                    md_bg_color: '#A7F500'
+                    pos_hint: {"center_x": 0.5, "center_y": 0.45}
+                    md_bg_color: "#A7F500"
 
                     BoxLayout:
-                        orientation: 'vertical'
+                        orientation: "vertical"
 
                         MDBoxLayout:
                             size_hint_y: 0.25
 
                         MDBoxLayout:
                             size_hint_y: 0.5
-                            orientation: 'vertical'
+                            orientation: "vertical"
                             MDLabel:
-                                text: 'Total movies watched'
+                                text: "Total movies watched"
                                 font_size: root.height * 0.03
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                halign: 'center'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                halign: "center"
 
                             MDLabel:
                                 text: str(root.netflix_main_screen.TotalMoviesWatched)
                                 font_size: root.height * 0.025
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                halign: 'center'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                halign: "center"
 
                         MDBoxLayout:
                             size_hint_y: 0.25
 
                 MDCard:
                     size_hint: 0.8, 0.2
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.2}
-                    line_color: '#A7F500'
+                    pos_hint: {"center_x": 0.5, "center_y": 0.2}
+                    line_color: "#A7F500"
                     line_width: 1.0
-                    md_bg_color: '#080808'
+                    md_bg_color: "#080808"
 
                     MDBoxLayout:
-                        orientation: 'vertical'
+                        orientation: "vertical"
 
                         MDBoxLayout:
                             size_hint_y: 0.25
 
                         MDBoxLayout:
                             size_hint_y: 0.5
-                            orientation: 'vertical'
+                            orientation: "vertical"
                             MDLabel:
-                                text: 'Total series watched'
-                                color: '#A7F500'
+                                text: "Total series watched"
+                                color: "#A7F500"
                                 font_size: root.height * 0.03
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                halign: 'center'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                halign: "center"
                             
                             MDLabel:
                                 text: str(root.netflix_main_screen.TotalSeriesWatched)
-                                color: '#A7F500'
+                                color: "#A7F500"
                                 font_size: root.height * 0.025
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.4}
-                                halign: 'center'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.4}
+                                halign: "center"
                         
                         MDBoxLayout:
                             size_hint_y: 0.25
 
 
             MDBottomNavigationItem:
-                md_bg_color: '#080808'
-                text: 'History'
-                icon: 'history'
+                md_bg_color: "#080808"
+                text: "History"
+                icon: "history"
 
                 MDFloatLayout:
                     MDScrollView:
@@ -103,15 +103,27 @@
                             id: netflixhistoryscreen
                             divider_color: "#E0E0E0"
                             divider: "Full"
-                            spacing: dp(10)
                             padding: dp(20)
+
+                            OneLineListItem:
+                                height: root.height * 0.1
+                                MDCard:
+                                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                    md_bg_color: "#080808"
+                                    MDBoxLayout:
+                                        MDLabel:
+                                            text: "Your viewing history"
+                                            color: "#E0E0E0"
+                                            font_size: root.height * 0.035
+                                            halign: "center"
+                                            bold: True
 
 
             MDBottomNavigationItem:
-                name: 'netflixchartsscreen'
-                md_bg_color: '#080808'
-                text: 'Charts'
-                icon: 'chart-line'
+                name: "netflixchartsscreen"
+                md_bg_color: "#080808"
+                text: "Charts"
+                icon: "chart-line"
 
                 MDBoxLayout:
 
@@ -171,14 +183,14 @@
 
 
             MDBottomNavigationItem:
-                name: 'netflixtoplistscreen'
-                md_bg_color: '#080808'
-                text: 'Top List'
-                icon: 'arrow-top-right'
+                name: "netflixtoplistscreen"
+                md_bg_color: "#080808"
+                text: "Top List"
+                icon: "arrow-top-right"
 
                 MDScrollView:
                     size_hint: 1, 1
-                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    pos_hint: {"center_x": .5, "center_y": .5}
 
                     MDList:
                         id: netflixtoplistscreen
@@ -191,20 +203,20 @@
                             height: root.height * 0.1
                             MDCard:
                                 size_hint: 0.8, 0.8
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
-                                line_color: '#A7F500'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.2}
+                                line_color: "#A7F500"
                                 line_width: 1.0
-                                md_bg_color: '#080808'
+                                md_bg_color: "#080808"
 
                                 MDBoxLayout:
-                                    orientation: 'vertical'
+                                    orientation: "vertical"
 
                                     MDLabel:
-                                        text: 'Top actors'
-                                        color: '#A7F500'
+                                        text: "Top actors"
+                                        color: "#A7F500"
                                         font_size: root.height * 0.04
-                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                        halign: 'center'
+                                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                        halign: "center"
 
                         MDWidget:
                             height: root.height * 0.5
@@ -213,17 +225,17 @@
                             height: root.height * 0.1
                             MDCard:
                                 size_hint: 0.8, 0.8
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.45}
-                                md_bg_color: '#A7F500'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.45}
+                                md_bg_color: "#A7F500"
 
                                 MDBoxLayout:
-                                    orientation: 'vertical'
+                                    orientation: "vertical"
 
                                     MDLabel:
-                                        text: 'Top genres'
+                                        text: "Top genres"
                                         font_size: root.height * 0.04
-                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                        halign: 'center'
+                                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                        halign: "center"
 
                         MDWidget:
                             height: root.height * 0.05
@@ -232,20 +244,20 @@
                             height: root.height * 0.1
                             MDCard:
                                 size_hint: 0.8, 0.8
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
-                                line_color: '#A7F500'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.2}
+                                line_color: "#A7F500"
                                 line_width: 1.0
-                                md_bg_color: '#080808'
+                                md_bg_color: "#080808"
 
                                 MDBoxLayout:
-                                    orientation: 'vertical'
+                                    orientation: "vertical"
 
                                     MDLabel:
-                                        text: 'Top series'
-                                        color: '#A7F500'
+                                        text: "Top series"
+                                        color: "#A7F500"
                                         font_size: root.height * 0.04
-                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                        halign: 'center'
+                                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                        halign: "center"
 
                         MDWidget:
                             height: root.height * 0.05
@@ -254,17 +266,17 @@
                             height: root.height * 0.2
                             MDCard:
                                 size_hint: 0.8, 0.8
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.45}
-                                md_bg_color: '#A7F500'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.45}
+                                md_bg_color: "#A7F500"
 
                                 MDBoxLayout:
-                                    orientation: 'vertical'
+                                    orientation: "vertical"
 
                                     MDLabel:
-                                        text: 'Most popular \nwatched'
+                                        text: "Most popular \nwatched"
                                         font_size: root.height * 0.04
-                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                        halign: 'center'
+                                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                        halign: "center"
 
                         MDWidget:
                             height: root.height * 0.5
@@ -273,34 +285,34 @@
                             height: root.height * 0.2
                             MDCard:
                                 size_hint: 0.8, 0.8
-                                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
-                                line_color: '#A7F500'
+                                pos_hint: {"center_x": 0.5, "center_y": 0.2}
+                                line_color: "#A7F500"
                                 line_width: 1.0
-                                md_bg_color: '#080808'
+                                md_bg_color: "#080808"
 
                                 MDBoxLayout:
-                                    orientation: 'vertical'
+                                    orientation: "vertical"
 
                                     MDLabel:
-                                        text: 'Top watched \nby day'
-                                        color: '#A7F500'
+                                        text: "Top watched \nby day"
+                                        color: "#A7F500"
                                         font_size: root.height * 0.04
-                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                                        halign: 'center'
+                                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                        halign: "center"
 
                         MDWidget:
                             height: root.height * 0.5
 
 
 <CustomOneLineListItem>:
-    text_color: '#E0E0E0'
-    theme_text_color: 'Custom'
-    font_style: 'H4'
+    text_color: "#E0E0E0"
+    theme_text_color: "Custom"
+    font_style: "H4"
 
 <CustomTwoLineListItem>:
-    text_color: '#E0E0E0'
-    theme_text_color: 'Custom'
-    font_style: 'H4'
+    text_color: "#E0E0E0"
+    theme_text_color: "Custom"
+    font_style: "H4"
     secondary_theme_text_color: "Custom"
     secondary_text_color: "#A7F500"
 
