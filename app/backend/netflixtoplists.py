@@ -9,7 +9,7 @@ class NetflixTopLists:
     def __init__(self, file="app/backend/files/Final_Data.csv"):
 
         self.csvFile = self.CSVFile(file)
-        if self.csvFile != None:
+        if self.csvFile is not None:
             self.TopActors = self.TopActors()
             self.TopGenres = self.TopGenres()
             self.TopSeries = self.TopSeries()
@@ -17,10 +17,11 @@ class NetflixTopLists:
             self.TopDayWatched = self.TopDayWatched()
 
     def CSVFile(self, file):
-        f = "app/backend/files/"
+        f = "app/backend/files"
         try:
             df = pd.read_csv(file)
             test = 1
+            return file
         except pd.errors.EmptyDataError:
             test = 0
 
@@ -49,7 +50,7 @@ class NetflixTopLists:
         print(self.TopDayWatched)
 
     def TopActors(self):
-        self.DataArray = pd.read_csv(self.csvFile)
+        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         actor_counter = {}
         for ind, row in self.DataArray.iterrows():
             actors = row["actress"]
@@ -74,6 +75,7 @@ class NetflixTopLists:
         return Actors
 
     def TopGenres(self):
+        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         genres_counter = {}
         for ind, row in self.DataArray.iterrows():
             genres = row["genres"]
@@ -104,7 +106,7 @@ class NetflixTopLists:
         return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
 
     def TopSeries(self):
-        DataArray = pd.read_csv(self.csvFile)
+        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         if np.isnan(DataArray.iloc[0, 6]):
             DataArray = DataArray.sort_values("number_of_episodes", ascending=False).head(10)
             Result = DataArray[["title", "number_of_episodes"]].copy()
@@ -121,7 +123,7 @@ class NetflixTopLists:
             return Result
 
     def MostPopularWatched(self):
-        DataArray = pd.read_csv(self.csvFile)
+        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         DataArray = DataArray.sort_values("popularity", ascending=False).head(10)
         Result = DataArray[["title", "popularity"]].copy()
         Result.reset_index(inplace=True)

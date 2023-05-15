@@ -2,7 +2,7 @@ import pandas as pd
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.screen import MDScreen
-
+import os
 from app.backend.netflixcharts import NetflixCharts
 from app.backend.netflixmain import NetflixMainScreen
 from app.backend.netflixtoplists import NetflixTopLists
@@ -21,13 +21,13 @@ class CustomThreeLineListItem(ThreeLineListItem):
 
 
 class NetflixUserScreen(MDScreen):
-     def __init__(self, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.netflix_main_screen = NetflixMainScreen()
         self.netflix_top_lists = NetflixTopLists()
         self.charts = NetflixCharts()
 
-     def generate_charts(self):
+    def generate_charts(self):
         self.manager.get_screen("netflixuserscreen").ids.total_movies.text = str(self.netflix_main_screen.CountMovies())
         self.manager.get_screen("netflixuserscreen").ids.total_series.text = str(self.netflix_main_screen.CountSeries())
         charts_screen = self.manager.get_screen("netflixuserscreen").ids
@@ -36,16 +36,39 @@ class NetflixUserScreen(MDScreen):
         charts_screen.years_chart.add_widget(FigureCanvasKivyAgg(self.charts.Favourite_year()))
         charts_screen.watch_count_chart.add_widget(FigureCanvasKivyAgg(self.charts.DatesChart()))
         charts_screen.time_at_series.add_widget(FigureCanvasKivyAgg(self.charts.TimeAtSeries()))
-        
+
         self.generate_history()
         self.create_top_list()
 
-     def generate_history(self):
-        df = pd.read_csv("app/backend/files/Final_Data.csv")
+    def CSVFile(self, file):
+        f = "app/backend/files"
+        try:
+            df = pd.read_csv(file)
+            test = 1
+            return file
+        except pd.errors.EmptyDataError:
+            test = 0
+
+        if test == 0:
+            files = [f"{f}/LastSmallData.csv", f"{f}/LastBigData.csv"]
+            latest_file = max(files, key=os.path.getmtime)
+            file = latest_file
+            try:
+                df = pd.read_csv(file)
+
+            except pd.errors.EmptyDataError:
+                if latest_file == f"{f}/LastBigData.csv":
+                    file = f"{f}/LastSmallData.csv"
+                else:
+                    file = f"{f}/LastBigData.csv"
+        return file
+
+    def generate_history(self):
+        df = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         data_array = df.to_dict("records")
         self.create_list(data_array)
 
-     def create_list(self, data_array):
+    def create_list(self, data_array):
         lista = self.manager.get_screen("netflixuserscreen").ids.netflixhistoryscreen
         for row in range(len(data_array)):
             third = ", ".join(
@@ -58,7 +81,7 @@ class NetflixUserScreen(MDScreen):
                 )
             )
 
-     def create_top_list(self):
+    def create_top_list(self):
         custom_list = self.manager.get_screen("netflixuserscreen").ids.netflixtoplistscreen
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopActors.iterrows():
@@ -87,8 +110,13 @@ class NetflixUserScreen(MDScreen):
 
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopSeries.iterrows():
-            line = row1[1].split(':')
-            second_text = f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
+            second_text = ""
+            if type(row1[1]) == int:
+                second_text = f"Number of episodes: {row1[1]}"
+            else:
+                line = row1[1].split(':')
+                second_text = f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
+
             list_item = CustomTwoLineListItem(
                 text=str(index) + ". " + row1[0],
                 secondary_text=second_text

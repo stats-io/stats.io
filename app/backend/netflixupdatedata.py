@@ -45,9 +45,9 @@ class NetflixUpdateData():
             self.data_from_api = self.get_Genres_and_Actors(self.data_from_api)
             self.dataArray = pd.concat([self.data_from_api, self.dataArray_from_db], ignore_index=True)
             if np.isnan(self.dataArray.iloc[0, 6]):
-                self.dataArray.to_csv("app/backend/files/LastSmallData.csv")
+                self.dataArray.to_csv("app/backend/files/LastSmallData.csv",index=False)
             else:
-                self.dataArray.to_csv("app/backend/files/LastBigData.csv")
+                self.dataArray.to_csv("app/backend/files/LastBigData.csv", index=False)
             self.dataArray.to_csv("app/backend/files/Final_Data.csv", index=False)
             self.fetchintoLocalDb(self.dataArray, 1)
         return 1

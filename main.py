@@ -23,10 +23,11 @@ class StatsApp(MDApp):
     def build(self):
         self.title = "stats.io"
         return WindowManager()
-    
+
     def on_stop(self):
         with open('app/backend/files/Final_Data.csv', 'w', newline='') as CsvFile:
             CsvFile.truncate()
+
 
 if __name__ == "__main__":
     StatsApp().run()

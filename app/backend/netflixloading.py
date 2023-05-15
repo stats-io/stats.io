@@ -17,7 +17,7 @@ class NetflixLoadingScreen:
         return (end-start)/5
 
     def Time(self):
-        self.update = UD('app/backend/files/BigCsv.csv')
+        self.update = UD('app/backend/files/test.csv')
         time = self.TimeTest()
         df = pd.read_csv(self.update.csvFile)
         size = len(df)

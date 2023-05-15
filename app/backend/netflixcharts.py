@@ -4,16 +4,18 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
+
 class NetflixCharts:
-    
+
     def __init__(self, file="app/backend/files/Final_Data.csv"):
         self.csvFile = self.CSVFile(file)
 
     def CSVFile(self, file):
-        f = "app/backend/files/"
+        f = "app/backend/files"
         try:
             df = pd.read_csv(file)
             test = 1
+            return file
         except pd.errors.EmptyDataError:
             test = 0
 
@@ -23,6 +25,7 @@ class NetflixCharts:
             file = latest_file
             try:
                 df = pd.read_csv(file)
+
             except pd.errors.EmptyDataError:
                 if latest_file == f"{f}/LastBigData.csv":
                     file = f"{f}/LastSmallData.csv"
@@ -40,7 +43,7 @@ class NetflixCharts:
         ax.spines["left"].set_color("#A7F500")
 
     def DatesChart(self):
-        self.DataArray = pd.read_csv(self.csvFile)
+        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         dates_counter = {}
         for ind, row in self.DataArray.iterrows():
             dates = row["Dates"]
@@ -122,7 +125,7 @@ class NetflixCharts:
 
     def GenresChart(self):
         genres_counter = {}
-        self.DataArray = pd.read_csv(self.csvFile)
+        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         for ind, row in self.DataArray.iterrows():
             genres = row["genres"]
             genres = eval(genres)
@@ -157,7 +160,7 @@ class NetflixCharts:
         return plt.gcf()
 
     def Favourite_year(self):
-        Release_year = pd.read_csv(self.csvFile)
+        Release_year = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         Release_year["Release Date"] = Release_year["Release Date"].str.slice(0, 4)
         Release_year = Release_year[["title", "Release Date"]]
         years_counter = {year: 0 for year in range(2000, 2024)}
@@ -189,7 +192,7 @@ class NetflixCharts:
         return plt.gcf()
 
     def TimeAtSeries(self):
-        DataArray = pd.read_csv(self.csvFile)
+        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
         if np.isnan(DataArray.iloc[0, 6]):
             DataArray = DataArray.sort_values("number_of_episodes").tail(20)
             Result = DataArray[["title", "number_of_episodes"]].copy()
