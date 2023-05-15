@@ -9,6 +9,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Install autopoint
+        run: sudo apt-get install autopoint
 
       # used to cache dependencies with a timeout
       - name: Get Date
