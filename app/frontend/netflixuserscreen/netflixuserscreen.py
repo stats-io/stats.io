@@ -21,18 +21,22 @@ class CustomThreeLineListItem(ThreeLineListItem):
 
 
 class NetflixUserScreen(MDScreen):
-    netflix_main_screen = NetflixMainScreen()
-    netflix_top_lists = NetflixTopLists()
-    charts = NetflixCharts()
+     def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.netflix_main_screen = NetflixMainScreen()
+        self.netflix_top_lists = NetflixTopLists()
+        self.charts = NetflixCharts()
 
     def generate_charts(self):
+        self.manager.get_screen("netflixuserscreen").ids.total_movies.text = str(self.netflix_main_screen.CountMovies())
+        self.manager.get_screen("netflixuserscreen").ids.total_series.text = str(self.netflix_main_screen.CountSeries())
         charts_screen = self.manager.get_screen("netflixuserscreen").ids
         charts_screen.genres_chart.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
         charts_screen.movies_series_chart.add_widget(FigureCanvasKivyAgg(self.charts.SeriesvsFilmChart()))
         charts_screen.years_chart.add_widget(FigureCanvasKivyAgg(self.charts.Favourite_year()))
         charts_screen.watch_count_chart.add_widget(FigureCanvasKivyAgg(self.charts.DatesChart()))
         charts_screen.time_at_series.add_widget(FigureCanvasKivyAgg(self.charts.TimeAtSeries()))
-
+        
         self.generate_history()
         self.create_top_list()
 
