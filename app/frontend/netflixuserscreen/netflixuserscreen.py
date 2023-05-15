@@ -4,7 +4,7 @@ from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.screen import MDScreen
 
 from app.backend.netflixcharts import NetflixCharts
-from app.backend.netflixmainscreen import NetflixMainScreen
+from app.backend.netflixmain import NetflixMainScreen
 from app.backend.netflixtoplists import NetflixTopLists
 
 
@@ -45,11 +45,11 @@ class NetflixUserScreen(MDScreen):
         lista = self.manager.get_screen("netflixuserscreen").ids.netflixhistoryscreen
         for row in range(len(data_array)):
             third = ", ".join(
-                list(set(data_array[row]["Dates"].replace("[", "").replace("]", "").replace("\"", "").split(", "))))
+                list(set(data_array[row]["Dates"].replace("[", "").replace("]", "").replace("'", "").split(", "))))
             lista.add_widget(
                 CustomThreeLineListItem(
                     text=data_array[row]["title"],
-                    secondary_text=data_array[row]["genres"].replace("[", "").replace("]", "").replace("\"", ""),
+                    secondary_text=data_array[row]["genres"].replace("[", "").replace("]", "").replace("'", ""),
                     tertiary_text=third,
                 )
             )

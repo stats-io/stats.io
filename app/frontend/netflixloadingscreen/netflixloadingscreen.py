@@ -4,7 +4,7 @@ import time
 from kivy.clock import Clock
 import threading
 from kivymd.uix.screen import MDScreen
-import app.backend.NetflixLoadingScreen as LS
+import app.backend.netflixloading as LS
 
 
 class NetflixLoadingScreen(MDScreen):
@@ -28,7 +28,8 @@ class NetflixLoadingScreen(MDScreen):
         self.X = LS.NetflixLoadingScreen()
         self.time, self.num = self.X.Time()
         self.num = math.ceil(self.num * 1.5)
-        self.manager.get_screen("netflixloadingscreen").ids.estimatedtime.text = f"Estimated Time {round((self.num * self.time),2)}s"
+        self.manager.get_screen(
+            "netflixloadingscreen").ids.estimatedtime.text = f"Estimated Time {round((self.num * self.time), 2)}s"
         watek2 = threading.Thread(target=self.X.StartUpdatingData)
         watek2.start()
         self.Zegar = Clock.schedule_interval(self._update_label, self.time)
