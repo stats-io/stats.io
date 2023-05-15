@@ -1,4 +1,6 @@
 import math
+import time
+
 from kivy.clock import Clock
 import threading
 from kivymd.uix.screen import MDScreen
@@ -13,27 +15,27 @@ class NetflixLoadingScreen(MDScreen):
             self._counter += 1
             self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{self._counter}/{self.num}"
         else:
+            # Poprawic zeby zapelnialo 100/100
             self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{self.num}/{self.num}"
             while True:
-
+                time.sleep(1)
                 if (self.X.finishedLoading == 1): break
-            self.manager.current = "netflixuserscreen"
+            self.Zegar.cancel()
             self.manager.get_screen("netflixuserscreen").generate_charts()
+            self.manager.current = "netflixuserscreen"
 
     def _animation(self, *args):
         self.X = LS.NetflixLoadingScreen()
         self.time, self.num = self.X.Time()
         self.num = math.ceil(self.num * 1.5)
         self.manager.get_screen("netflixloadingscreen").ids.estimatedtime.text = f"Estimated Time {round((self.num * self.time),2)}s"
-        watek1 = threading.Thread(target=self._update_label)
         watek2 = threading.Thread(target=self.X.StartUpdatingData)
-        watek1.start()
         watek2.start()
-        Clock.schedule_interval(self._update_label, self.time)
-
+        self.Zegar = Clock.schedule_interval(self._update_label, self.time)
 
     def start_animation(self):
-        Clock.schedule_once(self._animation, 0)
+        self.Zegar = Clock
+        self.Zegar.schedule_once(self._animation, 0)
 
     def skip_animation(self):
         self.manager.get_screen("netflixuserscreen").generate_charts()

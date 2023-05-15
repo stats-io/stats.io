@@ -37,19 +37,19 @@ class NetflixUserScreen(MDScreen):
         self.create_top_list()
 
     def generate_history(self):
-        with open("app/backend/files/BigFile.csv", "r") as file:
-            df = pd.read_csv(file)
-            data_array = df.to_dict("records")
-            self.create_list(data_array)
+        df = pd.read_csv("app/backend/files/BigFile.csv")
+        data_array = df.to_dict("records")
+        self.create_list(data_array)
 
     def create_list(self, data_array):
         lista = self.manager.get_screen("netflixuserscreen").ids.netflixhistoryscreen
         for row in range(len(data_array)):
-            third = ", ".join(list(set(data_array[row]["Dates"].replace("[", "").replace("]", "").replace("'", "").split(", "))))
+            third = ", ".join(
+                list(set(data_array[row]["Dates"].replace("[", "").replace("]", "").replace("\"", "").split(", "))))
             lista.add_widget(
                 CustomThreeLineListItem(
                     text=data_array[row]["title"],
-                    secondary_text=data_array[row]["genres"].replace("[", "").replace("]", "").replace("'", ""),
+                    secondary_text=data_array[row]["genres"].replace("[", "").replace("]", "").replace("\"", ""),
                     tertiary_text=third,
                 )
             )
@@ -90,6 +90,7 @@ class NetflixUserScreen(MDScreen):
 
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopDayWatched.iterrows():
+            print()
             list_item = CustomOneLineListItem(
                 text=str(index) + ". " + str(row1)
             )

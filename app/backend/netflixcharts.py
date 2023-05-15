@@ -1,13 +1,13 @@
 from datetime import datetime
-
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
 
 class NetflixCharts:
 
-    def __init__(self, file=""):
-        self.csvFile = "app/backend/files/BigFile.csv"
+    def __init__(self, file="app/backend/files/Final_Data.csv"):
+        self.csvFile = file
 
     def _adjust_colors_candles(self, fig, ax):
         ax.set_facecolor("#080808")
@@ -168,19 +168,28 @@ class NetflixCharts:
         return plt.gcf()
 
     def TimeAtSeries(self):
-        DataArray = pd.read_csv("app/backend/files/BigFile.csv")
-        DataArray = DataArray.sort_values("SumOfTime").tail(20)
-        Result = DataArray[["title", "SumOfTime"]].copy()
-        Result = Result[Result["SumOfTime"] >= 600]
-        Result = Result.reset_index(drop=True)
-        fig, ax = plt.subplots()
-
-        ax.barh(Result["title"], Result["SumOfTime"] / 60, color="#A7F500")
-        ax.set_ylabel("Tytuły")
-        ax.tick_params(axis="y", labelsize=8)
-
-        self._adjust_colors_candles(fig, ax)
-
-        ax.set_title("Most time spent shows", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+        DataArray = pd.read_csv(self.csvFile)
+        if np.isnan(DataArray.iloc[0, 6]):
+            DataArray = DataArray.sort_values("number_of_episodes").tail(20)
+            Result = DataArray[["title", "number_of_episodes"]].copy()
+            Result = Result[Result["number_of_episodes"] >= 10]
+            Result = Result.reset_index(drop=True)
+            fig, ax = plt.subplots()
+            ax.barh(Result["title"], Result["number_of_episodes"], color="#A7F500")
+            ax.set_ylabel("Tytuły")
+            ax.tick_params(axis="y", labelsize=8)
+            self._adjust_colors_candles(fig, ax)
+            ax.set_title("Most episodes watched", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+        else:
+            DataArray = DataArray.sort_values("SumOfTime").tail(20)
+            Result = DataArray[["title", "SumOfTime"]].copy()
+            Result = Result[Result["SumOfTime"] >= 600]
+            Result = Result.reset_index(drop=True)
+            fig, ax = plt.subplots()
+            ax.barh(Result["title"], Result["SumOfTime"] / 60, color="#A7F500")
+            ax.set_ylabel("Tytuły")
+            ax.tick_params(axis="y", labelsize=8)
+            self._adjust_colors_candles(fig, ax)
+            ax.set_title("Most time spent shows", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
 
         return plt.gcf()
