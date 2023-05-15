@@ -2,11 +2,11 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import os
 
 class NetflixCharts:
     
-     def __init__(self, file="app/backend/files/Final_Data.csv"):
+    def __init__(self, file="app/backend/files/Final_Data.csv"):
         self.csvFile = self.CSVFile(file)
 
     def CSVFile(self, file):
