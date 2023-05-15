@@ -50,7 +50,8 @@
                                 halign: "center"
 
                             MDLabel:
-                                text: str(root.netflix_main_screen.TotalMoviesWatched)
+                                id: total_movies
+                                text: ""
                                 font_size: root.height * 0.025
                                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                 halign: "center"
@@ -82,7 +83,8 @@
                                 halign: "center"
                             
                             MDLabel:
-                                text: str(root.netflix_main_screen.TotalSeriesWatched)
+                                id: total_series
+                                text: ""
                                 color: "#A7F500"
                                 font_size: root.height * 0.025
                                 pos_hint: {"center_x": 0.5, "center_y": 0.4}
