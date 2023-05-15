@@ -27,7 +27,7 @@ class NetflixUserScreen(MDScreen):
         self.netflix_top_lists = NetflixTopLists()
         self.charts = NetflixCharts()
 
-    def generate_charts(self):
+     def generate_charts(self):
         self.manager.get_screen("netflixuserscreen").ids.total_movies.text = str(self.netflix_main_screen.CountMovies())
         self.manager.get_screen("netflixuserscreen").ids.total_series.text = str(self.netflix_main_screen.CountSeries())
         charts_screen = self.manager.get_screen("netflixuserscreen").ids
@@ -40,12 +40,12 @@ class NetflixUserScreen(MDScreen):
         self.generate_history()
         self.create_top_list()
 
-    def generate_history(self):
-        df = pd.read_csv("app/backend/files/BigFile.csv")
+     def generate_history(self):
+        df = pd.read_csv("app/backend/files/Final_Data.csv")
         data_array = df.to_dict("records")
         self.create_list(data_array)
 
-    def create_list(self, data_array):
+     def create_list(self, data_array):
         lista = self.manager.get_screen("netflixuserscreen").ids.netflixhistoryscreen
         for row in range(len(data_array)):
             third = ", ".join(
@@ -58,28 +58,40 @@ class NetflixUserScreen(MDScreen):
                 )
             )
 
-    def create_top_list(self):
+     def create_top_list(self):
         custom_list = self.manager.get_screen("netflixuserscreen").ids.netflixtoplistscreen
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopActors.iterrows():
-            list_item = CustomOneLineListItem(
-                text=str(index) + ". " + ind1
+            third_text = ""
+            for item in row1[1]:
+                third_text = f"{third_text} {item},"
+            list_item = CustomThreeLineListItem(
+                font_style="H6",
+                text_color="#E0E0E0",
+                secondary_text_color="#A7F500",
+                text=str(index) + ". " + ind1,
+                secondary_text=str(row1[0]) + " appearances in history",
+                tertiary_text=third_text
             )
             index += 1
             custom_list.add_widget(list_item, 8)
 
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopGenres.iterrows():
-            list_item = CustomOneLineListItem(
-                text=str(index) + ". " + ind1
+            list_item = CustomTwoLineListItem(
+                text=str(index) + ". " + ind1,
+                secondary_text=str(row1[0]) + " movies/series"
             )
             index += 1
             custom_list.add_widget(list_item, 6)
 
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopSeries.iterrows():
-            list_item = CustomOneLineListItem(
-                text=str(index) + ". " + row1[0]
+            line = row1[1].split(':')
+            second_text = f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
+            list_item = CustomTwoLineListItem(
+                text=str(index) + ". " + row1[0],
+                secondary_text=second_text
             )
             index += 1
             custom_list.add_widget(list_item, 4)
@@ -94,9 +106,18 @@ class NetflixUserScreen(MDScreen):
 
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopDayWatched.iterrows():
-            print()
-            list_item = CustomOneLineListItem(
-                text=str(index) + ". " + str(row1)
+            foo=""
+            for item, count in row1[1].items():
+                foo = f"{foo} {item} - {count},"
+            foo = foo[:-1]
+
+            list_item = CustomThreeLineListItem(
+                font_style="H6",
+                text_color="#E0E0E0",
+                secondary_text_color="#A7F500",
+                text=str(index) + ". " + str(ind1),
+                secondary_text=str(row1[0]) + " titles",
+                tertiary_text=foo
             )
             index += 1
             custom_list.add_widget(list_item, 0)
