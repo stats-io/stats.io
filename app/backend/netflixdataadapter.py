@@ -142,5 +142,5 @@ class NetflixDataAdapter:
         self.df.insert(6, "SumOfTime", value=np.nan)
         self.df.insert(8, "TMBDid", value=np.nan)
         self.df.insert(9, "Release Date", value=np.nan)
-        self.df.to_csv("./adapted_data.csv", index=False)
-        self.csvFile = "./adapted_data.csv"
+        self.df.to_csv("./app/backend/files/adapted_data.csv", index=False)
+        self.csvFile = "./app/backend/files/adapted_data.csv"
