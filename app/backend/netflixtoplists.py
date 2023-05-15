@@ -2,17 +2,44 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
-
+import os
 
 class NetflixTopLists:
 
-    def __init__(self, file="app/backend/files/BigFile.csv"):
-        self.csvFile = file
-        self.TopActors = self.TopActors()
-        self.TopGenres = self.TopGenres()
-        self.TopSeries = self.TopSeries()
-        self.MostPopularWatched = self.MostPopularWatched()
-        self.TopDayWatched = self.TopDayWatched()
+    def __init__(self, file="app/backend/files/Final_Data.csv"):
+
+        self.csvFile = self.CSVFile(file)
+        if self.csvFile != None:
+            self.TopActors = self.TopActors()
+            self.TopGenres = self.TopGenres()
+            self.TopSeries = self.TopSeries()
+            self.MostPopularWatched = self.MostPopularWatched()
+            self.TopDayWatched = self.TopDayWatched()
+
+    def CSVFile(self, file):
+        f = "app/backend/files/"
+        try:
+            df = pd.read_csv(file)
+            test = 1
+        except pd.errors.EmptyDataError:
+            test = 0
+
+        if test == 0:
+            files = [f"{f}/LastSmallData.csv", f"{f}/LastBigData.csv"]
+            latest_file = max(files, key=os.path.getmtime)
+            file = latest_file
+            try:
+                df = pd.read_csv(file)
+            except pd.errors.EmptyDataError:
+                if latest_file == f"{f}/LastBigData.csv":
+                    file = f"{f}/LastSmallData.csv"
+                else:
+                    file = f"{f}/LastBigData.csv"
+        try:
+            df = pd.read_csv(file)
+            return file
+        except pd.errors.EmptyDataError:
+            return None
 
     def Visualize(self):
         print(self.TopActors)
