@@ -98,27 +98,47 @@
                 md_bg_color: "#080808"
                 text: "History"
                 icon: "history"
+                id: netflixhistoryscreen
 
-                MDFloatLayout:
-                    MDScrollView:
-                        MDList:
-                            id: netflixhistoryscreen
-                            divider_color: "#E0E0E0"
-                            divider: "Full"
-                            padding: dp(20)
+                MDScrollView:
+                    MDGridLayout:
+                        id: historylist
+                        cols: 1
+                        padding: 20
+                        spacing: 10
+                        size_hint_y: None
+                        height: 60
 
-                            OneLineListItem:
-                                height: root.height * 0.1
-                                MDCard:
-                                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-                                    md_bg_color: "#080808"
-                                    MDBoxLayout:
-                                        MDLabel:
-                                            text: "Your viewing history"
-                                            color: "#E0E0E0"
-                                            font_size: root.height * 0.035
-                                            halign: "center"
-                                            bold: True
+                        MDLabel:
+                            text: "Your viewing history"
+                            theme_text_color: "Custom"
+                            text_color: "#E0E0E0"
+                            font_style: "H6"
+                            halign: "center"
+                            bold: True
+                            size_hint_y: None
+                            height: dp(60)
+
+                        MDTextField:
+                            id: textfield
+                            hint_text: "Search"
+                            icon_right: "magnify"
+                            mode: "rectangle"
+                            line_color_normal: "#E0E0E0"
+                            line_color_focus: "#A7F500"
+                            hint_text_color_normal: "#E0E0E0"
+                            hint_text_color_focus: "#A7F500"
+                            text_color_normal: "#E0E0E0"
+                            text_color_focus: "#A7F500"
+                            icon_right_color_normal: "#E0E0E0"
+                            icon_right_color_focus: "#A7F500"
+
+                        MDRaisedButton:
+                            text: "Search film or series"
+                            size_hint_x: root.width
+                            md_bg_color: "#E0E0E0"
+                            text_color: "#080808"
+                            on_release: root.search_history()
 
 
             MDBottomNavigationItem:
@@ -319,6 +339,20 @@
     secondary_theme_text_color: "Custom"
     secondary_text_color: "#A7F500"
     secondary_font_style: "Caption"
+
+<CustomButton>:
+    md_bg_color: "#080808"
+    on_release: root.show_bigger()
+    MDBoxLayout:
+        orientation: "vertical"
+        MDLabel:
+            id: one_text
+            text: ""
+            color: "#A7F500"
+        MDLabel:
+            id: two_text
+            text: ""
+            color: "#E0E0E0"
 
 <CustomThreeLineListItem>:
     theme_text_color: "Custom"

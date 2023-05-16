@@ -2,6 +2,8 @@ import pandas as pd
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.card import MDCard
+
 import os
 from app.backend.netflixcharts import NetflixCharts
 from app.backend.netflixmain import NetflixMainScreen
@@ -18,6 +20,18 @@ class CustomTwoLineListItem(TwoLineListItem):
 
 class CustomThreeLineListItem(ThreeLineListItem):
     pass
+
+
+class CustomButton(MDCard):
+    big = False
+
+    def show_bigger(self):
+        print(self.ids.one_text.text)
+        if self.big == False:
+            self.height = 80
+        else:
+            self.height = 60
+        self.big = not self.big
 
 
 class NetflixUserScreen(MDScreen):
@@ -37,7 +51,7 @@ class NetflixUserScreen(MDScreen):
         charts_screen.watch_count_chart.add_widget(FigureCanvasKivyAgg(self.charts.DatesChart()))
         charts_screen.time_at_series.add_widget(FigureCanvasKivyAgg(self.charts.TimeAtSeries()))
 
-        self.generate_history()
+        self.generate_history("")
         self.create_top_list()
 
     def CSVFile(self, file):
@@ -63,23 +77,35 @@ class NetflixUserScreen(MDScreen):
                     file = f"{f}/LastBigData.csv"
         return file
 
-    def generate_history(self):
-        df = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
-        data_array = df.to_dict("records")
+    def search_history(self):
+        text = self.manager.get_screen("netflixuserscreen").ids.textfield.text
+        self.generate_history(text)
+
+    def generate_history(self, text):
+        df = pd.read_csv(self.CSVFile("app/backend/files/test.csv"))
+        data_array = None
+        if text.strip() == "":
+            data_array = df.to_dict("records")
+        else:
+            data_array = df[df["Title"].str.contains(text, case=False)]
+            data_array = data_array.to_dict("records")
+
+        children = self.manager.get_screen("netflixuserscreen").ids.historylist.children
+        excess_children = children[:-3]
+        for child in excess_children:
+            self.manager.get_screen("netflixuserscreen").ids.historylist.remove_widget(child)
         self.create_list(data_array)
 
     def create_list(self, data_array):
-        lista = self.manager.get_screen("netflixuserscreen").ids.netflixhistoryscreen
-        for row in range(len(data_array)):
-            third = ", ".join(
-                list(set(data_array[row]["Dates"].replace("[", "").replace("]", "").replace("'", "").split(", "))))
-            lista.add_widget(
-                CustomThreeLineListItem(
-                    text=data_array[row]["title"],
-                    secondary_text=data_array[row]["genres"].replace("[", "").replace("]", "").replace("'", ""),
-                    tertiary_text=third,
-                )
-            )
+        root = self.manager.get_screen("netflixuserscreen").ids.historylist
+
+        for row in range(min(len(data_array), 100)):
+            listelement = CustomButton(size_hint_y=None, height=60)
+            listelement.ids.one_text.text = data_array[row]["Title"]
+            listelement.ids.two_text.text = data_array[row]["Date"]
+            root.add_widget(listelement)
+
+        root.bind(minimum_height=root.setter("height"))
 
     def create_top_list(self):
         custom_list = self.manager.get_screen("netflixuserscreen").ids.netflixtoplistscreen
@@ -114,7 +140,7 @@ class NetflixUserScreen(MDScreen):
             if type(row1[1]) == int:
                 second_text = f"Number of episodes: {row1[1]}"
             else:
-                line = row1[1].split(':')
+                line = row1[1].split(":")
                 second_text = f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
 
             list_item = CustomTwoLineListItem(
@@ -134,7 +160,7 @@ class NetflixUserScreen(MDScreen):
 
         index = 1
         for ind1, row1 in self.netflix_top_lists.TopDayWatched.iterrows():
-            foo=""
+            foo = ""
             for item, count in row1[1].items():
                 foo = f"{foo} {item} - {count},"
             foo = foo[:-1]
