@@ -45,9 +45,9 @@ class NetflixCharts:
         )
         dates_counter = {}
         for ind, row in self.data_array.iterrows():
-            dates = row["Dates"]
-            dates = eval(dates)
-            for dates1 in dates:
+            dates_tmp = row["Dates"]
+            dates_tmp = eval(dates_tmp)
+            for dates1 in dates_tmp:
                 if type(dates1) != list:
                     dates_counter[dates1] = dates_counter.get(dates1, 0) + 1
                 else:
@@ -145,9 +145,9 @@ class NetflixCharts:
             self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
         )
         for ind, row in self.data_array.iterrows():
-            genres = row["genres"]
-            genres = eval(genres)
-            for genre in genres:
+            genres_tmp = row["genres"]
+            genres_tmp = eval(genres_tmp)
+            for genre in genres_tmp:
                 genres_counter[genre] = genres_counter.get(genre, 0) + 1
         genres = pd.DataFrame.from_dict(
             genres_counter, orient="index", columns=["value"]

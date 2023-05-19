@@ -32,12 +32,12 @@ class StatsApp(MDApp):
     def on_stop(self):
         with open(
             "app/backend/files/Netflix/Final_Data.csv", "w", newline=""
-        ) as CsvFile:
-            CsvFile.truncate()
+        ) as csv_file:
+            csv_file.truncate()
         with open(
             "app/backend/files/Spotify/Spotify_Data.csv", "w", newline=""
-        ) as CsvFile:
-            CsvFile.truncate()
+        ) as csv_file:
+            csv_file.truncate()
 
 
 if __name__ == "__main__":

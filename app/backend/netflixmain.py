@@ -3,13 +3,12 @@ import pandas as pd
 
 
 class NetflixMainScreen:
-
     def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
-        self.csvFile = self.CSVFile(file)
-        self.TotalMoviesWatched = 0
-        self.TotalSeriesWatched = 0
+        self.csv_file = self.read_csv_file(file)
+        self.total_movies_watched = 0
+        self.total_series_watched = 0
 
-    def CSVFile(self, file):
+    def read_csv_file(self, file):
         try:
             df = pd.read_csv(file)
             return file
@@ -22,13 +21,13 @@ class NetflixMainScreen:
         except pd.errors.EmptyDataError:
             return None
 
-    def CountMovies(self):
+    def count_movies(self):
         time.sleep(1)
-        self.csvFile = self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
-        self.DataArray = pd.read_csv(self.csvFile)
-        return len(self.DataArray[self.DataArray["type"] == "film"])
+        self.csv_file = self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+        self.data_array = pd.read_csv(self.csv_file)
+        return len(self.data_array[self.data_array["type"] == "film"])
 
-    def CountSeries(self):
-        self.csvFile = self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
-        self.DataArray = pd.read_csv(self.csvFile)
-        return len(self.DataArray[self.DataArray["type"] == "series"])
+    def count_series(self):
+        self.csv_file = self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+        self.data_array = pd.read_csv(self.csv_file)
+        return len(self.data_array[self.data_array["type"] == "series"])

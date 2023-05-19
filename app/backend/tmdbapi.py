@@ -4,72 +4,74 @@ import requests
 
 
 class TMBDApi:
-    def __init__(self, path="", get_act_and_gen=0, dataArray=None):
+    def __init__(self, path="", get_act_and_gen=0, data_array=None):
         if path == "":
-            self.dataArray = dataArray
+            self.data_array = data_array
         else:
-            self.dataArray = pd.read_csv(path)
+            self.data_array = pd.read_csv(path)
         self.get_act_and_gen = get_act_and_gen
 
-    def getMovieData(self):
-        self.dataArray["genres"] = self.dataArray["genres"].apply(
+    def get_movie_data(self):
+        self.data_array["genres"] = self.data_array["genres"].apply(
             lambda x: [] if pd.isna(x) else eval(x)
         )
-        SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
-        MovieURL = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
-        for i, row in self.dataArray.iterrows():
+        series_url = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
+        movie_url = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
+        for i, row in self.data_array.iterrows():
             title = row["title"].replace(" ", "+")
             title = title.replace("#", "")
             if row["type"] == "series":
-                Series_response = requests.get(f"{SeriesURL}{title}")
-                Series_data_dic = json.loads(Series_response.content)
+                series_response = requests.get(f"{series_url}{title}")
+                series_data_dic = json.loads(series_response.content)
                 try:
-                    result = Series_data_dic["results"][00]
-                    self.dataArray.loc[i, "Release Date"] = result["first_air_date"]
+                    result = series_data_dic["results"][00]
+                    self.data_array.loc[i, "Release Date"] = result["first_air_date"]
                 except IndexError:
-                    Film_response = requests.get(f"{MovieURL}{title}")
-                    Film_data_dic = json.loads(Film_response.content)
+                    film_response = requests.get(f"{movie_url}{title}")
+                    film_data_dic = json.loads(film_response.content)
                     try:
-                        result = Film_data_dic["results"][00]
-                        self.dataArray.loc[i, "type"] = "film"
-                        self.dataArray.loc[i, "Release Date"] = result["release_date"]
+                        result = film_data_dic["results"][00]
+                        self.data_array.loc[i, "type"] = "film"
+                        self.data_array.loc[i, "Release Date"] = result["release_date"]
                     except IndexError:
                         continue
             else:
-                Film_response = requests.get(f"{MovieURL}{title}")
-                Film_data_dic = json.loads(Film_response.content)
+                film_response = requests.get(f"{movie_url}{title}")
+                film_data_dic = json.loads(film_response.content)
                 try:
-                    result = Film_data_dic["results"][00]
-                    self.dataArray.loc[i, "Release Date"] = result["release_date"]
+                    result = film_data_dic["results"][00]
+                    self.data_array.loc[i, "Release Date"] = result["release_date"]
                 except IndexError:
-                    Series_response = requests.get(f"{SeriesURL}{title}")
-                    Series_data_dic = json.loads(Series_response.content)
+                    series_response = requests.get(f"{series_url}{title}")
+                    series_data_dic = json.loads(series_response.content)
                     try:
-                        result = Series_data_dic["results"][00]
-                        self.dataArray.loc[i, "type"] = "series"
-                        self.dataArray.loc[i, "Release Date"] = result["first_air_date"]
+                        result = series_data_dic["results"][00]
+                        self.data_array.loc[i, "type"] = "series"
+                        self.data_array.loc[i, "Release Date"] = result[
+                            "first_air_date"
+                        ]
                     except IndexError:
                         continue
-            self.dataArray.loc[i, "TMBDid"] = result["id"]
-            self.dataArray.at[i, "genres"] = result["genre_ids"]
-            self.dataArray.loc[i, "popularity"] = result["popularity"]
-        self.dataArray = self.dataArray.dropna(subset=["TMBDid"])
+            self.data_array.loc[i, "TMBDid"] = result["id"]
+            self.data_array.at[i, "genres"] = result["genre_ids"]
+            self.data_array.loc[i, "popularity"] = result["popularity"]
+        self.data_array = self.data_array.dropna(subset=["TMBDid"])
         if self.get_act_and_gen == 1:
-            self.getGenres()
+            self.get_genres()
 
-    def getActors(self):
-        self.dataArray.loc[:, ("actress")] = self.dataArray.loc[:, ("actress")].apply(
+    def get_actors(self):
+        self.data_array.loc[:, ("actress")] = self.data_array.loc[:, ("actress")].apply(
             lambda x: [] if pd.isna(x) else eval(x)
         )
-        ASeriesURL = "https://api.themoviedb.org/3/tv/"
-        AMovieURL = "https://api.themoviedb.org/3/movie/"
-        creditsURL = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
-        for i, row in self.dataArray.iterrows():
+        series_url = "https://api.themoviedb.org/3/tv/"
+        movie_url = "https://api.themoviedb.org/3/movie/"
+        credits_url = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
+        for i, row in self.data_array.iterrows():
             rows = row["TMBDid"]
             if row["type"] == "series":
-                url = f"{ASeriesURL}{rows}{creditsURL}"
+                url = f"{series_url}{rows}{credits_url}"
             else:
-                url = f"{AMovieURL}{rows}{creditsURL}"
+                url = f"{movie_url}{rows}{credits_url}"
             req = requests.get(url)
             actress = json.loads(req.content)
             credits = []
@@ -78,18 +80,18 @@ class TMBDApi:
                 if j >= 10:
                     break
                 credits.append(data["name"])
-            self.dataArray.at[i, "actress"] = credits
+            self.data_array.at[i, "actress"] = credits
 
-    def getGenres(self):
+    def get_genres(self):
         genres_df = pd.read_csv("app/backend/files/Netflix/genres.csv")
         genres_dict = dict(zip(genres_df["id"], genres_df["name"]))
-        for i, row in self.dataArray.iterrows():
+        for i, row in self.data_array.iterrows():
             genres = row["genres"]
             genres_names = []
             for genre in genres:
                 genres_names.append(genres_dict[genre])
-            self.dataArray.at[i, "genres"] = genres_names
-        self.getActors()
+            self.data_array.at[i, "genres"] = genres_names
+        self.get_actors()
 
 
 def get_genres(gen: list) -> str:
@@ -101,15 +103,14 @@ def get_genres(gen: list) -> str:
         return ", ".join(gen)
 
 
-
 def get_actors(program_type: str, tmdbid: str) -> str:
-    ASeriesURL = "https://api.themoviedb.org/3/tv/"
-    AMovieURL = "https://api.themoviedb.org/3/movie/"
-    creditsURL = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
+    series_url = "https://api.themoviedb.org/3/tv/"
+    movie_url = "https://api.themoviedb.org/3/movie/"
+    credits_url = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
     if program_type == "series":
-        url = f"{ASeriesURL}{tmdbid}{creditsURL}"
+        url = f"{series_url}{tmdbid}{credits_url}"
     else:
-        url = f"{AMovieURL}{tmdbid}{creditsURL}"
+        url = f"{movie_url}{tmdbid}{credits_url}"
     req = requests.get(url)
     actress = json.loads(req.content)
     credits = []
@@ -120,23 +121,21 @@ def get_actors(program_type: str, tmdbid: str) -> str:
     return ", ".join(credits)
 
 
-
 def single_movie_search(title: str) -> list:
-    SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
-    MovieURL = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
+    series_url = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
+    movie_url = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
     tit = title.replace(" ", "+").replace("#", "")
     element = title.find(":")
 
     if element != -1:
         tit = tit[:element]
-        Series_response = requests.get(f"{SeriesURL}{tit}")
-        Series_data_dic = json.loads(Series_response.content)
-        actors = get_actors("series", Series_data_dic["results"][00]["id"])
+        series_response = requests.get(f"{series_url}{tit}")
+        series_data_dic = json.loads(series_response.content)
+        actors = get_actors("series", series_data_dic["results"][00]["id"])
     else:
-        Series_response = requests.get(f"{MovieURL}{tit}")
-        Series_data_dic = json.loads(Series_response.content)
-        actors = get_actors("movies", Series_data_dic["results"][00]["id"])
-    overview = Series_data_dic["results"][00]["overview"]
-    genres = get_genres(Series_data_dic["results"][00]["genre_ids"])
+        series_response = requests.get(f"{movie_url}{tit}")
+        series_data_dic = json.loads(series_response.content)
+        actors = get_actors("movies", series_data_dic["results"][00]["id"])
+    overview = series_data_dic["results"][00]["overview"]
+    genres = get_genres(series_data_dic["results"][00]["genre_ids"])
     return [overview, genres, actors]
-

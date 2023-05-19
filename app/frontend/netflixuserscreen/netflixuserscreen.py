@@ -62,10 +62,10 @@ class NetflixUserScreen(MDScreen):
     def __generate_main_screen(self):
         netflix_main_screen = NetflixMainScreen()
         self.manager.get_screen("netflixuserscreen").ids.total_movies.text = str(
-            netflix_main_screen.CountMovies()
+            netflix_main_screen.count_movies()
         )
         self.manager.get_screen("netflixuserscreen").ids.total_series.text = str(
-            netflix_main_screen.CountSeries()
+            netflix_main_screen.count_series()
         )
 
     def __generate_charts(self):
@@ -132,8 +132,8 @@ class NetflixUserScreen(MDScreen):
         ).ids.netflixtoplistscreen
         try:
             index = 1
-            TopActors = netflix_top_lists.TopActors
-            for ind1, row1 in TopActors.iterrows():
+            top_actors = netflix_top_lists.top_actors
+            for ind1, row1 in top_actors.iterrows():
                 third_text = ""
                 for item in row1[1]:
                     third_text = f"{third_text} {item},"
@@ -149,8 +149,8 @@ class NetflixUserScreen(MDScreen):
                 custom_list.add_widget(list_item, 8)
 
             index = 1
-            TopGenres = netflix_top_lists.TopGenres
-            for ind1, row1 in TopGenres.iterrows():
+            top_genres = netflix_top_lists.top_genres
+            for ind1, row1 in top_genres.iterrows():
                 list_item = CustomTwoLineListItem(
                     text=str(index) + ". " + ind1,
                     secondary_text=str(row1[0]) + " movies/series",
@@ -159,8 +159,8 @@ class NetflixUserScreen(MDScreen):
                 custom_list.add_widget(list_item, 6)
 
             index = 1
-            TopSeries = netflix_top_lists.TopSeries
-            for ind1, row1 in TopSeries.iterrows():
+            top_series = netflix_top_lists.top_series
+            for ind1, row1 in top_series.iterrows():
                 second_text = ""
                 if type(row1[1]) == int:
                     second_text = f"Number of episodes: {row1[1]}"
@@ -175,15 +175,15 @@ class NetflixUserScreen(MDScreen):
                 custom_list.add_widget(list_item, 4)
 
             index = 1
-            Mostpopular = netflix_top_lists.MostPopularWatched
-            for ind1, row1 in Mostpopular.iterrows():
+            most_popular = netflix_top_lists.most_popular_watched
+            for ind1, row1 in most_popular.iterrows():
                 list_item = CustomOneLineListItem(text=str(index) + ". " + row1[0])
                 index += 1
                 custom_list.add_widget(list_item, 2)
 
             index = 1
-            TopDay = netflix_top_lists.TopDayWatched
-            for ind1, row1 in TopDay.iterrows():
+            top_day = netflix_top_lists.top_day_watched
+            for ind1, row1 in top_day.iterrows():
                 foo = ""
                 for item, count in row1[1].items():
                     foo = f"{foo} {item} - {count},"
@@ -206,7 +206,7 @@ class NetflixUserScreen(MDScreen):
                     "netflixuserscreen"
                 ).ids.netflixtoplistscreen
                 index = 1
-                for ind1, row1 in netflix_top_lists.TopActors.iterrows():
+                for ind1, row1 in netflix_top_lists.top_actors.iterrows():
                     third_text = ""
                     for item in row1[1]:
                         third_text = f"{third_text} {item},"
@@ -222,7 +222,7 @@ class NetflixUserScreen(MDScreen):
                     custom_list.add_widget(list_item, 8)
 
                 index = 1
-                for ind1, row1 in netflix_top_lists.TopGenres.iterrows():
+                for ind1, row1 in netflix_top_lists.top_genres.iterrows():
                     list_item = CustomTwoLineListItem(
                         text=str(index) + ". " + ind1,
                         secondary_text=str(row1[0]) + " movies/series",
@@ -231,7 +231,7 @@ class NetflixUserScreen(MDScreen):
                     custom_list.add_widget(list_item, 6)
 
                 index = 1
-                for ind1, row1 in netflix_top_lists.TopSeries.iterrows():
+                for ind1, row1 in netflix_top_lists.top_series.iterrows():
                     second_text = ""
                     if type(row1[1]) == int:
                         second_text = f"Number of episodes: {row1[1]}"
@@ -248,13 +248,13 @@ class NetflixUserScreen(MDScreen):
                     custom_list.add_widget(list_item, 4)
 
                 index = 1
-                for ind1, row1 in netflix_top_lists.MostPopularWatched.iterrows():
+                for ind1, row1 in netflix_top_lists.most_popular_watched.iterrows():
                     list_item = CustomOneLineListItem(text=str(index) + ". " + row1[0])
                     index += 1
                     custom_list.add_widget(list_item, 2)
 
                 index = 1
-                for ind1, row1 in netflix_top_lists.TopDayWatched.iterrows():
+                for ind1, row1 in netflix_top_lists.top_day_watched.iterrows():
                     foo = ""
                     for item, count in row1[1].items():
                         foo = f"{foo} {item} - {count},"
