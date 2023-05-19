@@ -1,5 +1,5 @@
 import pandas as pd
-from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+from libs.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.card import MDCard
