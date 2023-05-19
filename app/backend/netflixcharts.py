@@ -6,9 +6,9 @@ import re
 
 class NetflixCharts:
     def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
-        self.csvFile = self.CSVFile(file)
+        self.csv_file = self.read_csv_file(file)
 
-    def CSVFile(self, file):
+    def read_csv_file(self, file):
         try:
             df = pd.read_csv(file)
             return file
@@ -30,21 +30,21 @@ class NetflixCharts:
         ax.spines["right"].set_color("#080808")
         ax.spines["left"].set_color("#A7F500")
 
-    def FormatData(self, date):
+    def format_data(self, date):
         pattern = r"(\d{1,2})/(\d{1,2})/(\d{2})"
         match = re.match(pattern, date)
         if match:
-            miesiac = match.group(1).zfill(2)
-            dzien = match.group(2).zfill(2)
-            rok = "20" + match.group(3).zfill(2)
-            return f"{rok}-{miesiac}-{dzien}"
+            month = match.group(1).zfill(2)
+            day = match.group(2).zfill(2)
+            year = "20" + match.group(3).zfill(2)
+            return f"{year}-{month}-{day}"
 
-    def DatesChart(self):
-        self.DataArray = pd.read_csv(
-            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+    def dates_chart(self):
+        self.data_array = pd.read_csv(
+            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
         )
         dates_counter = {}
-        for ind, row in self.DataArray.iterrows():
+        for ind, row in self.data_array.iterrows():
             dates = row["Dates"]
             dates = eval(dates)
             for dates1 in dates:
@@ -53,42 +53,42 @@ class NetflixCharts:
                 else:
                     for date in dates1:
                         dates_counter[date] = dates_counter.get(date, 0) + 1
-        Dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
-        Dates = Dates.sort_values("value", ascending=False)
-        y = Dates.index
+        dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
+        dates = dates.sort_values("value", ascending=False)
+        y = dates.index
         tmp = pd.DataFrame(columns=["date"])
-        isBig = 0
+        is_big = 0
 
         for i, date in enumerate(y):
             if date[2] == "/" or date[1] == "/":
-                tmp.loc[i] = self.FormatData(date)
+                tmp.loc[i] = self.format_data(date)
             else:
-                isBig = 1
+                is_big = 1
                 break
 
-        if isBig == 0:
+        if is_big == 0:
             tmp["date"] = pd.to_datetime(tmp["date"], format="%Y-%m-%d")
-            Dates.index = tmp["date"]
+            dates.index = tmp["date"]
         else:
-            tmp["date"] = Dates.index
-            Dates.index = tmp["date"]
+            tmp["date"] = dates.index
+            dates.index = tmp["date"]
 
-        Dates = Dates.sort_values("date")
-        y = Dates.index
+        dates = dates.sort_values("date")
+        y = dates.index
         tmp = pd.DataFrame(columns=["date"])
         for i, date in enumerate(y):
             data = str(date)
-            if isBig == 0:
+            if is_big == 0:
                 tmp.loc[i] = data[0:-12]
             else:
                 tmp.loc[i] = data[0:-3]
-        Dates.index = tmp["date"]
-        Dates = Dates.groupby(Dates.index).sum()
-        Dates.index = pd.to_datetime(Dates.index)
-        Dates = Dates.resample("6M").sum()
-        Dates.index = pd.to_datetime(Dates.index).strftime("%Y-%m")
+        dates.index = tmp["date"]
+        dates = dates.groupby(dates.index).sum()
+        dates.index = pd.to_datetime(dates.index)
+        dates = dates.resample("6M").sum()
+        dates.index = pd.to_datetime(dates.index).strftime("%Y-%m")
         fig, ax = plt.subplots(figsize=(10, 5))
-        Dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
+        dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
         plt.xticks(fontsize=8)
         plt.xticks(rotation=0)
         ax.set_xlabel("Date")
@@ -100,9 +100,9 @@ class NetflixCharts:
         self._adjust_colors_candles(fig, ax)
         return plt.gcf()
 
-    def SeriesvsFilmChart(self):
-        film_counter = len(self.DataArray[self.DataArray["type"] == "film"])
-        series_counter = len(self.DataArray[self.DataArray["type"] == "series"])
+    def series_vs_film_chart(self):
+        film_counter = len(self.data_array[self.data_array["type"] == "film"])
+        series_counter = len(self.data_array[self.data_array["type"] == "series"])
         sizes = [film_counter, series_counter]
         colors = ["#A7F500", "#E0E0E0"]
         fig, ax = plt.subplots()
@@ -139,25 +139,25 @@ class NetflixCharts:
         plt.subplots_adjust(bottom=0.5)
         return plt.gcf()
 
-    def GenresChart(self):
+    def genres_chart(self):
         genres_counter = {}
-        self.DataArray = pd.read_csv(
-            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        self.data_array = pd.read_csv(
+            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
         )
-        for ind, row in self.DataArray.iterrows():
+        for ind, row in self.data_array.iterrows():
             genres = row["genres"]
             genres = eval(genres)
             for genre in genres:
                 genres_counter[genre] = genres_counter.get(genre, 0) + 1
-        Genres = pd.DataFrame.from_dict(
+        genres = pd.DataFrame.from_dict(
             genres_counter, orient="index", columns=["value"]
         )
-        Genres = Genres.sort_values("value", ascending=False)
-        other_rows = Genres[Genres["value"] <= 3]
+        genres = genres.sort_values("value", ascending=False)
+        other_rows = genres[genres["value"] <= 3]
         other_rows = other_rows["value"].sum()
-        Genres = Genres[Genres["value"] > 3]
+        genres = genres[genres["value"] > 3]
         other_row = pd.DataFrame({"value": [other_rows]}, index=["Others"])
-        Genres = pd.concat([Genres, other_row])
+        genres = pd.concat([genres, other_row])
 
         colors = [
             "#A7F500",
@@ -195,7 +195,7 @@ class NetflixCharts:
         ]
 
         fig, ax = plt.subplots(facecolor="none")
-        ax.pie(Genres["value"], labels=None, colors=colors)
+        ax.pie(genres["value"], labels=None, colors=colors)
 
         ax.set_title(
             "Genres chart",
@@ -204,7 +204,7 @@ class NetflixCharts:
         fig.patch.set_facecolor("#080808")
         ax.set_xlabel(None)
         leg = ax.legend(
-            Genres.index,
+            genres.index,
             loc="upper center",
             bbox_to_anchor=(0.5, -0.1),
             fontsize=8,
@@ -218,14 +218,14 @@ class NetflixCharts:
         plt.subplots_adjust(bottom=0.5)
         return plt.gcf()
 
-    def Favourite_year(self):
-        Release_year = pd.read_csv(
-            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+    def favourite_year(self):
+        release_year = pd.read_csv(
+            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
         )
-        Release_year["Release Date"] = Release_year["Release Date"].str.slice(0, 4)
-        Release_year = Release_year[["title", "Release Date"]]
+        release_year["Release Date"] = release_year["Release Date"].str.slice(0, 4)
+        release_year = release_year[["title", "Release Date"]]
         years_counter = {year: 0 for year in range(2000, 2024)}
-        for ind, row in Release_year.iterrows():
+        for ind, row in release_year.iterrows():
             year = row["Release Date"]
             if type(year) is float:
                 continue
@@ -240,11 +240,11 @@ class NetflixCharts:
                 sum_under_2000 += years_counter[key]
                 years_counter.pop(key)
         years_counter[1999] = sum_under_2000
-        Years = pd.DataFrame.from_dict(years_counter, orient="index", columns=["value"])
-        Years = Years.sort_index(axis=0)
-        Years = Years.rename(index={1999: "<2000"})
+        years = pd.DataFrame.from_dict(years_counter, orient="index", columns=["value"])
+        years = years.sort_index(axis=0)
+        years = years.rename(index={1999: "<2000"})
         fig, ax = plt.subplots()
-        Years.plot(kind="barh", ax=ax, color="#A7F500", legend=False)
+        years.plot(kind="barh", ax=ax, color="#A7F500", legend=False)
         ax.set_yticks(ax.get_yticks()[-1::-2])
         ax.set_title(
             "Most watched films from years",
@@ -256,17 +256,17 @@ class NetflixCharts:
         self._adjust_colors_candles(fig, ax)
         return plt.gcf()
 
-    def TimeAtSeries(self):
-        DataArray = pd.read_csv(
-            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+    def time_at_series(self):
+        dataArray = pd.read_csv(
+            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
         )
-        if np.isnan(DataArray.iloc[0, 6]):
-            DataArray = DataArray.sort_values("number_of_episodes").tail(20)
-            Result = DataArray[["title", "number_of_episodes"]].copy()
-            Result = Result[Result["number_of_episodes"] >= 10]
-            Result = Result.reset_index(drop=True)
+        if np.isnan(dataArray.iloc[0, 6]):
+            dataArray = dataArray.sort_values("number_of_episodes").tail(20)
+            result = dataArray[["title", "number_of_episodes"]].copy()
+            result = result[result["number_of_episodes"] >= 10]
+            result = result.reset_index(drop=True)
             fig, ax = plt.subplots()
-            ax.barh(Result["title"], Result["number_of_episodes"], color="#A7F500")
+            ax.barh(result["title"], result["number_of_episodes"], color="#A7F500")
             ax.set_ylabel("Tytuły")
             ax.tick_params(axis="y", labelsize=8)
             self._adjust_colors_candles(fig, ax)
@@ -275,12 +275,12 @@ class NetflixCharts:
                 fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
             )
         else:
-            DataArray = DataArray.sort_values("SumOfTime").tail(20)
-            Result = DataArray[["title", "SumOfTime"]].copy()
-            Result = Result[Result["SumOfTime"] >= 600]
-            Result = Result.reset_index(drop=True)
+            dataArray = dataArray.sort_values("SumOfTime").tail(20)
+            result = dataArray[["title", "SumOfTime"]].copy()
+            result = result[result["SumOfTime"] >= 600]
+            result = result.reset_index(drop=True)
             fig, ax = plt.subplots()
-            ax.barh(Result["title"], Result["SumOfTime"] / 60, color="#A7F500")
+            ax.barh(result["title"], result["SumOfTime"] / 60, color="#A7F500")
             ax.set_ylabel("Tytuły")
             ax.tick_params(axis="y", labelsize=8)
             self._adjust_colors_candles(fig, ax)
