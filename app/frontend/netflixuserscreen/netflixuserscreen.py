@@ -52,9 +52,7 @@ class CustomButton(MDCard):
         self.__dialog.open()
 
 
-
 class NetflixUserScreen(MDScreen):
-
     def generate_screens(self):
         self.__generate_main_screen()
         self.__generate_charts()
@@ -63,17 +61,29 @@ class NetflixUserScreen(MDScreen):
 
     def __generate_main_screen(self):
         netflix_main_screen = NetflixMainScreen()
-        self.manager.get_screen("netflixuserscreen").ids.total_movies.text = str(netflix_main_screen.CountMovies())
-        self.manager.get_screen("netflixuserscreen").ids.total_series.text = str(netflix_main_screen.CountSeries())
+        self.manager.get_screen("netflixuserscreen").ids.total_movies.text = str(
+            netflix_main_screen.CountMovies()
+        )
+        self.manager.get_screen("netflixuserscreen").ids.total_series.text = str(
+            netflix_main_screen.CountSeries()
+        )
 
     def __generate_charts(self):
-        charts = NetflixCharts()        
+        charts = NetflixCharts()
         charts_screen = self.manager.get_screen("netflixuserscreen").ids
-        charts_screen.genres_chart.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
-        charts_screen.movies_series_chart.add_widget(FigureCanvasKivyAgg(self.charts.SeriesvsFilmChart()))
-        charts_screen.years_chart.add_widget(FigureCanvasKivyAgg(self.charts.Favourite_year()))
-        charts_screen.watch_count_chart.add_widget(FigureCanvasKivyAgg(self.charts.DatesChart()))
-        charts_screen.time_at_series.add_widget(FigureCanvasKivyAgg(self.charts.TimeAtSeries()))
+        charts_screen.genres_chart.add_widget(FigureCanvasKivyAgg(charts.GenresChart()))
+        charts_screen.movies_series_chart.add_widget(
+            FigureCanvasKivyAgg(charts.SeriesvsFilmChart())
+        )
+        charts_screen.years_chart.add_widget(
+            FigureCanvasKivyAgg(charts.Favourite_year())
+        )
+        charts_screen.watch_count_chart.add_widget(
+            FigureCanvasKivyAgg(charts.DatesChart())
+        )
+        charts_screen.time_at_series.add_widget(
+            FigureCanvasKivyAgg(charts.TimeAtSeries())
+        )
 
     def search_history(self):
         text = self.manager.get_screen("netflixuserscreen").ids.textfield.text
@@ -91,7 +101,9 @@ class NetflixUserScreen(MDScreen):
         children = self.manager.get_screen("netflixuserscreen").ids.historylist.children
         excess_children = children[:-3]
         for child in excess_children:
-            self.manager.get_screen("netflixuserscreen").ids.historylist.remove_widget(child)
+            self.manager.get_screen("netflixuserscreen").ids.historylist.remove_widget(
+                child
+            )
         self.__generate_history_list(data_array)
 
     def __generate_history_list(self, data_array):
@@ -113,7 +125,9 @@ class NetflixUserScreen(MDScreen):
 
     def __generate_top_lists(self):
         netflix_top_lists = NetflixTopLists()
-        custom_list = self.manager.get_screen("netflixuserscreen").ids.netflixtoplistscreen
+        custom_list = self.manager.get_screen(
+            "netflixuserscreen"
+        ).ids.netflixtoplistscreen
         try:
             index = 1
             TopActors = netflix_top_lists.TopActors
@@ -233,9 +247,7 @@ class NetflixUserScreen(MDScreen):
 
                 index = 1
                 for ind1, row1 in netflix_top_lists.MostPopularWatched.iterrows():
-                    list_item = CustomOneLineListItem(
-                        text=str(index) + ". " + row1[0]
-                    )
+                    list_item = CustomOneLineListItem(text=str(index) + ". " + row1[0])
                     index += 1
                     custom_list.add_widget(list_item, 2)
 
