@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import os
 
+
 class NetflixTopLists:
 
     def __init__(self, file="app/backend/files/Final_Data.csv"):
@@ -41,13 +42,6 @@ class NetflixTopLists:
             return file
         except pd.errors.EmptyDataError:
             return None
-
-    def Visualize(self):
-        print(self.TopActors)
-        print(self.TopGenres)
-        print(self.TopSeries)
-        print(self.MostPopularWatched)
-        print(self.TopDayWatched)
 
     def TopActors(self):
         self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))

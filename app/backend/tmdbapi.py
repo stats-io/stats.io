@@ -14,21 +14,21 @@ class TMBDApi:
         else:
             self.dataArray = pd.read_csv(path)
         self.get_act_and_gen = get_act_and_gen
-        
-    def FindMovieData(self,title,type):
+
+    def FindMovieData(self, title, type):
         SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
         MovieURL = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
-        name = title.replace(" ",'+')
-        name = name.replace('#','')
-        if type == 'series':
-           Series_response = requests.get(f"{SeriesURL}{name}")
-           Series_data_dic = json.loads(Series_response.content)
-           try:
-               return Series_data_dic["results"][00]
-           except IndexError:
-               Film_response = requests.get(f"{MovieURL}{name}")
-               Film_data_dic = json.loads(Film_response.content)
-               return Film_data_dic["results"][00]
+        name = title.replace(" ", "+")
+        name = name.replace("#", "")
+        if type == "series":
+            Series_response = requests.get(f"{SeriesURL}{name}")
+            Series_data_dic = json.loads(Series_response.content)
+            try:
+                return Series_data_dic["results"][00]
+            except IndexError:
+                Film_response = requests.get(f"{MovieURL}{name}")
+                Film_data_dic = json.loads(Film_response.content)
+                return Film_data_dic["results"][00]
         else:
             Film_response = requests.get(f"{MovieURL}{name}")
             Film_data_dic = json.loads(Film_response.content)
@@ -85,7 +85,7 @@ class TMBDApi:
         if self.get_act_and_gen == 1:
             self.getGenres()
 
-    def FindActors(self,id,type):
+    def FindActors(self, id, type):
         SeriesURL = "https://api.themoviedb.org/3/tv/"
         MovieURL = "https://api.themoviedb.org/3/movie/"
         creditsURL = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
@@ -108,10 +108,10 @@ class TMBDApi:
             lambda x: [] if pd.isna(x) else eval(x))
 
         for i, row in self.dataArray.iterrows():
-            credits = self.FindActors(row['TMBDid'],row['type'])
+            credits = self.FindActors(row["TMBDid"], row["type"])
             self.dataArray.at[i, "actress"] = credits
 
-    def FindGenres(self,row):
+    def FindGenres(self, row):
         genres_df = pd.read_csv("app/backend/files/genres.csv")
         genres_dict = dict(zip(genres_df["id"], genres_df["name"]))
         res = []
@@ -123,9 +123,10 @@ class TMBDApi:
         genres_df = pd.read_csv("app/backend/files/genres.csv")
         genres_dict = dict(zip(genres_df["id"], genres_df["name"]))
         for i, row in self.dataArray.iterrows():
-            genres_names = self.FindGenres(row['genres'])
+            genres_names = self.FindGenres(row["genres"])
             self.dataArray.at[i, "genres"] = genres_names
         self.getActors()
+
 
 def get_genres(gen: list) -> str:
     with open("app/backend/files/genres.csv", "r") as f:
@@ -134,6 +135,7 @@ def get_genres(gen: list) -> str:
         for i in range(len(gen)):
             gen[i] = genres_dict[gen[i]]
         return ", ".join(gen)
+
 
 def get_actors(program_type: str, tmdbid: str) -> str:
     SeriesURL = "https://api.themoviedb.org/3/tv/"

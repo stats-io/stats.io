@@ -10,7 +10,7 @@ import os
 from app.backend.netflixcharts import NetflixCharts
 from app.backend.netflixmain import NetflixMainScreen
 from app.backend.netflixtoplists import NetflixTopLists
-from app.backend.tmdbapi import TMBDApi, single_movie_search
+from app.backend.tmdbapi import single_movie_search
 
 
 class CustomOneLineListItem(OneLineListItem):
@@ -122,7 +122,7 @@ class NetflixUserScreen(MDScreen):
         row = 0
         possible = 100
         while row < min(len(data_array), possible):
-            listelement = CustomButton(size_hint_y=None, height=60)
+            listelement = CustomButton(size_hint_y=None, height=80)
             listelement.ids.one_text.text = data_array[row]["Title"]
             try:
                 listelement.ids.two_text.text = data_array[row]["Date"]
@@ -134,8 +134,6 @@ class NetflixUserScreen(MDScreen):
                     continue
             row += 1
             root.add_widget(listelement)
-
-        root.bind(minimum_height=root.setter("height"))
 
         root.bind(minimum_height=root.setter("height"))
 
@@ -282,4 +280,3 @@ class NetflixUserScreen(MDScreen):
                     )
                     index += 1
                     custom_list.add_widget(list_item, 0)
-
