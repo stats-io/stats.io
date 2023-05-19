@@ -1,6 +1,7 @@
 from unittest import TestLoader
 from unittest import TextTestRunner
 
+
 def testGeneralAll():
     import generaltests.testMainScr as mainscr
     import generaltests.testStatioApp as testapp
@@ -33,9 +34,17 @@ def testNetflixAll():
     tests.append(TestLoader().loadTestsFromTestCase(loading.LoadingisFinished))
     tests.append(TestLoader().loadTestsFromTestCase(loading.UpdateFileisvalid))
     tests.append(TestLoader().loadTestsFromTestCase(loading.GoToNetflixMainScreen))
-    tests.append(TestLoader().loadTestsFromTestCase(newdata.testNetflixNewDataScreenCSV))
-    tests.append(TestLoader().loadTestsFromTestCase(newdata.TestLoadingButtonPressWhenFileExsists))
-    tests.append(TestLoader().loadTestsFromTestCase(newdata.TestMainButtonPressWhenFileExsists))
+    tests.append(
+        TestLoader().loadTestsFromTestCase(newdata.testNetflixNewDataScreenCSV)
+    )
+    tests.append(
+        TestLoader().loadTestsFromTestCase(
+            newdata.TestLoadingButtonPressWhenFileExsists
+        )
+    )
+    tests.append(
+        TestLoader().loadTestsFromTestCase(newdata.TestMainButtonPressWhenFileExsists)
+    )
     tests.append(TestLoader().loadTestsFromTestCase(newdata.FormatofUserFileIsGood))
     tests.append(TestLoader().loadTestsFromTestCase(newdata.FormatofHistoryFileIsGood))
     tests.append(TestLoader().loadTestsFromTestCase(update.FormatDataTest))
@@ -63,8 +72,14 @@ def testSpotifyAll():
     tests.append(TestLoader().loadTestsFromTestCase(loading.GoToNetflixMainScreen))
     tests.append(TestLoader().loadTestsFromTestCase(login.TestButtons))
     tests.append(TestLoader().loadTestsFromTestCase(newdata.TestProcessFile))
-    tests.append(TestLoader().loadTestsFromTestCase(newdata.TestMainButtonPressWhenFileExsists))
-    tests.append(TestLoader().loadTestsFromTestCase(newdata.TestLoadingButtonPressWhenFileExsists))
+    tests.append(
+        TestLoader().loadTestsFromTestCase(newdata.TestMainButtonPressWhenFileExsists)
+    )
+    tests.append(
+        TestLoader().loadTestsFromTestCase(
+            newdata.TestLoadingButtonPressWhenFileExsists
+        )
+    )
     tests.append(TestLoader().loadTestsFromTestCase(process.TestDataProcessing))
 
     runner = TextTestRunner(verbosity=2)

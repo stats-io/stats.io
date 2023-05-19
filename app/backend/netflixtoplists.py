@@ -4,7 +4,6 @@ import pandas as pd
 
 
 class NetflixTopLists:
-
     def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
         self.csvFile = self.CSVFile(file)
         if self.csvFile is not None:
@@ -28,18 +27,24 @@ class NetflixTopLists:
             return None
 
     def TopActors(self):
-        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
+        self.DataArray = pd.read_csv(
+            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        )
         actor_counter = {}
         for ind, row in self.DataArray.iterrows():
             actors = row["actress"]
             actors = eval(actors)
             for actor in actors:
                 actor_counter[actor] = actor_counter.get(actor, 0) + 1
-        Actors = pd.DataFrame.from_dict(actor_counter, orient="index", columns=["value"])
+        Actors = pd.DataFrame.from_dict(
+            actor_counter, orient="index", columns=["value"]
+        )
         Actors = Actors.sort_values("value", ascending=False).head(10)
         Actors.insert(1, "titles", value=np.nan)
 
-        Actors.loc[:, ("titles")] = Actors.loc[:, ("titles")].apply(lambda x: [] if pd.isna(x) else eval(x))
+        Actors.loc[:, ("titles")] = Actors.loc[:, ("titles")].apply(
+            lambda x: [] if pd.isna(x) else eval(x)
+        )
 
         for ind1, row1 in Actors.iterrows():
             title = []
@@ -53,17 +58,23 @@ class NetflixTopLists:
         return Actors
 
     def TopGenres(self):
-        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
+        self.DataArray = pd.read_csv(
+            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        )
         genres_counter = {}
         for ind, row in self.DataArray.iterrows():
             genres = row["genres"]
             genres = eval(genres)
             for genre in genres:
                 genres_counter[genre] = genres_counter.get(genre, 0) + 1
-        Genres = pd.DataFrame.from_dict(genres_counter, orient="index", columns=["value"])
+        Genres = pd.DataFrame.from_dict(
+            genres_counter, orient="index", columns=["value"]
+        )
         Genres = Genres.sort_values("value", ascending=False).head(10)
         Genres.insert(1, "titles", value=np.nan)
-        Genres.loc[:, ("titles")] = Genres.loc[:, ("titles")].apply(lambda x: [] if pd.isna(x) else eval(x))
+        Genres.loc[:, ("titles")] = Genres.loc[:, ("titles")].apply(
+            lambda x: [] if pd.isna(x) else eval(x)
+        )
 
         for ind1, row1 in Genres.iterrows():
             title = []
@@ -96,9 +107,13 @@ class NetflixTopLists:
         return date[::-1]
 
     def TopSeries(self):
-        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
+        DataArray = pd.read_csv(
+            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        )
         if np.isnan(DataArray.iloc[0, 6]):
-            DataArray = DataArray.sort_values("number_of_episodes", ascending=False).head(10)
+            DataArray = DataArray.sort_values(
+                "number_of_episodes", ascending=False
+            ).head(10)
             Result = DataArray[["title", "number_of_episodes"]].copy()
             Result.reset_index(inplace=True)
             Result.drop("index", inplace=True, axis=1)
@@ -106,14 +121,18 @@ class NetflixTopLists:
         else:
             DataArray = DataArray.sort_values("SumOfTime", ascending=False).head(10)
             Result = DataArray[["title", "SumOfTime"]].copy()
-            Result["SumOfTime"] = Result["SumOfTime"].apply(lambda x: self.change_sec_to_time(x))
+            Result["SumOfTime"] = Result["SumOfTime"].apply(
+                lambda x: self.change_sec_to_time(x)
+            )
             Result.rename(columns={"SumOfTime": "Time (HH:MM:SS)"}, inplace=True)
             Result.reset_index(inplace=True)
             Result.drop("index", inplace=True, axis=1)
             return Result
 
     def MostPopularWatched(self):
-        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
+        DataArray = pd.read_csv(
+            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        )
         DataArray = DataArray.sort_values("popularity", ascending=False).head(10)
         Result = DataArray[["title", "popularity"]].copy()
         Result.reset_index(inplace=True)
@@ -135,7 +154,9 @@ class NetflixTopLists:
         Dates = Dates.sort_values("value", ascending=False).head(10)
         Dates.insert(1, "titles", value=np.nan)
 
-        Dates.loc[:, ("titles")] = Dates.loc[:, ("titles")].apply(lambda x: [] if pd.isna(x) else eval(x))
+        Dates.loc[:, ("titles")] = Dates.loc[:, ("titles")].apply(
+            lambda x: [] if pd.isna(x) else eval(x)
+        )
 
         for ind1, row1 in Dates.iterrows():
             title = {}
@@ -155,12 +176,14 @@ class NetflixTopLists:
         BigCsv = 0
         tmp = pd.DataFrame(columns=["date"])
         for i, date in enumerate(y):
-            if date[2] == '/' or date[1] == '/':
+            if date[2] == "/" or date[1] == "/":
                 tmp.loc[i] = self.FormatData(date)
             else:
                 BigCsv = 1
                 break
         if BigCsv == 0:
             Dates.index = tmp["date"]
-        Dates.index = pd.to_datetime(Dates.index, format='%Y-%m-%d').strftime('%d-%m-%Y')
+        Dates.index = pd.to_datetime(Dates.index, format="%Y-%m-%d").strftime(
+            "%d-%m-%Y"
+        )
         return Dates

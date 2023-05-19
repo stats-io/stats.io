@@ -31,6 +31,6 @@ class TestNetflixUserScreen(unittest.TestCase):
 
     def test_back_to_main_screen(self):
         netflix_user_screen = NetflixUserScreen()
-        self.app.screen_manager.current = 'Netflix_Main_Screen'
+        self.app.screen_manager.current = "Netflix_Main_Screen"
         netflix_user_screen.backToMainScreen()
         self.assertEqual(self.app.screen_manager.current, "Main_Screen")

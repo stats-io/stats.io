@@ -5,7 +5,6 @@ import re
 
 
 class NetflixCharts:
-
     def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
         self.csvFile = self.CSVFile(file)
 
@@ -41,7 +40,9 @@ class NetflixCharts:
             return f"{rok}-{miesiac}-{dzien}"
 
     def DatesChart(self):
-        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
+        self.DataArray = pd.read_csv(
+            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        )
         dates_counter = {}
         for ind, row in self.DataArray.iterrows():
             dates = row["Dates"]
@@ -59,7 +60,7 @@ class NetflixCharts:
         isBig = 0
 
         for i, date in enumerate(y):
-            if date[2] == '/' or date[1] == '/':
+            if date[2] == "/" or date[1] == "/":
                 tmp.loc[i] = self.FormatData(date)
             else:
                 isBig = 1
@@ -92,7 +93,10 @@ class NetflixCharts:
         plt.xticks(rotation=0)
         ax.set_xlabel("Date")
         ax.set_ylabel("Value")
-        ax.set_title("Number of watched shows", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+        ax.set_title(
+            "Number of watched shows",
+            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+        )
         self._adjust_colors_candles(fig, ax)
         return plt.gcf()
 
@@ -107,15 +111,29 @@ class NetflixCharts:
             colors=colors,
             autopct="%1.1f%%",
             startangle=90,
-            textprops={"color": "#080808", "fontsize": 8, "horizontalalignment": "center",
-                       "verticalalignment": "center"}
+            textprops={
+                "color": "#080808",
+                "fontsize": 8,
+                "horizontalalignment": "center",
+                "verticalalignment": "center",
+            },
         )
         labels = ["Films", "Series"]
-        leg = ax.legend(labels, loc="upper center", bbox_to_anchor=(0.5, -0.1), fontsize=8, ncol=2, edgecolor="#080808")
+        leg = ax.legend(
+            labels,
+            loc="upper center",
+            bbox_to_anchor=(0.5, -0.1),
+            fontsize=8,
+            ncol=2,
+            edgecolor="#080808",
+        )
         fig.patch.set_facecolor("#080808")
         for text in leg.get_texts():
             text.set_color("#E0E0E0")
-        ax.set_title("Series to films ratio", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+        ax.set_title(
+            "Series to films ratio",
+            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+        )
         leg._legend_title_box._text.set_color("#E0E0E0")
         leg.get_frame().set_facecolor("#080808")
         plt.subplots_adjust(bottom=0.5)
@@ -123,13 +141,17 @@ class NetflixCharts:
 
     def GenresChart(self):
         genres_counter = {}
-        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
+        self.DataArray = pd.read_csv(
+            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        )
         for ind, row in self.DataArray.iterrows():
             genres = row["genres"]
             genres = eval(genres)
             for genre in genres:
                 genres_counter[genre] = genres_counter.get(genre, 0) + 1
-        Genres = pd.DataFrame.from_dict(genres_counter, orient="index", columns=["value"])
+        Genres = pd.DataFrame.from_dict(
+            genres_counter, orient="index", columns=["value"]
+        )
         Genres = Genres.sort_values("value", ascending=False)
         other_rows = Genres[Genres["value"] <= 3]
         other_rows = other_rows["value"].sum()
@@ -137,19 +159,58 @@ class NetflixCharts:
         other_row = pd.DataFrame({"value": [other_rows]}, index=["Others"])
         Genres = pd.concat([Genres, other_row])
 
-        colors = ["#A7F500", "#C2F52B", "#DFF55C", "#F5F218", "#F5C118", "#F58B18", "#F55B18", "#F53518", "#F51818",
-                  "#E01B4F", "#E04F6F", "#E0828F", "#E0B5AF", "#E0E0CF", "#B5E0AF", "#82E082", "#4FE052", "#4FB56F",
-                  "#4FE0A3", "#4FE0CF", "#4FB5CF", "#4F82CF", "#4F4FCF", "#824FCF", "#B54FCF", "#E04FCF", "#E04F8F",
-                  "#E0B5CF", "#B5B5E0", "#8282E0", "#4F4FE0", "#666666"]
+        colors = [
+            "#A7F500",
+            "#C2F52B",
+            "#DFF55C",
+            "#F5F218",
+            "#F5C118",
+            "#F58B18",
+            "#F55B18",
+            "#F53518",
+            "#F51818",
+            "#E01B4F",
+            "#E04F6F",
+            "#E0828F",
+            "#E0B5AF",
+            "#E0E0CF",
+            "#B5E0AF",
+            "#82E082",
+            "#4FE052",
+            "#4FB56F",
+            "#4FE0A3",
+            "#4FE0CF",
+            "#4FB5CF",
+            "#4F82CF",
+            "#4F4FCF",
+            "#824FCF",
+            "#B54FCF",
+            "#E04FCF",
+            "#E04F8F",
+            "#E0B5CF",
+            "#B5B5E0",
+            "#8282E0",
+            "#4F4FE0",
+            "#666666",
+        ]
 
         fig, ax = plt.subplots(facecolor="none")
         ax.pie(Genres["value"], labels=None, colors=colors)
 
-        ax.set_title("Genres chart", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+        ax.set_title(
+            "Genres chart",
+            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+        )
         fig.patch.set_facecolor("#080808")
         ax.set_xlabel(None)
-        leg = ax.legend(Genres.index, loc="upper center", bbox_to_anchor=(0.5, -0.1), fontsize=8, ncol=2,
-                        edgecolor="#080808")
+        leg = ax.legend(
+            Genres.index,
+            loc="upper center",
+            bbox_to_anchor=(0.5, -0.1),
+            fontsize=8,
+            ncol=2,
+            edgecolor="#080808",
+        )
         for text in leg.get_texts():
             text.set_color("#E0E0E0")
         leg._legend_title_box._text.set_color("#E0E0E0")
@@ -158,13 +219,16 @@ class NetflixCharts:
         return plt.gcf()
 
     def Favourite_year(self):
-        Release_year = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
+        Release_year = pd.read_csv(
+            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        )
         Release_year["Release Date"] = Release_year["Release Date"].str.slice(0, 4)
         Release_year = Release_year[["title", "Release Date"]]
         years_counter = {year: 0 for year in range(2000, 2024)}
         for ind, row in Release_year.iterrows():
             year = row["Release Date"]
-            if type(year) is float: continue
+            if type(year) is float:
+                continue
             year = int(year)
             if year in years_counter.keys():
                 years_counter[year] += 1
@@ -182,7 +246,10 @@ class NetflixCharts:
         fig, ax = plt.subplots()
         Years.plot(kind="barh", ax=ax, color="#A7F500", legend=False)
         ax.set_yticks(ax.get_yticks()[-1::-2])
-        ax.set_title("Most watched films from years", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+        ax.set_title(
+            "Most watched films from years",
+            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+        )
         ax.set_xlabel("Date")
         ax.set_ylabel("Number of films/series")
 
@@ -190,7 +257,9 @@ class NetflixCharts:
         return plt.gcf()
 
     def TimeAtSeries(self):
-        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
+        DataArray = pd.read_csv(
+            self.CSVFile("app/backend/files/Netflix/Final_Data.csv")
+        )
         if np.isnan(DataArray.iloc[0, 6]):
             DataArray = DataArray.sort_values("number_of_episodes").tail(20)
             Result = DataArray[["title", "number_of_episodes"]].copy()
@@ -201,7 +270,10 @@ class NetflixCharts:
             ax.set_ylabel("Tytuły")
             ax.tick_params(axis="y", labelsize=8)
             self._adjust_colors_candles(fig, ax)
-            ax.set_title("Most episodes watched", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+            ax.set_title(
+                "Most episodes watched",
+                fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+            )
         else:
             DataArray = DataArray.sort_values("SumOfTime").tail(20)
             Result = DataArray[["title", "SumOfTime"]].copy()
@@ -212,6 +284,9 @@ class NetflixCharts:
             ax.set_ylabel("Tytuły")
             ax.tick_params(axis="y", labelsize=8)
             self._adjust_colors_candles(fig, ax)
-            ax.set_title("Most time spent shows", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
+            ax.set_title(
+                "Most time spent shows",
+                fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+            )
 
         return plt.gcf()

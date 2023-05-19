@@ -4,8 +4,7 @@ import app.backend.netflixdataadapter as adapter
 import app.backend.tmdbapi as TMBD
 
 
-class NetflixUpdateData():
-
+class NetflixUpdateData:
     def __init__(self, path):
         data = adapter.NetflixDataAdapter(path)
         data.remakeFile()
@@ -16,7 +15,9 @@ class NetflixUpdateData():
         self.dataArray = pd.DataFrame(self.dataArray)
         self.DBexsist = 0
 
-        with open("app/backend/files/Netflix/UserDB.csv", "r", encoding="utf-8") as file:
+        with open(
+            "app/backend/files/Netflix/UserDB.csv", "r", encoding="utf-8"
+        ) as file:
             first_line = file.readline()
             if not first_line:
                 pass
@@ -26,12 +27,20 @@ class NetflixUpdateData():
         if self.DBexsist == 0:
             self.dataArray = self.lookintoTMBD(self.csvFile, 1)
             if np.isnan(self.dataArray.iloc[0, 6]):
-                self.dataArray.to_csv("app/backend/files/Netflix/Final_Data.csv", index=False)
-                self.dataArray.to_csv("app/backend/files/Netflix/LastData.csv", index=False)
+                self.dataArray.to_csv(
+                    "app/backend/files/Netflix/Final_Data.csv", index=False
+                )
+                self.dataArray.to_csv(
+                    "app/backend/files/Netflix/LastData.csv", index=False
+                )
                 self.fetchintoLocalDb(self.dataArray, 0)
             else:
-                self.dataArray.to_csv("app/backend/files/Netflix/LastData.csv", index=False)
-                self.dataArray.to_csv("app/backend/files/Netflix/Final_Data.csv", index=False)
+                self.dataArray.to_csv(
+                    "app/backend/files/Netflix/LastData.csv", index=False
+                )
+                self.dataArray.to_csv(
+                    "app/backend/files/Netflix/Final_Data.csv", index=False
+                )
                 self.dataArray["SumOfTime"] = np.nan
                 self.dataArray["Dates"] = np.nan
                 self.fetchintoLocalDb(self.dataArray, 0)
@@ -41,9 +50,13 @@ class NetflixUpdateData():
             self.dataArray_from_db = self.dataArray[self.dataArray["actress"].notna()]
             self.data_from_api = self.dataArray[~self.dataArray["actress"].notna()]
             self.data_from_api = self.get_Genres_and_Actors(self.data_from_api)
-            self.dataArray = pd.concat([self.data_from_api, self.dataArray_from_db], ignore_index=True)
+            self.dataArray = pd.concat(
+                [self.data_from_api, self.dataArray_from_db], ignore_index=True
+            )
             self.dataArray.to_csv("app/backend/files/Netflix/LastData.csv", index=False)
-            self.dataArray.to_csv("app/backend/files/Netflix/Final_Data.csv", index=False)
+            self.dataArray.to_csv(
+                "app/backend/files/Netflix/Final_Data.csv", index=False
+            )
             self.fetchintoLocalDb(self.dataArray, 1)
         return 1
 
@@ -64,7 +77,10 @@ class NetflixUpdateData():
                 filtered_df = self.data.loc[(self.data["title"] == row[0])]
                 filtered_df = filtered_df.loc[filtered_df["type"] == row[1]]
                 if len(filtered_df) > 0:
-                    dataArray.loc[ind, ["genres", "actress"]] = [filtered_df.iloc[0, 3], filtered_df.iloc[0, 5]]
+                    dataArray.loc[ind, ["genres", "actress"]] = [
+                        filtered_df.iloc[0, 3],
+                        filtered_df.iloc[0, 5],
+                    ]
                 else:
                     continue
             except IndexError:
