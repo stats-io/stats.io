@@ -1,7 +1,7 @@
 import pandas as pd
 
-class SpotifyMainScreen:
 
+class SpotifyMainScreen:
     def __init__(self):
         self.csvFile = self.ReadCSV()
         self.TotalArtists = 0
@@ -18,20 +18,20 @@ class SpotifyMainScreen:
             pass
         try:
             self.DataArray = pd.read_csv(self.Last)
-            return  self.Last
+            return self.Last
         except pd.errors.EmptyDataError:
             return None
 
     def CountArtists(self):
         self.DataArray = pd.read_csv(self.csvFile)
-        return self.DataArray['Artist'].nunique()
+        return self.DataArray["Artist"].nunique()
 
     def CountSongs(self):
         self.DataArray = pd.read_csv(self.csvFile)
-        return self.DataArray['Title'].nunique()
+        return self.DataArray["Title"].nunique()
 
     def msConverter(self):
-        ms = self.DataArray['Time'].sum()
+        ms = self.DataArray["Time"].sum()
         seconds = ms // 1000
         minutes = seconds // 60
         hours = minutes // 60
@@ -45,6 +45,5 @@ class SpotifyMainScreen:
 
     def CountTime(self):
         self.DataArray = pd.read_csv(self.csvFile)
-        ms = self.DataArray['Time'].sum()
+        ms = self.DataArray["Time"].sum()
         return self.msConverter()
-

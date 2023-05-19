@@ -2,8 +2,8 @@ import json
 import pandas as pd
 import requests
 
-class TMBDApi:
 
+class TMBDApi:
     def __init__(self, path="", get_act_and_gen=0, dataArray=None):
         if path == "":
             self.dataArray = dataArray
@@ -12,7 +12,9 @@ class TMBDApi:
         self.get_act_and_gen = get_act_and_gen
 
     def getMovieData(self):
-        self.dataArray["genres"] = self.dataArray["genres"].apply(lambda x: [] if pd.isna(x) else eval(x))
+        self.dataArray["genres"] = self.dataArray["genres"].apply(
+            lambda x: [] if pd.isna(x) else eval(x)
+        )
         SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
         MovieURL = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
         for i, row in self.dataArray.iterrows():
@@ -57,7 +59,8 @@ class TMBDApi:
 
     def getActors(self):
         self.dataArray.loc[:, ("actress")] = self.dataArray.loc[:, ("actress")].apply(
-            lambda x: [] if pd.isna(x) else eval(x))
+            lambda x: [] if pd.isna(x) else eval(x)
+        )
         ASeriesURL = "https://api.themoviedb.org/3/tv/"
         AMovieURL = "https://api.themoviedb.org/3/movie/"
         creditsURL = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
@@ -88,6 +91,7 @@ class TMBDApi:
             self.dataArray.at[i, "genres"] = genres_names
         self.getActors()
 
+
 def get_genres(gen: list) -> str:
     with open("app/backend/files/Netflix/genres.csv", "r") as f:
         genres_df = pd.read_csv(f)
@@ -95,6 +99,7 @@ def get_genres(gen: list) -> str:
         for i in range(len(gen)):
             gen[i] = genres_dict[gen[i]]
         return ", ".join(gen)
+
 
 def get_actors(program_type: str, tmdbid: str) -> str:
     ASeriesURL = "https://api.themoviedb.org/3/tv/"
@@ -112,6 +117,7 @@ def get_actors(program_type: str, tmdbid: str) -> str:
             break
         credits.append(data["name"])
     return ", ".join(credits)
+
 
 def single_movie_search(title: str) -> list:
     SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="

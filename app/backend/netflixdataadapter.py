@@ -1,10 +1,8 @@
-
 import numpy as np
 import pandas as pd
 
 
 class NetflixDataAdapter:
-
     def __init__(self, path):
         self.csvFile = path
 
@@ -21,7 +19,7 @@ class NetflixDataAdapter:
 
         for row in data.iterrows():
             time_str = row[1][2]
-            hours, minutes, seconds = map(int, time_str.split(':'))
+            hours, minutes, seconds = map(int, time_str.split(":"))
             time_in_seconds = (hours * 60 + minutes) * 60 + seconds
 
             key = row[1][4]
@@ -77,10 +75,14 @@ class NetflixDataAdapter:
                     self.film_tab_dates[title] = []
                     self.film_tab_dates[title].append(row[1][1])
                 self.film_tab[title] = self.film_tab.get(title, 0) + 1
-        return self.film_tab, self.series_tab, self.film_tab_dates, self.series_tab_dates
+        return (
+            self.film_tab,
+            self.series_tab,
+            self.film_tab_dates,
+            self.series_tab_dates,
+        )
 
     def GetData(self, data):
-
         self.title = {}
         for row in data.iterrows():
             title = row[1][4].split(":")[0]
@@ -108,12 +110,22 @@ class NetflixDataAdapter:
         self.film_ep, self.series_ep = self.FilmOrSeries(self.data)
         self.adapted_data = []
         for key, value in self.film_ep.items():
-            new = ({"title": f"{key}", "type": "film", "number_of_episodes": value, "SumOfTime": self.TotalTime[key],
-                    "Dates": self.TotalData[key]})
+            new = {
+                "title": f"{key}",
+                "type": "film",
+                "number_of_episodes": value,
+                "SumOfTime": self.TotalTime[key],
+                "Dates": self.TotalData[key],
+            }
             self.adapted_data.append(new)
         for key, value in self.series_ep.items():
-            new = ({"title": f"{key}", "type": "series", "number_of_episodes": value, "SumOfTime": self.TotalTime[key],
-                    "Dates": self.TotalData[key]})
+            new = {
+                "title": f"{key}",
+                "type": "series",
+                "number_of_episodes": value,
+                "SumOfTime": self.TotalTime[key],
+                "Dates": self.TotalData[key],
+            }
             self.adapted_data.append(new)
 
         self.df = pd.DataFrame(self.adapted_data)
@@ -127,14 +139,29 @@ class NetflixDataAdapter:
 
     def remakeFileShort(self):
         self.data = pd.read_csv(self.csvFile)
-        self.film_ep, self.series_ep, self.film_dates, self.series_dates = self.FilmOrSeriesDatesShort(self.data)
+        (
+            self.film_ep,
+            self.series_ep,
+            self.film_dates,
+            self.series_dates,
+        ) = self.FilmOrSeriesDatesShort(self.data)
         self.adapted_data = []
 
         for key, value in self.film_ep.items():
-            new = ({"title": f"{key}", "type": "film", "number_of_episodes": value, "Dates": self.film_dates[key]})
+            new = {
+                "title": f"{key}",
+                "type": "film",
+                "number_of_episodes": value,
+                "Dates": self.film_dates[key],
+            }
             self.adapted_data.append(new)
         for key, value in self.series_ep.items():
-            new = ({"title": f"{key}", "type": "series", "number_of_episodes": value, "Dates": self.series_dates[key]})
+            new = {
+                "title": f"{key}",
+                "type": "series",
+                "number_of_episodes": value,
+                "Dates": self.series_dates[key],
+            }
             self.adapted_data.append(new)
 
         self.df = pd.DataFrame(self.adapted_data)

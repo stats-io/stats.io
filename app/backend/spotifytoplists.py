@@ -1,7 +1,7 @@
 import pandas as pd
 
-class SpotifyTopList:
 
+class SpotifyTopList:
     def __init__(self):
         self.csvFile = self.ReadCSV()
 
@@ -43,37 +43,43 @@ class SpotifyTopList:
         month_list = self.ArtistDictionary(self.MonthArtistList)
         half_year_list = self.ArtistDictionary(self.halfYearArtistList)
         all_time_list = self.ArtistDictionary(self.AllTimeArtistList)
-        return self.DataConverter(month_list), self.DataConverter(half_year_list), self.DataConverter(all_time_list)
+        return (
+            self.DataConverter(month_list),
+            self.DataConverter(half_year_list),
+            self.DataConverter(all_time_list),
+        )
 
-    def Dates(self,time):
-            tmp_df = self.DataArray
-            tmp_df['Date'] = pd.to_datetime(tmp_df['Date'])
-            tmp_df = tmp_df.drop('Unnamed: 0', axis=1)
-            newest_data = tmp_df['Date'].max()
-            if time == 1:
-                Data = tmp_df[tmp_df['Date'] >= newest_data - pd.DateOffset(months=1)]
-            elif time == 2:
-                Data = tmp_df[tmp_df['Date'] >= newest_data - pd.DateOffset(months=6)]
-            else:
-                Data = tmp_df
-            return Data
+    def Dates(self, time):
+        tmp_df = self.DataArray
+        tmp_df["Date"] = pd.to_datetime(tmp_df["Date"])
+        tmp_df = tmp_df.drop("Unnamed: 0", axis=1)
+        newest_data = tmp_df["Date"].max()
+        if time == 1:
+            Data = tmp_df[tmp_df["Date"] >= newest_data - pd.DateOffset(months=1)]
+        elif time == 2:
+            Data = tmp_df[tmp_df["Date"] >= newest_data - pd.DateOffset(months=6)]
+        else:
+            Data = tmp_df
+        return Data
 
-    def ArtistDictionary(self,DataArray):
+    def ArtistDictionary(self, DataArray):
         Artist_dic = {}
-        for ind,row in DataArray.iterrows():
-            Artist = row['Artist']
-            time = row['Time']
+        for ind, row in DataArray.iterrows():
+            Artist = row["Artist"]
+            time = row["Time"]
             if Artist in Artist_dic.keys():
                 Artist_dic[Artist] += time
             else:
                 Artist_dic[Artist] = time
-        Artist_df = pd.DataFrame.from_dict(Artist_dic, orient="index",columns=["value"])
-        Artist_df = Artist_df.sort_values("value",ascending=False).head(10)
+        Artist_df = pd.DataFrame.from_dict(
+            Artist_dic, orient="index", columns=["value"]
+        )
+        Artist_df = Artist_df.sort_values("value", ascending=False).head(10)
         return Artist_df
 
-    def DataConverter(self,DataArray):
-        for ind,row in DataArray.iterrows():
-            DataArray.loc[ind,'value'] = self.msConverter(row['value'])
+    def DataConverter(self, DataArray):
+        for ind, row in DataArray.iterrows():
+            DataArray.loc[ind, "value"] = self.msConverter(row["value"])
         return DataArray
 
     def SongTopList(self):
@@ -83,13 +89,17 @@ class SpotifyTopList:
         month_list = self.SongDictionary(self.MonthSongList)
         half_year_list = self.SongDictionary(self.HalfYearSongList)
         all_time_list = self.SongDictionary(self.AlltimeSongList)
-        return self.DataConverter(month_list), self.DataConverter(half_year_list), self.DataConverter(all_time_list)
+        return (
+            self.DataConverter(month_list),
+            self.DataConverter(half_year_list),
+            self.DataConverter(all_time_list),
+        )
 
-    def SongDictionary(self,DataArray):
+    def SongDictionary(self, DataArray):
         Song_dic = {}
         for ind, row in DataArray.iterrows():
-            Song = row['Title']
-            time = row['Time']
+            Song = row["Title"]
+            time = row["Time"]
             if Song in Song_dic.keys():
                 Song_dic[Song] += time
             else:
@@ -100,11 +110,11 @@ class SpotifyTopList:
 
     def MostListenedDay(self):
         DataArray = pd.read_csv(self.csvFile)
-        DataArray = DataArray.drop('Unnamed: 0', axis=1)
-        DataArray['Date'] = DataArray['Date'].apply(lambda x: x.split(' ')[0])
-        DataArray = DataArray.groupby('Date').agg({'Time': 'sum'}).reset_index()
-        DataArray = DataArray.sort_values('Time',ascending=False).head(10)
+        DataArray = DataArray.drop("Unnamed: 0", axis=1)
+        DataArray["Date"] = DataArray["Date"].apply(lambda x: x.split(" ")[0])
+        DataArray = DataArray.groupby("Date").agg({"Time": "sum"}).reset_index()
+        DataArray = DataArray.sort_values("Time", ascending=False).head(10)
         for ind, row in DataArray.iterrows():
-            DataArray.loc[ind,'Time'] = self.msConverter(row['Time'])
-        DataArray.reset_index(drop = True, inplace=True)
+            DataArray.loc[ind, "Time"] = self.msConverter(row["Time"])
+        DataArray.reset_index(drop=True, inplace=True)
         return DataArray

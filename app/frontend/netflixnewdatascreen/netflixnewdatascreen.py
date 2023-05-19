@@ -22,8 +22,12 @@ class NetflixNewDataScreen(MDScreen):
 
     def _show_banner(self):
         self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
-        self.parent.get_screen("netflixnewdatascreen").ids.bannericon.icon = "chevron-up"
+        self.parent.get_screen(
+            "netflixnewdatascreen"
+        ).ids.bannericon.icon = "chevron-up"
 
     def _hide_banner(self):
         self.parent.get_screen("netflixnewdatascreen").ids.banner.hide()
-        self.parent.get_screen("netflixnewdatascreen").ids.bannericon.icon = "chevron-down"
+        self.parent.get_screen(
+            "netflixnewdatascreen"
+        ).ids.bannericon.icon = "chevron-down"

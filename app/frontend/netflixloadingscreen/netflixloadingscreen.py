@@ -13,13 +13,18 @@ class NetflixLoadingScreen(MDScreen):
     def _update_label(self, *args):
         if self._counter < self.num and self.X.finishedLoading == 0:
             self._counter += 1
-            self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{self._counter}/{self.num}"
+            self.manager.get_screen(
+                "netflixloadingscreen"
+            ).ids.loadinglabel.text = f"{self._counter}/{self.num}"
         else:
             # Poprawic zeby zapelnialo 100/100
-            self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{self.num}/{self.num}"
+            self.manager.get_screen(
+                "netflixloadingscreen"
+            ).ids.loadinglabel.text = f"{self.num}/{self.num}"
             while True:
                 time.sleep(1)
-                if (self.X.finishedLoading == 1): break
+                if self.X.finishedLoading == 1:
+                    break
             self.Zegar.cancel()
             self.manager.get_screen("netflixuserscreen").generate_charts()
             self.manager.current = "netflixuserscreen"
@@ -29,7 +34,8 @@ class NetflixLoadingScreen(MDScreen):
         self.time, self.num = self.X.Time()
         self.num = math.ceil(self.num * 1.5)
         self.manager.get_screen(
-            "netflixloadingscreen").ids.estimatedtime.text = f"Estimated Time {round((self.num * self.time), 2)}s"
+            "netflixloadingscreen"
+        ).ids.estimatedtime.text = f"Estimated Time {round((self.num * self.time), 2)}s"
         watek2 = threading.Thread(target=self.X.StartUpdatingData)
         watek2.start()
         self.Zegar = Clock.schedule_interval(self._update_label, self.time)

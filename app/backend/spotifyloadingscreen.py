@@ -1,7 +1,7 @@
 import spotifyproccesdata as PD
 
-class SpotifyLoadingScreen:
 
+class SpotifyLoadingScreen:
     def __init__(self):
         self.finished_loading = 0
 

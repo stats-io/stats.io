@@ -47,9 +47,10 @@ class CustomButton(MDCard):
                         md_bg_color="#A7F500",
                         on_release=self.close_dialog,
                     )
-                ]
+                ],
             )
         self.dialog.open()
+
 
 class NetflixUserScreen(MDScreen):
     def __init__(self, **kwargs):
@@ -59,14 +60,28 @@ class NetflixUserScreen(MDScreen):
         self.charts = NetflixCharts()
 
     def generate_charts(self):
-        self.manager.get_screen("netflixuserscreen").ids.total_movies.text = str(self.netflix_main_screen.CountMovies())
-        self.manager.get_screen("netflixuserscreen").ids.total_series.text = str(self.netflix_main_screen.CountSeries())
+        self.manager.get_screen("netflixuserscreen").ids.total_movies.text = str(
+            self.netflix_main_screen.CountMovies()
+        )
+        self.manager.get_screen("netflixuserscreen").ids.total_series.text = str(
+            self.netflix_main_screen.CountSeries()
+        )
         charts_screen = self.manager.get_screen("netflixuserscreen").ids
-        charts_screen.genres_chart.add_widget(FigureCanvasKivyAgg(self.charts.GenresChart()))
-        charts_screen.movies_series_chart.add_widget(FigureCanvasKivyAgg(self.charts.SeriesvsFilmChart()))
-        charts_screen.years_chart.add_widget(FigureCanvasKivyAgg(self.charts.Favourite_year()))
-        charts_screen.watch_count_chart.add_widget(FigureCanvasKivyAgg(self.charts.DatesChart()))
-        charts_screen.time_at_series.add_widget(FigureCanvasKivyAgg(self.charts.TimeAtSeries()))
+        charts_screen.genres_chart.add_widget(
+            FigureCanvasKivyAgg(self.charts.GenresChart())
+        )
+        charts_screen.movies_series_chart.add_widget(
+            FigureCanvasKivyAgg(self.charts.SeriesvsFilmChart())
+        )
+        charts_screen.years_chart.add_widget(
+            FigureCanvasKivyAgg(self.charts.Favourite_year())
+        )
+        charts_screen.watch_count_chart.add_widget(
+            FigureCanvasKivyAgg(self.charts.DatesChart())
+        )
+        charts_screen.time_at_series.add_widget(
+            FigureCanvasKivyAgg(self.charts.TimeAtSeries())
+        )
 
         self.generate_history("")
         self.create_top_list()
@@ -87,7 +102,9 @@ class NetflixUserScreen(MDScreen):
         children = self.manager.get_screen("netflixuserscreen").ids.historylist.children
         excess_children = children[:-3]
         for child in excess_children:
-            self.manager.get_screen("netflixuserscreen").ids.historylist.remove_widget(child)
+            self.manager.get_screen("netflixuserscreen").ids.historylist.remove_widget(
+                child
+            )
         self.create_list(data_array)
 
     def create_list(self, data_array):
@@ -112,7 +129,9 @@ class NetflixUserScreen(MDScreen):
         root.bind(minimum_height=root.setter("height"))
 
     def create_top_list(self):
-        custom_list = self.manager.get_screen("netflixuserscreen").ids.netflixtoplistscreen
+        custom_list = self.manager.get_screen(
+            "netflixuserscreen"
+        ).ids.netflixtoplistscreen
         try:
             index = 1
             TopActors = self.netflix_top_lists.TopActors
@@ -126,7 +145,7 @@ class NetflixUserScreen(MDScreen):
                     secondary_text_color="#A7F500",
                     text=str(index) + ". " + ind1,
                     secondary_text=str(row1[0]) + " appearances in history",
-                    tertiary_text=third_text
+                    tertiary_text=third_text,
                 )
                 index += 1
                 custom_list.add_widget(list_item, 8)
@@ -136,7 +155,7 @@ class NetflixUserScreen(MDScreen):
             for ind1, row1 in TopGenres.iterrows():
                 list_item = CustomTwoLineListItem(
                     text=str(index) + ". " + ind1,
-                    secondary_text=str(row1[0]) + " movies/series"
+                    secondary_text=str(row1[0]) + " movies/series",
                 )
                 index += 1
                 custom_list.add_widget(list_item, 6)
@@ -152,8 +171,7 @@ class NetflixUserScreen(MDScreen):
                     second_text = f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
 
                 list_item = CustomTwoLineListItem(
-                    text=str(index) + ". " + row1[0],
-                    secondary_text=second_text
+                    text=str(index) + ". " + row1[0], secondary_text=second_text
                 )
                 index += 1
                 custom_list.add_widget(list_item, 4)
@@ -161,9 +179,7 @@ class NetflixUserScreen(MDScreen):
             index = 1
             Mostpopular = self.netflix_top_lists.MostPopularWatched
             for ind1, row1 in Mostpopular.iterrows():
-                list_item = CustomOneLineListItem(
-                    text=str(index) + ". " + row1[0]
-                )
+                list_item = CustomOneLineListItem(text=str(index) + ". " + row1[0])
                 index += 1
                 custom_list.add_widget(list_item, 2)
 
@@ -181,13 +197,16 @@ class NetflixUserScreen(MDScreen):
                     secondary_text_color="#A7F500",
                     text=str(index) + ". " + str(ind1),
                     secondary_text=str(row1[0]) + " titles",
-                    tertiary_text=foo
+                    tertiary_text=foo,
                 )
                 index += 1
                 custom_list.add_widget(list_item, 0)
         except AttributeError:
+
             def create_top_list(self):
-                custom_list = self.manager.get_screen("netflixuserscreen").ids.netflixtoplistscreen
+                custom_list = self.manager.get_screen(
+                    "netflixuserscreen"
+                ).ids.netflixtoplistscreen
                 index = 1
                 for ind1, row1 in self.netflix_top_lists.TopActors.iterrows():
                     third_text = ""
@@ -199,7 +218,7 @@ class NetflixUserScreen(MDScreen):
                         secondary_text_color="#A7F500",
                         text=str(index) + ". " + ind1,
                         secondary_text=str(row1[0]) + " appearances in history",
-                        tertiary_text=third_text
+                        tertiary_text=third_text,
                     )
                     index += 1
                     custom_list.add_widget(list_item, 8)
@@ -208,7 +227,7 @@ class NetflixUserScreen(MDScreen):
                 for ind1, row1 in self.netflix_top_lists.TopGenres.iterrows():
                     list_item = CustomTwoLineListItem(
                         text=str(index) + ". " + ind1,
-                        secondary_text=str(row1[0]) + " movies/series"
+                        secondary_text=str(row1[0]) + " movies/series",
                     )
                     index += 1
                     custom_list.add_widget(list_item, 6)
@@ -220,20 +239,19 @@ class NetflixUserScreen(MDScreen):
                         second_text = f"Number of episodes: {row1[1]}"
                     else:
                         line = row1[1].split(":")
-                        second_text = f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
+                        second_text = (
+                            f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
+                        )
 
                     list_item = CustomTwoLineListItem(
-                        text=str(index) + ". " + row1[0],
-                        secondary_text=second_text
+                        text=str(index) + ". " + row1[0], secondary_text=second_text
                     )
                     index += 1
                     custom_list.add_widget(list_item, 4)
 
                 index = 1
                 for ind1, row1 in self.netflix_top_lists.MostPopularWatched.iterrows():
-                    list_item = CustomOneLineListItem(
-                        text=str(index) + ". " + row1[0]
-                    )
+                    list_item = CustomOneLineListItem(text=str(index) + ". " + row1[0])
                     index += 1
                     custom_list.add_widget(list_item, 2)
 
@@ -250,8 +268,7 @@ class NetflixUserScreen(MDScreen):
                         secondary_text_color="#A7F500",
                         text=str(index) + ". " + str(ind1),
                         secondary_text=str(row1[0]) + " titles",
-                        tertiary_text=foo
+                        tertiary_text=foo,
                     )
                     index += 1
                     custom_list.add_widget(list_item, 0)
-
