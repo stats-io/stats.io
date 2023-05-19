@@ -1,0 +1,133 @@
+<SpotifyNewDataScreen>:
+    name: "spotifynewdatascreen"
+    md_bg_color: "#080808"
+
+    MDBanner:
+        id: banner
+        over_widget: screen
+        text: ["Here will be some hints for the user"]
+        vertical_pad: 0
+        radius: 0
+        on_release: root.help_banner_handler()
+
+    MDFloatLayout:
+        id: screen
+
+        MDCard:
+            padding: dp(25)
+            size_hint: 1, 0.05
+            md_bg_color: "#A7F500"
+            pos_hint: {"center_x": 0.5, "center_y": 0.975}
+            radius: 0, 0, 5, 5
+#            on_release: root.help_banner_handler()
+
+            MDLabel:
+                text: "Need some help?"
+                pos_hint: {"center_y": 0.5}
+                halign: "left"
+                font_size: root.height * 0.025
+
+            MDIcon:
+                id: bannericon
+                icon: "chevron-down"
+                pos_hint: {"center_y": 0.5}
+                halign: "right"
+
+        MDCard:
+            size_hint: 0.8, 0.3
+            pos_hint: {"center_x": 0.5, "center_y": 0.65}
+            line_color: "#A7F500"
+            md_bg_color: "#080808"
+            line_width: 1.0
+            line_style: "dotted"
+#            on_release: root.file_manager_open()
+
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint: 1, 1
+                padding: dp(25)
+
+                MDIcon:
+                    id: filemanagericon
+                    icon: "folder-plus"
+                    color: "#A7F500"
+                    pos_hint: {"center_x": 0.5}
+                    font_size: root.height * 0.1
+
+                MDBoxLayout:
+                    size_hint_y: 0.2
+
+                MDBoxLayout:
+                    size_hint_y: 0.5
+                    orientation: "vertical"
+
+                    MDLabel:
+                        id: fileadd
+                        text: "Add your file"
+                        color: "E0E0E0"
+                        halign: "center"
+                        bold: True
+                        font_size: root.height * 0.03
+
+                    MDLabel:
+                        id: filename
+                        text: "my_spotify_data.zip"
+                        color: "E0E0E0"
+                        halign: "center"
+                        font_size: root.height * 0.02
+
+        MDCard:
+            size_hint: 0.8, 0.1
+            pos_hint: {"center_x": 0.5,"center_y": 0.3}
+            md_bg_color: "#A7F500"
+            line_color: "#A7F500"
+            line_width: 1.0
+#            on_release: root.start_processing_data()
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                size_hint: 1, 1
+                padding: dp(25)
+                spacing: dp(20)
+
+                MDLabel:
+                    text: "Start import"
+                    color: "#080808"
+                    pos_hint: {"center_y": 0.5}
+                    font_size: root.height * 0.025
+                    halign: "left"
+
+                MDIcon:
+                    icon: "database-import"
+                    color: "#080808"
+                    pos_hint: {"center_y": 0.5}
+                    font_size: root.height * 0.03
+                    halign: "right"
+
+        MDCard:
+            size_hint: 0.8, 0.1
+            pos_hint: {"center_x": 0.5,"center_y": 0.15}
+            md_bg_color: "#080808"
+            line_color: "#A7F500"
+            line_width: 1.0
+            on_release: root.skip_processing_data()
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                size_hint: 1, 1
+                padding: dp(25)
+                spacing: dp(10)
+
+                MDLabel:
+                    text: "Skip"
+                    color: "#A7F500"
+                    pos_hint: {"center_y": 0.5}
+                    font_size: root.height * 0.025
+                    halign: "left"
+
+                MDIcon:
+                    icon: "skip-next-circle"
+                    color: "#A7F500"
+                    pos_hint: {"center_y": 0.5}
+                    font_size: root.height * 0.03
+                    halign: "right"

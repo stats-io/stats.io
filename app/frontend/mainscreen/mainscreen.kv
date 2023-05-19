@@ -20,7 +20,7 @@
             halign: "center"
             font_size: root.height * 0.045
             bold: True
-        
+
         MDLabel:
             text: "All your stats in one place"
             color: "#E0E0E0"
@@ -62,6 +62,7 @@
             md_bg_color: "#080808"
             line_color: "#A7F500"
             line_width: 1.0
+            on_release: app.root.current = "spotifynewdatascreen"
 
             MDBoxLayout:
                 orientation: "horizontal"
