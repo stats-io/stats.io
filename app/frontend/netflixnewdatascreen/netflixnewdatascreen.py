@@ -16,6 +16,7 @@ class NetflixNewDataScreen(MDScreen):
         self.parent.current = "netflixloadingscreen"
 
     def skip_processing_data(self):
+        ## tu dopisac aby nie mozna bylo dawac skipa gdy apka jest uzywana po raz 1
         self.parent.get_screen("netflixloadingscreen").skip_animation()
         self.parent.current = "netflixuserscreen"
 

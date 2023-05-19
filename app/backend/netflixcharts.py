@@ -1,37 +1,26 @@
-from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import os
+import re
 
 
 class NetflixCharts:
 
-    def __init__(self, file="app/backend/files/Final_Data.csv"):
+    def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
         self.csvFile = self.CSVFile(file)
 
     def CSVFile(self, file):
-        f = "app/backend/files"
         try:
             df = pd.read_csv(file)
-            test = 1
             return file
         except pd.errors.EmptyDataError:
-            test = 0
-
-        if test == 0:
-            files = [f"{f}/LastSmallData.csv", f"{f}/LastBigData.csv"]
-            latest_file = max(files, key=os.path.getmtime)
-            file = latest_file
-            try:
-                df = pd.read_csv(file)
-
-            except pd.errors.EmptyDataError:
-                if latest_file == f"{f}/LastBigData.csv":
-                    file = f"{f}/LastSmallData.csv"
-                else:
-                    file = f"{f}/LastBigData.csv"
-        return file
+            pass
+        file = "app/backend/files/Netflix/LastData.csv"
+        try:
+           df = pd.read_csv(file)
+           return file
+        except pd.errors.EmptyDataError:
+           return None
 
     def _adjust_colors_candles(self, fig, ax):
         ax.set_facecolor("#080808")
@@ -42,8 +31,17 @@ class NetflixCharts:
         ax.spines["right"].set_color("#080808")
         ax.spines["left"].set_color("#A7F500")
 
+    def FormatData(self, date):
+        pattern = r"(\d{1,2})/(\d{1,2})/(\d{2})"
+        match = re.match(pattern, date)
+        if match:
+            miesiac = match.group(1).zfill(2)
+            dzien = match.group(2).zfill(2)
+            rok = "20" + match.group(3).zfill(2)
+            return f"{rok}-{miesiac}-{dzien}"
+
     def DatesChart(self):
-        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
+        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
         dates_counter = {}
         for ind, row in self.DataArray.iterrows():
             dates = row["Dates"]
@@ -59,15 +57,16 @@ class NetflixCharts:
         y = Dates.index
         tmp = pd.DataFrame(columns=["date"])
         isBig = 0
+
         for i, date in enumerate(y):
-            try:
-                date_obj = datetime.strptime(date, "%m/%d/%y")
-                tmp.loc[i] = date_obj.strftime("%y-%m-%d")
-            except ValueError:
+            if date[2] == '/' or date[1] == '/':
+                tmp.loc[i] = self.FormatData(date)
+            else:
                 isBig = 1
                 break
+
         if isBig == 0:
-            tmp["date"] = pd.to_datetime(tmp["date"], format="%y-%m-%d")
+            tmp["date"] = pd.to_datetime(tmp["date"], format="%Y-%m-%d")
             Dates.index = tmp["date"]
         else:
             tmp["date"] = Dates.index
@@ -89,9 +88,8 @@ class NetflixCharts:
         Dates.index = pd.to_datetime(Dates.index).strftime("%Y-%m")
         fig, ax = plt.subplots(figsize=(10, 5))
         Dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
-        ax.set_xticks(ax.get_xticks()[::2])
         plt.xticks(fontsize=8)
-        plt.xticks(rotation=90)
+        plt.xticks(rotation=0)
         ax.set_xlabel("Date")
         ax.set_ylabel("Value")
         ax.set_title("Number of watched shows", fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"})
@@ -125,7 +123,7 @@ class NetflixCharts:
 
     def GenresChart(self):
         genres_counter = {}
-        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
+        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
         for ind, row in self.DataArray.iterrows():
             genres = row["genres"]
             genres = eval(genres)
@@ -160,7 +158,7 @@ class NetflixCharts:
         return plt.gcf()
 
     def Favourite_year(self):
-        Release_year = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
+        Release_year = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
         Release_year["Release Date"] = Release_year["Release Date"].str.slice(0, 4)
         Release_year = Release_year[["title", "Release Date"]]
         years_counter = {year: 0 for year in range(2000, 2024)}
@@ -192,7 +190,7 @@ class NetflixCharts:
         return plt.gcf()
 
     def TimeAtSeries(self):
-        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
+        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
         if np.isnan(DataArray.iloc[0, 6]):
             DataArray = DataArray.sort_values("number_of_episodes").tail(20)
             Result = DataArray[["title", "number_of_episodes"]].copy()

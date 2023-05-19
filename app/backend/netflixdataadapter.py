@@ -1,4 +1,3 @@
-import datetime
 
 import numpy as np
 import pandas as pd
@@ -19,11 +18,14 @@ class NetflixDataAdapter:
     def GetTotalTime(self, data):
         self.title = {}
         self.title_final = {}
+
         for row in data.iterrows():
             time_str = row[1][2]
-            time = datetime.datetime.strptime(time_str, "%H:%M:%S").time()
-            time_in_seconds = int((time.hour * 60 + time.minute) * 60 + time.second)
+            hours, minutes, seconds = map(int, time_str.split(':'))
+            time_in_seconds = (hours * 60 + minutes) * 60 + seconds
+
             key = row[1][4]
+
             if key in self.title:
                 self.title[key] += time_in_seconds
             else:
@@ -120,8 +122,8 @@ class NetflixDataAdapter:
         self.df.insert(7, "TMBDid", value=np.nan)
         self.df.insert(8, "Release Date", value=np.nan)
         self.df.insert(5, "actress", value=np.nan)
-        self.df.to_csv("./app/backend/files/adapted_data.csv", index=False)
-        self.csvFile = "./app/backend/files/adapted_data.csv"
+        self.df.to_csv("app/backend/files/Netflix/adapted_data.csv", index=False)
+        self.csvFile = "app/backend/files/Netflix/adapted_data.csv"
 
     def remakeFileShort(self):
         self.data = pd.read_csv(self.csvFile)
@@ -142,5 +144,5 @@ class NetflixDataAdapter:
         self.df.insert(6, "SumOfTime", value=np.nan)
         self.df.insert(8, "TMBDid", value=np.nan)
         self.df.insert(9, "Release Date", value=np.nan)
-        self.df.to_csv("./app/backend/files/adapted_data.csv", index=False)
-        self.csvFile = "./app/backend/files/adapted_data.csv"
+        self.df.to_csv("app/backend/files/Netflix/adapted_data.csv", index=False)
+        self.csvFile = "app/backend/files/Netflix/adapted_data.csv"

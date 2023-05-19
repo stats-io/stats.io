@@ -5,8 +5,6 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
-
-import os
 from app.backend.netflixcharts import NetflixCharts
 from app.backend.netflixmain import NetflixMainScreen
 from app.backend.netflixtoplists import NetflixTopLists
@@ -53,7 +51,6 @@ class CustomButton(MDCard):
             )
         self.dialog.open()
 
-
 class NetflixUserScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -74,35 +71,12 @@ class NetflixUserScreen(MDScreen):
         self.generate_history("")
         self.create_top_list()
 
-    def CSVFile(self, file):
-        f = "app/backend/files"
-        try:
-            df = pd.read_csv(file)
-            test = 1
-            return file
-        except pd.errors.EmptyDataError:
-            test = 0
-
-        if test == 0:
-            files = [f"{f}/LastSmallData.csv", f"{f}/LastBigData.csv"]
-            latest_file = max(files, key=os.path.getmtime)
-            file = latest_file
-            try:
-                df = pd.read_csv(file)
-
-            except pd.errors.EmptyDataError:
-                if latest_file == f"{f}/LastBigData.csv":
-                    file = f"{f}/LastSmallData.csv"
-                else:
-                    file = f"{f}/LastBigData.csv"
-        return file
-
     def search_history(self):
         text = self.manager.get_screen("netflixuserscreen").ids.textfield.text
         self.generate_history(text)
 
     def generate_history(self, text):
-        df = pd.read_csv(self.CSVFile("app/backend/files/BigCsv.csv"))
+        df = pd.read_csv("app/backend/files/Netflix/test.csv")
         data_array = None
         if text.strip() == "":
             data_array = df.to_dict("records")
@@ -280,3 +254,4 @@ class NetflixUserScreen(MDScreen):
                     )
                     index += 1
                     custom_list.add_widget(list_item, 0)
+

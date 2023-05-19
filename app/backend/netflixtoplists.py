@@ -1,14 +1,11 @@
-from datetime import datetime
-
+import re
 import numpy as np
 import pandas as pd
-import os
 
 
 class NetflixTopLists:
 
-    def __init__(self, file="app/backend/files/Final_Data.csv"):
-
+    def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
         self.csvFile = self.CSVFile(file)
         if self.csvFile is not None:
             self.TopActors = self.TopActors()
@@ -18,25 +15,12 @@ class NetflixTopLists:
             self.TopDayWatched = self.TopDayWatched()
 
     def CSVFile(self, file):
-        f = "app/backend/files"
         try:
             df = pd.read_csv(file)
-            test = 1
             return file
         except pd.errors.EmptyDataError:
-            test = 0
-
-        if test == 0:
-            files = [f"{f}/LastSmallData.csv", f"{f}/LastBigData.csv"]
-            latest_file = max(files, key=os.path.getmtime)
-            file = latest_file
-            try:
-                df = pd.read_csv(file)
-            except pd.errors.EmptyDataError:
-                if latest_file == f"{f}/LastBigData.csv":
-                    file = f"{f}/LastSmallData.csv"
-                else:
-                    file = f"{f}/LastBigData.csv"
+            pass
+        file = "app/backend/files/Netflix/LastData.csv"
         try:
             df = pd.read_csv(file)
             return file
@@ -44,7 +28,7 @@ class NetflixTopLists:
             return None
 
     def TopActors(self):
-        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
+        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
         actor_counter = {}
         for ind, row in self.DataArray.iterrows():
             actors = row["actress"]
@@ -69,7 +53,7 @@ class NetflixTopLists:
         return Actors
 
     def TopGenres(self):
-        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
+        self.DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
         genres_counter = {}
         for ind, row in self.DataArray.iterrows():
             genres = row["genres"]
@@ -92,6 +76,15 @@ class NetflixTopLists:
             Genres.at[ind1, "titles"] = title
         return Genres
 
+    def FormatData(self, date):
+        pattern = r"(\d{1,2})/(\d{1,2})/(\d{2})"
+        match = re.match(pattern, date)
+        if match:
+            miesiac = match.group(1).zfill(2)
+            dzien = match.group(2).zfill(2)
+            rok = "20" + match.group(3).zfill(2)
+            return f"{rok}-{miesiac}-{dzien}"
+
     def change_sec_to_time(self, sec):
         sec = int(sec)
         hours = sec // 3600
@@ -99,8 +92,11 @@ class NetflixTopLists:
         seconds = sec % 60
         return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
 
+    def ReverseDate(self,date):
+        return date[::-1]
+
     def TopSeries(self):
-        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
+        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
         if np.isnan(DataArray.iloc[0, 6]):
             DataArray = DataArray.sort_values("number_of_episodes", ascending=False).head(10)
             Result = DataArray[["title", "number_of_episodes"]].copy()
@@ -117,12 +113,13 @@ class NetflixTopLists:
             return Result
 
     def MostPopularWatched(self):
-        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Final_Data.csv"))
+        DataArray = pd.read_csv(self.CSVFile("app/backend/files/Netflix/Final_Data.csv"))
         DataArray = DataArray.sort_values("popularity", ascending=False).head(10)
         Result = DataArray[["title", "popularity"]].copy()
         Result.reset_index(inplace=True)
         Result.drop("index", inplace=True, axis=1)
         return Result
+
 
     def TopDayWatched(self):
         dates_counter = {}
@@ -159,12 +156,12 @@ class NetflixTopLists:
         BigCsv = 0
         tmp = pd.DataFrame(columns=["date"])
         for i, date in enumerate(y):
-            try:
-                date_obj = datetime.strptime(date, "%m/%d/%y")
-                tmp.loc[i] = date_obj.strftime("%d-%m-%Y")
-            except ValueError:
+            if date[2] == '/' or date[1] == '/':
+                tmp.loc[i] = self.FormatData(date)
+            else:
                 BigCsv = 1
                 break
         if BigCsv == 0:
             Dates.index = tmp["date"]
+        Dates.index = pd.to_datetime(Dates.index, format='%Y-%m-%d').strftime('%d-%m-%Y')
         return Dates

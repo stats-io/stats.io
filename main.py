@@ -1,8 +1,7 @@
 from kivy.lang import Builder
-
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
-
+import app.backend.tmdbapi
 from app.frontend.mainscreen.mainscreen import MainScreen
 from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadingScreen
 from app.frontend.netflixnewdatascreen.netflixnewdatascreen import NetflixNewDataScreen
@@ -25,7 +24,9 @@ class StatsApp(MDApp):
         return WindowManager()
 
     def on_stop(self):
-        with open('app/backend/files/Final_Data.csv', 'w', newline='') as CsvFile:
+        with open("app/backend/files/Netflix/Final_Data.csv", 'w', newline='') as CsvFile:
+            CsvFile.truncate()
+        with open("app/backend/files/Spotify/Spotify_Data.csv", 'w', newline='') as CsvFile:
             CsvFile.truncate()
 
 

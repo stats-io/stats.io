@@ -9,16 +9,16 @@ class NetflixLoadingScreen:
         self.finishedLoading = 0
 
     def TimeTest(self):
+        MovieURL = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
         x = ["Avengers", "John+Wick", "Alice+in+Borderlands", "The+Matrix", "Baywatch"]
         start = time.time()
         for i in range(5):
-            y = requests.get(
-                f"https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query={x[i]}")
+            y = requests.get(f"{MovieURL}{x[i]}")
         end = time.time()
         return (end - start) / 5
 
     def Time(self):
-        self.update = UD("app/backend/files/test.csv")
+        self.update = UD("app/backend/files/Netflix/test.csv")
         time = self.TimeTest()
         df = pd.read_csv(self.update.csvFile)
         size = len(df)
