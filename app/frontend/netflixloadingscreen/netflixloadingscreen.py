@@ -8,24 +8,33 @@ import app.backend.netflixloading as Loading
 
 
 class NetflixLoadingScreen(MDScreen):
-
     def _update_label(self, *args):
-        if self.__counter < self.__num and self.__loading_screen.finishedLoading == 0:
+        if self.__counter < self.__num and self.__loading_screen.finished_loading == 0:
             self.__counter += 1
             percent = self.__counter * 100 // self.__num
-            self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{percent}%"
+            self.manager.get_screen(
+                "netflixloadingscreen"
+            ).ids.loadinglabel.text = f"{percent}%"
         else:
-            self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"100%"
-            while not self.__loading_screen.finishedLoading:
+            self.manager.get_screen(
+                "netflixloadingscreen"
+            ).ids.loadinglabel.text = f"100%"
+            while not self.__loading_screen.finished_loading:
                 sleep(1)
             self.__timer.cancel()
             self.skip_processing()
 
     def _animation_handler(self, *args):
         self.__loading_screen = Loading.NetflixLoadingScreen()
-        est_time, self.__num = self.__loading_screen.get_estimated_time(self.__file_path)
-        backend_thread = Thread(target=self.__loading_screen.start_processing_data).start()
-        self.manager.get_screen("netflixloadingscreen").ids.estimatedtime.text = f"Estimated time: {round(self.__num * est_time)}s"
+        est_time, self.__num = self.__loading_screen.get_estimated_time(
+            self.__file_path
+        )
+        backend_thread = Thread(
+            target=self.__loading_screen.start_processing_data
+        ).start()
+        self.manager.get_screen(
+            "netflixloadingscreen"
+        ).ids.estimatedtime.text = f"Estimated time: {round(self.__num * est_time)}s"
         self.__timer = Clock.schedule_interval(self._update_label, est_time)
 
     def start_processing(self, file_path):

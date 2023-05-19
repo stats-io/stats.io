@@ -17,7 +17,7 @@ class LoadingisFinished(unittest.TestCase):
             "Spotify_Loading_Screen"
         )
         self.spotify_loading.startUpdatingData(None)
-        if self.spotify_loading.finishedLoading == 1:
+        if self.spotify_loading.finished_loading == 1:
             end_time = time.time()
         else:
             end_time = time.time() * 20
@@ -53,6 +53,6 @@ class GoToNetflixMainScreen(unittest.TestCase):
         ).spotifyMainScreenChange(None)
         current_screen = self.app.screen_manager.current
         self.assertEqual(
-            self.spotify_loading.finishedLoading == 1,
+            self.spotify_loading.finished_loading == 1,
             current_screen == "Spotify_Main_Screen",
         )

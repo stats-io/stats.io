@@ -6,11 +6,18 @@ from app.backend.netflixupdatedata import NetflixUpdateData as UpdateData
 
 class NetflixLoadingScreen:
     def __init__(self):
-        self.finishedLoading = 0
+        self.finished_loading = 0
 
     def __test_time_on_sample(self):
         url = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
-        movies = ["Avengers", "John+Wick", "Alice+in+Borderlands", "The+Matrix", "Baywatch", "Narcos"]
+        movies = [
+            "Avengers",
+            "John+Wick",
+            "Alice+in+Borderlands",
+            "The+Matrix",
+            "Baywatch",
+            "Narcos",
+        ]
         start = time.time()
         [requests.get(f"{url}{movie}") for movie in movies]
         return (time.time() - start) / len(movies)
@@ -21,4 +28,4 @@ class NetflixLoadingScreen:
 
     def start_processing_data(self):
         self.update.formatUserData()
-        self.finishedLoading = 1
+        self.finished_loading = 1

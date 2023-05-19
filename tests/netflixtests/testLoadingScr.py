@@ -17,7 +17,7 @@ class LoadingisFinished(unittest.TestCase):
             "Netflix_Loading_Screen"
         )
         self.netflix_loading.startUpdatingData(None)
-        if self.netflix_loading.finishedLoading == 1:
+        if self.netflix_loading.finished_loading == 1:
             end_time = time.time()
         else:
             end_time = time.time() * 20
@@ -53,6 +53,6 @@ class GoToNetflixMainScreen(unittest.TestCase):
         )
         current_screen = self.app.screen_manager.current
         self.assertEqual(
-            self.netflix_loading.finishedLoading == 1,
+            self.netflix_loading.finished_loading == 1,
             current_screen == "Netflix_Main_Screen",
         )
