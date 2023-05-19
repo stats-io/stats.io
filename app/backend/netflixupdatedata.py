@@ -7,8 +7,8 @@ import app.backend.tmdbapi as TMBD
 class NetflixUpdateData:
     def __init__(self, path):
         data = adapter.NetflixDataAdapter(path)
-        data.remakeFile()
-        self.csvFile = data.csvFile
+        data.remake_file()
+        self.csvFile = data.csv_file
 
     def formatUserData(self):
         self.dataArray = pd.read_csv(self.csvFile)
