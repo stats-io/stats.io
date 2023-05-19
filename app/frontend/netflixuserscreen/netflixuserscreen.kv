@@ -105,9 +105,8 @@
                         id: historylist
                         cols: 1
                         padding: 20
-                        spacing: 10
+                        spacing: 20
                         size_hint_y: None
-                        height: 60
 
                         MDLabel:
                             text: "Your viewing history"
@@ -343,16 +342,16 @@
 <CustomButton>:
     md_bg_color: "#080808"
     on_release: root.show_bigger()
-    MDBoxLayout:
-        orientation: "vertical"
-        MDLabel:
-            id: one_text
-            text: ""
-            color: "#A7F500"
-        MDLabel:
-            id: two_text
-            text: ""
-            color: "#E0E0E0"
+    orientation: "vertical"
+
+    MDLabel:
+        id: one_text
+        text: ""
+        color: "#A7F500"
+    MDLabel:
+        id: two_text
+        text: ""
+        color: "#A7F500"
 
 <CustomThreeLineListItem>:
     theme_text_color: "Custom"

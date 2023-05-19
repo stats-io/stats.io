@@ -126,3 +126,51 @@ class TMBDApi:
             genres_names = self.FindGenres(row['genres'])
             self.dataArray.at[i, "genres"] = genres_names
         self.getActors()
+
+def get_genres(gen: list) -> str:
+    with open("app/backend/files/genres.csv", "r") as f:
+        genres_df = pd.read_csv(f)
+        genres_dict = dict(zip(genres_df["id"], genres_df["name"]))
+        for i in range(len(gen)):
+            gen[i] = genres_dict[gen[i]]
+        return ", ".join(gen)
+
+def get_actors(program_type: str, tmdbid: str) -> str:
+    SeriesURL = "https://api.themoviedb.org/3/tv/"
+    creditsURL = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
+    MovieURL = "https://api.themoviedb.org/3/movie/"
+
+    if program_type == "series":
+        url = f"{SeriesURL}{tmdbid}{creditsURL}"
+    else:
+        url = f"{MovieURL}{tmdbid}{creditsURL}"
+    req = requests.get(url)
+    actress = json.loads(req.content)
+    credits = []
+    for j, data in enumerate(actress["cast"]):
+        if j >= 10:
+            break
+        credits.append(data["name"])
+    return ", ".join(credits)
+
+
+def single_movie_search(title: str) -> list:
+    SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
+    MovieURL = f"https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
+
+    tit = title.replace(" ", "+").replace("#", "")
+    element = title.find(":")
+
+    if element != -1:
+        tit = tit[:element]
+        Series_response = requests.get(f"{SeriesURL}{tit}")
+        Series_data_dic = json.loads(Series_response.content)
+        actors = get_actors("series", Series_data_dic["results"][00]["id"])
+    else:
+        Series_response = requests.get(f"{MovieURL}{tit}")
+        Series_data_dic = json.loads(Series_response.content)
+        actors = get_actors("movies", Series_data_dic["results"][00]["id"])
+    overview = Series_data_dic["results"][00]["overview"]
+    genres = get_genres(Series_data_dic["results"][00]["genre_ids"])
+    actors = get_actors("series", Series_data_dic["results"][00]["id"])
+    return [overview, genres, actors]

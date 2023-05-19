@@ -3,11 +3,14 @@ from libs.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.card import MDCard
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDFlatButton
 
 import os
 from app.backend.netflixcharts import NetflixCharts
 from app.backend.netflixmain import NetflixMainScreen
 from app.backend.netflixtoplists import NetflixTopLists
+from app.backend.tmdbapi import TMBDApi, single_movie_search
 
 
 class CustomOneLineListItem(OneLineListItem):
@@ -23,15 +26,32 @@ class CustomThreeLineListItem(ThreeLineListItem):
 
 
 class CustomButton(MDCard):
-    big = False
+    dialog = None
+
+    def close_dialog(self, *args):
+        self.dialog.dismiss()
 
     def show_bigger(self):
-        print(self.ids.one_text.text)
-        if self.big == False:
-            self.height = 80
-        else:
-            self.height = 60
-        self.big = not self.big
+        tit = self.ids.one_text.text
+        date = self.ids.two_text.text
+        overview, genres, actors = single_movie_search(tit)
+
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title=f"{tit}\n{date}",
+                text=f"Genres: {genres}\n\nActors: {actors}\n\nOverview: {overview}",
+                md_bg_color="#E0E0E0",
+                buttons=[
+                    MDFlatButton(
+                        text="CLOSE",
+                        theme_text_color="Custom",
+                        text_color="#080808",
+                        md_bg_color="#A7F500",
+                        on_release=self.close_dialog,
+                    )
+                ]
+            )
+        self.dialog.open()
 
 
 class NetflixUserScreen(MDScreen):
@@ -82,7 +102,7 @@ class NetflixUserScreen(MDScreen):
         self.generate_history(text)
 
     def generate_history(self, text):
-        df = pd.read_csv(self.CSVFile("app/backend/files/test.csv"))
+        df = pd.read_csv(self.CSVFile("app/backend/files/BigCsv.csv"))
         data_array = None
         if text.strip() == "":
             data_array = df.to_dict("records")
@@ -99,11 +119,23 @@ class NetflixUserScreen(MDScreen):
     def create_list(self, data_array):
         root = self.manager.get_screen("netflixuserscreen").ids.historylist
 
-        for row in range(min(len(data_array), 100)):
+        row = 0
+        possible = 100
+        while row < min(len(data_array), possible):
             listelement = CustomButton(size_hint_y=None, height=60)
             listelement.ids.one_text.text = data_array[row]["Title"]
-            listelement.ids.two_text.text = data_array[row]["Date"]
+            try:
+                listelement.ids.two_text.text = data_array[row]["Date"]
+            except KeyError:
+                listelement.ids.two_text.text = data_array[row]["Start Time"][:10]
+                if data_array[row]["Title"].find("_") != -1:
+                    possible += 1
+                    row += 1
+                    continue
+            row += 1
             root.add_widget(listelement)
+
+        root.bind(minimum_height=root.setter("height"))
 
         root.bind(minimum_height=root.setter("height"))
 
