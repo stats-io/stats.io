@@ -134,8 +134,9 @@
 
                         MDRaisedButton:
                             text: "Search film or series"
-                            size_hint_x: root.width
-                            md_bg_color: "#E0E0E0"
+                            size_hint: 1, None
+                            height: root.height * 0.08
+                            md_bg_color: "#A7F500"
                             text_color: "#080808"
                             on_release: root.search_history()
 
@@ -341,7 +342,7 @@
 
 <CustomButton>:
     md_bg_color: "#080808"
-    on_release: root.show_bigger()
+    on_release: root.show_bigger(one_text.text, two_text.text)
     orientation: "vertical"
 
     MDLabel:

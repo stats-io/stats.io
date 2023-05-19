@@ -78,9 +78,9 @@ class NetflixUpdateData():
         dataArray["number_of_episodes"] = np.nan
         self.userdb = "app/backend/files/Netflix/UserDB.csv"
         if x == 0:
-            dataArray.to_csv(self.userdb , index=False)
+            dataArray.to_csv(self.userdb, index=False)
         else:
-            dataArray.to_csv(self.userdb , index=False, mode="a", header=False)
-            self.df = pd.read_csv(self.userdb )
+            dataArray.to_csv(self.userdb, index=False, mode="a", header=False)
+            self.df = pd.read_csv(self.userdb)
             self.df = self.df.drop_duplicates(subset=["title"])
-            self.df.to_csv(self.userdb , index=False, mode="w")
+            self.df.to_csv(self.userdb, index=False, mode="w")

@@ -1,42 +1,39 @@
-import math
-import time
+from time import sleep
+from threading import Thread
 
 from kivy.clock import Clock
-import threading
 from kivymd.uix.screen import MDScreen
-import app.backend.netflixloading as LS
+
+import app.backend.netflixloading as Loading
 
 
 class NetflixLoadingScreen(MDScreen):
-    _counter = 0
 
     def _update_label(self, *args):
-        if self._counter < self.num and self.X.finishedLoading == 0:
-            self._counter += 1
-            self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{self._counter}/{self.num}"
+        if self.__counter < self.__num and self.__loading_screen.finishedLoading == 0:
+            self.__counter += 1
+            percent = self.__counter * 100 // self.__num
+            self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{percent}%"
         else:
-            # Poprawic zeby zapelnialo 100/100
-            self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"{self.num}/{self.num}"
-            while True:
-                time.sleep(1)
-                if (self.X.finishedLoading == 1): break
-            self.Zegar.cancel()
-            self.manager.get_screen("netflixuserscreen").generate_charts()
-            self.manager.current = "netflixuserscreen"
+            self.manager.get_screen("netflixloadingscreen").ids.loadinglabel.text = f"100%"
+            while not self.__loading_screen.finishedLoading:
+                sleep(1)
+            self.__timer.cancel()
+            self.skip_processing()
 
-    def _animation(self, *args):
-        self.X = LS.NetflixLoadingScreen()
-        self.time, self.num = self.X.Time()
-        self.num = math.ceil(self.num * 1.5)
-        self.manager.get_screen(
-            "netflixloadingscreen").ids.estimatedtime.text = f"Estimated Time {round((self.num * self.time), 2)}s"
-        watek2 = threading.Thread(target=self.X.StartUpdatingData)
-        watek2.start()
-        self.Zegar = Clock.schedule_interval(self._update_label, self.time)
+    def _animation_handler(self, *args):
+        self.__loading_screen = Loading.NetflixLoadingScreen()
+        est_time, self.__num = self.__loading_screen.get_estimated_time(self.__file_path)
+        backend_thread = Thread(target=self.__loading_screen.start_processing_data).start()
+        self.manager.get_screen("netflixloadingscreen").ids.estimatedtime.text = f"Estimated time: {round(self.__num * est_time)}s"
+        self.__timer = Clock.schedule_interval(self._update_label, est_time)
 
-    def start_animation(self):
-        self.Zegar = Clock
-        self.Zegar.schedule_once(self._animation, 0)
+    def start_processing(self, file_path):
+        self.__counter = 0
+        self.__file_path = file_path
+        self.__timer = Clock
+        self.__timer.schedule_once(self._animation_handler, 0)
 
-    def skip_animation(self):
-        self.manager.get_screen("netflixuserscreen").generate_charts()
+    def skip_processing(self):
+        self.manager.get_screen("netflixuserscreen").generate_screens()
+        self.manager.current = "netflixuserscreen"

@@ -4,7 +4,7 @@ import pandas as pd
 
 class NetflixMainScreen:
 
-    def __init__(self,file="app/backend/files/Netflix/Final_Data.csv"):
+    def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
         self.csvFile = self.CSVFile(file)
         self.TotalMoviesWatched = 0
         self.TotalSeriesWatched = 0

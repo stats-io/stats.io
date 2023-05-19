@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class SpotifyMainScreen:
 
     def __init__(self):
@@ -18,7 +19,7 @@ class SpotifyMainScreen:
             pass
         try:
             self.DataArray = pd.read_csv(self.Last)
-            return  self.Last
+            return self.Last
         except pd.errors.EmptyDataError:
             return None
 
@@ -47,4 +48,3 @@ class SpotifyMainScreen:
         self.DataArray = pd.read_csv(self.csvFile)
         ms = self.DataArray['Time'].sum()
         return self.msConverter()
-

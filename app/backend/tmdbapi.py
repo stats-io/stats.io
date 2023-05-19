@@ -2,6 +2,7 @@ import json
 import pandas as pd
 import requests
 
+
 class TMBDApi:
 
     def __init__(self, path="", get_act_and_gen=0, dataArray=None):
@@ -88,6 +89,7 @@ class TMBDApi:
             self.dataArray.at[i, "genres"] = genres_names
         self.getActors()
 
+
 def get_genres(gen: list) -> str:
     with open("app/backend/files/Netflix/genres.csv", "r") as f:
         genres_df = pd.read_csv(f)
@@ -95,6 +97,7 @@ def get_genres(gen: list) -> str:
         for i in range(len(gen)):
             gen[i] = genres_dict[gen[i]]
         return ", ".join(gen)
+
 
 def get_actors(program_type: str, tmdbid: str) -> str:
     ASeriesURL = "https://api.themoviedb.org/3/tv/"
@@ -112,6 +115,7 @@ def get_actors(program_type: str, tmdbid: str) -> str:
             break
         credits.append(data["name"])
     return ", ".join(credits)
+
 
 def single_movie_search(title: str) -> list:
     SeriesURL = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="

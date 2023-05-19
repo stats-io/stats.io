@@ -92,7 +92,7 @@ class NetflixTopLists:
         seconds = sec % 60
         return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
 
-    def ReverseDate(self,date):
+    def ReverseDate(self, date):
         return date[::-1]
 
     def TopSeries(self):
@@ -119,7 +119,6 @@ class NetflixTopLists:
         Result.reset_index(inplace=True)
         Result.drop("index", inplace=True, axis=1)
         return Result
-
 
     def TopDayWatched(self):
         dates_counter = {}

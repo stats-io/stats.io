@@ -17,10 +17,10 @@ class NetflixCharts:
             pass
         file = "app/backend/files/Netflix/LastData.csv"
         try:
-           df = pd.read_csv(file)
-           return file
+            df = pd.read_csv(file)
+            return file
         except pd.errors.EmptyDataError:
-           return None
+            return None
 
     def _adjust_colors_candles(self, fig, ax):
         ax.set_facecolor("#080808")

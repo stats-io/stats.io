@@ -1,29 +1,24 @@
 import pandas as pd
 import requests
 import time
-from app.backend.netflixupdatedata import NetflixUpdateData as UD
+from app.backend.netflixupdatedata import NetflixUpdateData as UpdateData
 
 
 class NetflixLoadingScreen:
     def __init__(self):
         self.finishedLoading = 0
 
-    def TimeTest(self):
-        MovieURL = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
-        x = ["Avengers", "John+Wick", "Alice+in+Borderlands", "The+Matrix", "Baywatch"]
+    def __test_time_on_sample(self):
+        url = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
+        movies = ["Avengers", "John+Wick", "Alice+in+Borderlands", "The+Matrix", "Baywatch", "Narcos"]
         start = time.time()
-        for i in range(5):
-            y = requests.get(f"{MovieURL}{x[i]}")
-        end = time.time()
-        return (end - start) / 5
+        [requests.get(f"{url}{movie}") for movie in movies]
+        return (time.time() - start) / len(movies)
 
-    def Time(self):
-        self.update = UD("app/backend/files/Netflix/test.csv")
-        time = self.TimeTest()
-        df = pd.read_csv(self.update.csvFile)
-        size = len(df)
-        return time, size
+    def get_estimated_time(self, file_path):
+        self.update = UpdateData("app/backend/files/Netflix/test.csv")
+        return [self.__test_time_on_sample(), len(pd.read_csv(self.update.csvFile))]
 
-    def StartUpdatingData(self):
+    def start_processing_data(self):
         self.update.formatUserData()
         self.finishedLoading = 1
