@@ -130,143 +130,55 @@ class NetflixUserScreen(MDScreen):
         custom_list = self.manager.get_screen(
             "netflixuserscreen"
         ).ids.netflixtoplistscreen
-        try:
-            index = 1
-            top_actors = netflix_top_lists.top_actors
-            for ind1, row1 in top_actors.iterrows():
-                third_text = ""
-                for item in row1[1]:
-                    third_text = f"{third_text} {item},"
-                list_item = CustomThreeLineListItem(
-                    font_style="H6",
-                    text_color="#E0E0E0",
-                    secondary_text_color="#A7F500",
-                    text=str(index) + ". " + ind1,
-                    secondary_text=str(row1[0]) + " appearances in history",
-                    tertiary_text=third_text,
-                )
-                index += 1
-                custom_list.add_widget(list_item, 8)
 
-            index = 1
-            top_genres = netflix_top_lists.top_genres
-            for ind1, row1 in top_genres.iterrows():
-                list_item = CustomTwoLineListItem(
-                    text=str(index) + ". " + ind1,
-                    secondary_text=str(row1[0]) + " movies/series",
-                )
-                index += 1
-                custom_list.add_widget(list_item, 6)
+        index = 1
+        for person, titles in netflix_top_lists.top_actors.iterrows():
+            list_item = CustomThreeLineListItem(
+                font_style="H6",
+                text_color="#E0E0E0",
+                secondary_text_color="#A7F500",
+                text=f"{index}. {person}",
+                secondary_text=f"{titles[0]} appearances in history",
+                tertiary_text=", ".join(titles[1]),
+            )
+            index += 1
+            custom_list.add_widget(list_item, 8)
 
-            index = 1
-            top_series = netflix_top_lists.top_series
-            for ind1, row1 in top_series.iterrows():
-                second_text = ""
-                if type(row1[1]) == int:
-                    second_text = f"Number of episodes: {row1[1]}"
-                else:
-                    line = row1[1].split(":")
-                    second_text = f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
+        index = 1
+        for genre, number in  netflix_top_lists.top_genres.iterrows():
+            list_item = CustomTwoLineListItem(
+                text=f"{index}. {genre}",
+                secondary_text=f"{number[0]} movies/series"
+            )
+            index += 1
+            custom_list.add_widget(list_item, 6)
 
-                list_item = CustomTwoLineListItem(
-                    text=str(index) + ". " + row1[0], secondary_text=second_text
-                )
-                index += 1
-                custom_list.add_widget(list_item, 4)
+        index = 1
+        for serie, hours in netflix_top_lists.top_series.iterrows():
+            list_item = CustomTwoLineListItem(
+                text=f"{index}. {hours[0]}",
+                secondary_text=f"Number of episodes: {hours[1]}" if type(hours[1]) == int else f"{hours[1][0:2]}h {hours[1][3:5]}m {hours[1][6:8]}s"
+            )
+            index += 1
+            custom_list.add_widget(list_item, 4)
 
-            index = 1
-            most_popular = netflix_top_lists.most_popular_watched
-            for ind1, row1 in most_popular.iterrows():
-                list_item = CustomOneLineListItem(text=str(index) + ". " + row1[0])
-                index += 1
-                custom_list.add_widget(list_item, 2)
+        index = 1
+        for _, title in netflix_top_lists.most_popular_watched.iterrows():
+            list_item = CustomOneLineListItem(
+                text=f"{index}. {title[0]}"
+            )
+            index += 1
+            custom_list.add_widget(list_item, 2)
 
-            index = 1
-            top_day = netflix_top_lists.top_day_watched
-            for ind1, row1 in top_day.iterrows():
-                foo = ""
-                for item, count in row1[1].items():
-                    foo = f"{foo} {item} - {count},"
-                foo = foo[:-1]
-
-                list_item = CustomThreeLineListItem(
-                    font_style="H6",
-                    text_color="#E0E0E0",
-                    secondary_text_color="#A7F500",
-                    text=str(index) + ". " + str(ind1),
-                    secondary_text=str(row1[0]) + " titles",
-                    tertiary_text=foo,
-                )
-                index += 1
-                custom_list.add_widget(list_item, 0)
-        except AttributeError:
-
-            def create_top_list(self):
-                custom_list = self.manager.get_screen(
-                    "netflixuserscreen"
-                ).ids.netflixtoplistscreen
-                index = 1
-                for ind1, row1 in netflix_top_lists.top_actors.iterrows():
-                    third_text = ""
-                    for item in row1[1]:
-                        third_text = f"{third_text} {item},"
-                    list_item = CustomThreeLineListItem(
-                        font_style="H6",
-                        text_color="#E0E0E0",
-                        secondary_text_color="#A7F500",
-                        text=str(index) + ". " + ind1,
-                        secondary_text=str(row1[0]) + " appearances in history",
-                        tertiary_text=third_text,
-                    )
-                    index += 1
-                    custom_list.add_widget(list_item, 8)
-
-                index = 1
-                for ind1, row1 in netflix_top_lists.top_genres.iterrows():
-                    list_item = CustomTwoLineListItem(
-                        text=str(index) + ". " + ind1,
-                        secondary_text=str(row1[0]) + " movies/series",
-                    )
-                    index += 1
-                    custom_list.add_widget(list_item, 6)
-
-                index = 1
-                for ind1, row1 in netflix_top_lists.top_series.iterrows():
-                    second_text = ""
-                    if type(row1[1]) == int:
-                        second_text = f"Number of episodes: {row1[1]}"
-                    else:
-                        line = row1[1].split(":")
-                        second_text = (
-                            f"{line[0]} hours {line[1]} minutes {line[2]} seconds"
-                        )
-
-                    list_item = CustomTwoLineListItem(
-                        text=str(index) + ". " + row1[0], secondary_text=second_text
-                    )
-                    index += 1
-                    custom_list.add_widget(list_item, 4)
-
-                index = 1
-                for ind1, row1 in netflix_top_lists.most_popular_watched.iterrows():
-                    list_item = CustomOneLineListItem(text=str(index) + ". " + row1[0])
-                    index += 1
-                    custom_list.add_widget(list_item, 2)
-
-                index = 1
-                for ind1, row1 in netflix_top_lists.top_day_watched.iterrows():
-                    foo = ""
-                    for item, count in row1[1].items():
-                        foo = f"{foo} {item} - {count},"
-                    foo = foo[:-1]
-
-                    list_item = CustomThreeLineListItem(
-                        font_style="H6",
-                        text_color="#E0E0E0",
-                        secondary_text_color="#A7F500",
-                        text=str(index) + ". " + str(ind1),
-                        secondary_text=str(row1[0]) + " titles",
-                        tertiary_text=foo,
-                    )
-                    index += 1
-                    custom_list.add_widget(list_item, 0)
+        index = 1
+        for date, titles in netflix_top_lists.top_day_watched.iterrows():
+            list_item = CustomThreeLineListItem(
+                font_style="H6",
+                text_color="#E0E0E0",
+                secondary_text_color="#A7F500",
+                text=f"{index}. {date}",
+                secondary_text=f"{titles[0]} titles",
+                tertiary_text=", ".join([f"{item} - {count}" for item, count in sorted(titles[1].items(), key=lambda x: -int(x[1]))]),
+            )
+            index += 1
+            custom_list.add_widget(list_item, 0)
