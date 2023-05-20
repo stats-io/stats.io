@@ -3,3 +3,4 @@
 **/.idea
 **/venv
 config.py
+.cache
