@@ -10,6 +10,7 @@ class SpotifyProcessData:
     def process_data_from_spotipy(self, sp):
         self.get_recently_played_tracks(sp)
         self.get_top_tracks(sp)
+        self.get_top_artists(sp)
 
     def get_recently_played_tracks(self, sp):
         results = sp.current_user_recently_played(limit=50)
@@ -53,6 +54,28 @@ class SpotifyProcessData:
                 track = item["name"]
                 artist = item["artists"][0]["name"]
                 row = [i + 1, track, artist]
+                writer.writerow(row)
+
+    def get_top_artists(self, sp):
+        results = sp.current_user_top_artists(limit=50)
+
+        with open(
+            "app/backend/files/Spotify/top_artists.csv",
+            "w",
+            newline="",
+            encoding="utf-8",
+        ) as file:
+            writer = csv.writer(file)
+
+            # Zapisz nagłówki kolumn
+            headers = ["Nr", "Artist"]
+            writer.writerow(headers)
+
+            # Zapisz dane do pliku
+            for i, item in enumerate(results["items"]):
+                artist = item["name"]
+
+                row = [i + 1, artist]
                 writer.writerow(row)
 
     def process_data_from_file(self):

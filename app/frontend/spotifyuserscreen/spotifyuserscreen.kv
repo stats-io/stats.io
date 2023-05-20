@@ -55,7 +55,25 @@
                                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                         halign: "center"
 
+                        OneLineListItem:
+                            height: root.height * 0.08
+                            MDCard:
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                md_bg_color: "#A7F500"
 
+                                MDBoxLayout:
+                                    orientation: "vertical"
+
+                                    MDLabel:
+                                        text: "Top artists"
+                                        font_size: root.height * 0.03
+                                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                        halign: "center"
+
+<CustomOneLineListItem>:
+    text_color: "#E0E0E0"
+    theme_text_color: "Custom"
+    font_style: "Subtitle1"
 
 <CustomTwoLineListItem>:
     text_color: "#E0E0E0"
