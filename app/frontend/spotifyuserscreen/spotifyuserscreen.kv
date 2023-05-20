@@ -25,3 +25,42 @@
                 md_bg_color: "#080808"
                 text: "Top List"
                 icon: "arrow-top-right"
+
+                MDScrollView:
+                    size_hint: 1, 1
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                    MDList:
+                        id: spotifytoplistscreen
+                        divider_color: "#E0E0E0"
+                        divider: "Full"
+                        spacing: dp(10)
+                        padding: dp(20)
+
+                        OneLineListItem:
+                            height: root.height * 0.08
+                            MDCard:
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                line_color: "#A7F500"
+                                line_width: 1.0
+                                md_bg_color: "#080808"
+
+                                MDBoxLayout:
+                                    orientation: "vertical"
+
+                                    MDLabel:
+                                        text: "Top tracks"
+                                        color: "#A7F500"
+                                        font_size: root.height * 0.03
+                                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                        halign: "center"
+
+
+
+<CustomTwoLineListItem>:
+    text_color: "#E0E0E0"
+    theme_text_color: "Custom"
+    font_style: "H6"
+    secondary_theme_text_color: "Custom"
+    secondary_text_color: "#A7F500"
+    secondary_font_style: "Caption"
