@@ -11,6 +11,7 @@ class SpotifyProcessData:
         self.get_recently_played_tracks(sp)
         self.get_top_tracks(sp)
         self.get_top_artists(sp)
+        self.get_recommendations(sp)
 
     def get_recently_played_tracks(self, sp):
         results = sp.current_user_recently_played(limit=50)
@@ -23,11 +24,9 @@ class SpotifyProcessData:
         ) as file:
             writer = csv.writer(file)
 
-            # Zapisz nagłówki kolumn
             headers = ["Nr", "Title", "Artists"]
             writer.writerow(headers)
 
-            # Zapisz dane do pliku
             for i, item in enumerate(results["items"]):
                 track = item["track"]
                 artists = ", ".join([artist["name"] for artist in track["artists"]])
@@ -45,11 +44,9 @@ class SpotifyProcessData:
         ) as file:
             writer = csv.writer(file)
 
-            # Zapisz nagłówki kolumn
             headers = ["Nr", "Title", "Artists"]
             writer.writerow(headers)
 
-            # Zapisz dane do pliku
             for i, item in enumerate(results["items"]):
                 track = item["name"]
                 artist = item["artists"][0]["name"]
@@ -67,16 +64,44 @@ class SpotifyProcessData:
         ) as file:
             writer = csv.writer(file)
 
-            # Zapisz nagłówki kolumn
             headers = ["Nr", "Artist"]
             writer.writerow(headers)
 
-            # Zapisz dane do pliku
             for i, item in enumerate(results["items"]):
                 artist = item["name"]
 
                 row = [i + 1, artist]
                 writer.writerow(row)
+
+    def get_recommendations(self, sp):
+        top_artists = pd.read_csv("app/backend/files/Spotify/top_artists.csv")
+        artists = []
+
+        for i in range(2):
+            search = sp.search(q=top_artists["Artist"][i], type="artist")
+            artist_id = search["artists"]["items"][0]["id"]
+            artists.append(artist_id)
+
+        results = sp.recommendations(limit=20, seed_artists=artists)
+
+        with open(
+            "app/backend/files/Spotify/recommendations.csv",
+            "w",
+            newline="",
+            encoding="utf-8",
+        ) as file:
+            writer = csv.writer(file)
+
+            headers = ["Nr", "Title", "Artist"]
+            writer.writerow(headers)
+
+            tracks = results["tracks"]
+            index = 1
+            for track in tracks:
+                artist = track["artists"][0]["name"]
+                row = [index, track["name"], artist]
+                writer.writerow(row)
+                index += 1
 
     def process_data_from_file(self):
         json_files = []

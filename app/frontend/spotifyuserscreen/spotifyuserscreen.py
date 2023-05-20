@@ -27,11 +27,20 @@ class SpotifyUserScreen(MDScreen):
                 text=f"{index}. {row[1]}", secondary_text=f"Artist: {row[2]}"
             )
             index += 1
-            custom_list.add_widget(list_item, 1)
+            custom_list.add_widget(list_item, 2)
 
         data_array = pd.read_csv("app/backend/files/Spotify/top_artists.csv")
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomOneLineListItem(text=f"{index}. {row[1]}")
+            index += 1
+            custom_list.add_widget(list_item, 1)
+
+        data_array = pd.read_csv("app/backend/files/Spotify/recommendations.csv")
+        index = 1
+        for i, row in data_array.iterrows():
+            list_item = CustomTwoLineListItem(
+                text=f"{index}. {row[1]}", secondary_text=f"Artist: {row[2]}"
+            )
             index += 1
             custom_list.add_widget(list_item, 0)

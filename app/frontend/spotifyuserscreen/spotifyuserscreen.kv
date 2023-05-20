@@ -70,6 +70,24 @@
                                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
                                         halign: "center"
 
+                        OneLineListItem:
+                            height: root.height * 0.08
+                            MDCard:
+                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                line_color: "#A7F500"
+                                line_width: 1.0
+                                md_bg_color: "#080808"
+
+                                MDBoxLayout:
+                                    orientation: "vertical"
+
+                                    MDLabel:
+                                        text: "Recommendations"
+                                        color: "#A7F500"
+                                        font_size: root.height * 0.03
+                                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                        halign: "center"
+
 <CustomOneLineListItem>:
     text_color: "#E0E0E0"
     theme_text_color: "Custom"
