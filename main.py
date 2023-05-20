@@ -9,6 +9,7 @@ from app.frontend.netflixuserscreen.netflixuserscreen import NetflixUserScreen
 from app.frontend.spotifyloginscreen.spotifyloginscreen import SpotifyLoginScreen
 from app.frontend.spotifynewdatascreen.spotifynewdatascreen import SpotifyNewDataScreen
 from app.frontend.spotifyuserscreen.spotifyuserscreen import SpotifyUserScreen
+from app.frontend.spotifyloadingscreen.spotifyloadingscreen import SpotifyLoadingScreen
 
 Builder.load_file("main.kv")
 Builder.load_file("app/frontend/mainscreen/mainscreen.kv")
@@ -18,6 +19,7 @@ Builder.load_file("app/frontend/netflixuserscreen/netflixuserscreen.kv")
 Builder.load_file("app/frontend/spotifyloginscreen/spotifyloginscreen.kv")
 Builder.load_file("app/frontend/spotifynewdatascreen/spotifynewdatascreen.kv")
 Builder.load_file("app/frontend/spotifyuserscreen/spotifyuserscreen.kv")
+Builder.load_file("app/frontend/spotifyloadingscreen/spotifyloadingscreen.kv")
 
 
 class WindowManager(MDScreenManager):
