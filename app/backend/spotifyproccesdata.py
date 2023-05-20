@@ -24,13 +24,15 @@ class SpotifyProcessData:
         ) as file:
             writer = csv.writer(file)
 
-            headers = ["Nr", "Title", "Artists"]
+            headers = ["Nr", "Title", "Artists", "Date"]
             writer.writerow(headers)
 
             for i, item in enumerate(results["items"]):
                 track = item["track"]
                 artists = ", ".join([artist["name"] for artist in track["artists"]])
-                row = [i + 1, track["name"], artists]
+                tmp_date = item["played_at"]
+                date = tmp_date[:-5].replace("T", " ")
+                row = [i + 1, track["name"], artists, date]
                 writer.writerow(row)
 
     def get_top_tracks(self, sp):

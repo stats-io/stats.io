@@ -20,6 +20,17 @@
                 text: "History"
                 icon: "history"
 
+                MDScrollView:
+                    size_hint: 1, 1
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                    MDList:
+                        id: spotifyhistoryscreen
+                        divider_color: "#E0E0E0"
+                        divider: "Full"
+                        spacing: dp(10)
+                        padding: dp(20)
+
             MDBottomNavigationItem:
                 name: "spotifytoplistscreen"
                 md_bg_color: "#080808"
@@ -100,3 +111,16 @@
     secondary_theme_text_color: "Custom"
     secondary_text_color: "#A7F500"
     secondary_font_style: "Caption"
+
+<CustomThreeLineListItem>:
+    theme_text_color: "Custom"
+    secondary_theme_text_color: "Custom"
+    tertiary_theme_text_color: "Custom"
+    text_color: "#E0E0E0"
+    secondary_text_color: "#A7F500"
+    tertiary_text_color: "#E0E0E0"
+    secondary_font_style: "Caption"
+    tertiary_font_style: "Caption"
+
+
+
