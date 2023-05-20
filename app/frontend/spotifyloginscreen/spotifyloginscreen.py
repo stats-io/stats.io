@@ -1,7 +1,7 @@
 from kivymd.uix.screen import MDScreen
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from app.frontend.spotifyloginscreen.config import (
+from config import (
     CLIENT_ID,
     CLIENT_SECRET,
     REDIRECT_URI,
