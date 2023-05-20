@@ -3,35 +3,35 @@ import pandas as pd
 
 class SpotifyMainScreen:
     def __init__(self):
-        self.csvFile = self.ReadCSV()
-        self.TotalArtists = 0
-        self.TotalSongs = 0
-        self.TotalTime = 0
+        self.csv_file = self.read_csv()
+        self.total_artists = 0
+        self.total_songs = 0
+        self.total_time = 0
 
-    def ReadCSV(self):
-        self.Last = "app/backend/files/Spotify/Last_Data.csv"
+    def read_csv(self):
+        self.last = "app/backend/files/Spotify/Last_Data.csv"
         self.new = "app/backend/files/Spotify/Spotify_Data.csv"
         try:
-            self.DataArray = pd.read_csv(self.new)
+            self.data_array = pd.read_csv(self.new)
             return self.new
         except pd.errors.EmptyDataError:
             pass
         try:
-            self.DataArray = pd.read_csv(self.Last)
-            return self.Last
+            self.data_array = pd.read_csv(self.last)
+            return self.last
         except pd.errors.EmptyDataError:
             return None
 
-    def CountArtists(self):
-        self.DataArray = pd.read_csv(self.csvFile)
-        return self.DataArray["Artist"].nunique()
+    def count_artists(self):
+        self.data_array = pd.read_csv(self.csv_file)
+        return self.data_array["Artist"].nunique()
 
-    def CountSongs(self):
-        self.DataArray = pd.read_csv(self.csvFile)
-        return self.DataArray["Title"].nunique()
+    def count_songs(self):
+        self.data_array = pd.read_csv(self.csv_file)
+        return self.data_array["Title"].nunique()
 
-    def msConverter(self):
-        ms = self.DataArray["Time"].sum()
+    def ms_converter(self):
+        ms = self.data_array["Time"].sum()
         seconds = ms // 1000
         minutes = seconds // 60
         hours = minutes // 60
@@ -41,9 +41,9 @@ class SpotifyMainScreen:
         minutes %= 60
         hours %= 24
 
-        return f"{days} dni {hours} godzin {minutes} minut {seconds} sekund"
+        return f"{days} days {hours} hours {minutes} minutes {seconds} seconds"
 
-    def CountTime(self):
-        self.DataArray = pd.read_csv(self.csvFile)
-        ms = self.DataArray["Time"].sum()
-        return self.msConverter()
+    def count_time(self):
+        self.data_array = pd.read_csv(self.csv_file)
+        ms = self.data_array["Time"].sum()
+        return self.ms_converter()

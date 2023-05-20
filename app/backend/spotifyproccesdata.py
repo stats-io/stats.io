@@ -5,7 +5,7 @@ import csv
 
 class SpotifyProcessData:
     def __init__(self, file="app/backend/files/Spotify/my_spotify_data.zip"):
-        self.FolderDir = file
+        self.folder_dir = file
 
     def process_data_from_spotipy(self, sp):
         self.get_recently_played_tracks(sp)
@@ -55,18 +55,18 @@ class SpotifyProcessData:
                 row = [i + 1, track, artist]
                 writer.writerow(row)
 
-    def ProcessDataFromFile(self):
+    def process_data_from_file(self):
         json_files = []
 
-        with zipfile.ZipFile(self.FolderDir, "r") as zip:
+        with zipfile.ZipFile(self.folder_dir, "r") as zip:
             for file_name in zip.namelist():
                 if "StreamingHistory" in file_name and file_name.endswith(".json"):
                     with zip.open(file_name) as file:
                         df = pd.read_json(file)
                         json_files.append(df)
 
-        self.DataArray = pd.concat(json_files, ignore_index=True)
-        self.DataArray.rename(
+        self.data_array = pd.concat(json_files, ignore_index=True)
+        self.data_array.rename(
             columns={
                 "endTime": "Date",
                 "artistName": "Artist",
@@ -75,10 +75,10 @@ class SpotifyProcessData:
             },
             inplace=True,
         )
-        self.DataArray = self.DataArray.iloc[::-1]
-        self.DataArray = self.DataArray.reset_index(drop=True)
-        self.DataArray.to_csv("app/backend/files/Spotify/Spotify_Data.csv")
-        self.SaveLastData()
+        self.data_array = self.data_array.iloc[::-1]
+        self.data_array = self.data_array.reset_index(drop=True)
+        self.data_array.to_csv("app/backend/files/Spotify/Spotify_Data.csv")
+        self.save_last_data()
 
-    def SaveLastData(self):
-        self.DataArray.to_csv("app/backend/files/Spotify/Last_Data.csv")
+    def save_last_data(self):
+        self.data_array.to_csv("app/backend/files/Spotify/Last_Data.csv")

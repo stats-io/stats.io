@@ -5,8 +5,7 @@ class SpotifyLoadingScreen:
     def __init__(self):
         self.finished_loading = 0
 
-    def startProcessingData(self):
+    def start_processing_data(self):
         x = PD.SpotifyProcessData()
-        x.ProcessDataFromFile()
+        x.process_data_from_file()
         self.finished_loading = 1
-
