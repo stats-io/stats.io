@@ -14,6 +14,20 @@
                 text: "main"
                 icon: "home"
 
+                MDLabel:
+                    text: "Some random\n recommendations"
+                    color: "#A7F500"
+                    pos_hint: {"center_x": 0.5, "center_y": 0.95}
+                    font_size: root.height * 0.025
+                    halign: "center"
+
+                MDBoxLayout:
+                    id: spotifymainscreen
+                    orientation: "vertical"
+                    size_hint: 1, 0.9
+                    padding: dp(10)
+                    spacing: dp(20)
+
             MDBottomNavigationItem:
                 name: "spotifyhistoryscreen"
                 md_bg_color: "#080808"
@@ -123,4 +137,42 @@
     tertiary_font_style: "Caption"
 
 
+<CustomMDCard>:
+    size_hint: 0.8, 0.1
+    md_bg_color: "#080808"
+    line_color: "#A7F500"
+    line_width: 1.0
 
+    MDBoxLayout:
+        orientation: "horizontal"
+        size_hint: 1, 1
+        padding: dp(10)
+        spacing: dp(20)
+
+        AsyncImage:
+            id: image_url
+            source: ""
+            halign: "left"
+            pos_hint: {"center_x": 0.2, "center_y": 0.5}
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint: 1, 1
+            padding: dp(25)
+            spacing: dp(10)
+
+            MDLabel:
+                id: title_name
+                text: ""
+                color: "#E0E0E0"
+                pos_hint: {"center_y": 0.5}
+                font_size: root.height * 0.10
+                halign: "left"
+
+            MDLabel:
+                id: artist_name
+                text: ""
+                color: "#E0E0E0"
+                pos_hint: {"center_y": 0.5}
+                font_size: root.height * 0.10
+                halign: "left"

@@ -1,6 +1,16 @@
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
+from kivymd.uix.card import MDCard
 import pandas as pd
+import random
+import spotipy
+from spotipy import SpotifyOAuth
+from config import (
+    CLIENT_ID,
+    CLIENT_SECRET,
+    REDIRECT_URI,
+    SCOPE,
+)
 
 
 class CustomOneLineListItem(OneLineListItem):
@@ -15,10 +25,46 @@ class CustomThreeLineListItem(ThreeLineListItem):
     pass
 
 
+class CustomMDCard(MDCard):
+    pass
+
+
 class SpotifyUserScreen(MDScreen):
     def generate_screens(self):
+        self.__generate_main_screen()
         self.__generate_history()
         self.__generate_top_lists()
+
+    def __generate_main_screen(self):
+        screen = self.manager.get_screen("spotifyuserscreen").ids.spotifymainscreen
+
+        sp = spotipy.Spotify(
+            auth_manager=SpotifyOAuth(
+                client_id=CLIENT_ID,
+                client_secret=CLIENT_SECRET,
+                redirect_uri=REDIRECT_URI,
+                scope=SCOPE,
+            )
+        )
+
+        data_array = pd.read_csv("app/backend/files/Spotify/top_artists.csv")
+        number_of_lines = len(data_array)
+        number_of_random_artist = random.randint(0, number_of_lines - 1)
+        artist = data_array.iloc[number_of_random_artist]
+        artist_name = artist["Artist"]
+        search = sp.search(q=f"{artist_name}", type="artist")
+        artist_id = search["artists"]["items"][0]["id"]
+        results = sp.recommendations(limit=6, seed_artists=[artist_id])
+
+        for track in results["tracks"]:
+            card = CustomMDCard(pos_hint={"center_x": 0.5})
+            track_name = track["name"]
+            artist_name = track["artists"][0]["name"]
+            url = track["album"]["images"][0]["url"]
+            card.ids.title_name.text = f"Title:  {track_name}"
+            card.ids.artist_name.text = f"Artist: {artist_name}"
+            card.ids.image_url.source = url
+            screen.add_widget(card)
 
     def __generate_history(self):
         custom_list = self.manager.get_screen(
