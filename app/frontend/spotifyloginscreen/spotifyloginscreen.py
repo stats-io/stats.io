@@ -7,23 +7,9 @@ from config import (
     REDIRECT_URI,
     SCOPE,
 )
-import os
 
 
 class SpotifyLoginScreen(MDScreen):
-    def skip_login(self):
-        if os.path.isfile(".cache"):
-            sp = spotipy.Spotify(
-                auth_manager=SpotifyOAuth(
-                    client_id=CLIENT_ID,
-                    client_secret=CLIENT_SECRET,
-                    redirect_uri=REDIRECT_URI,
-                    scope=SCOPE,
-                )
-            )
-            self.parent.get_screen("spotifyloadingscreen").sp = sp
-            self.parent.current = "spotifynewdatascreen"
-
     def login(self):
         sp = spotipy.Spotify(
             auth_manager=SpotifyOAuth(

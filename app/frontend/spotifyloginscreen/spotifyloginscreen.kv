@@ -6,7 +6,7 @@
         id: screen
 
         MDLabel:
-            text: "Here you can\n\n log into your account\n\n to get more data"
+            text: "Please log into\n your Spotify account \nto get your data"
             color: "E0E0E0"
             halign: "center"
             pos_hint: {"center_x": 0.5,"center_y": 0.7}
@@ -40,31 +40,5 @@
                     font_size: root.height * 0.03
                     halign: "right"
 
-        MDCard:
-            size_hint: 0.8, 0.1
-            pos_hint: {"center_x": 0.5,"center_y": 0.15}
-            md_bg_color: "#A7F500"
-            line_color: "#A7F500"
-            line_width: 1.0
-            on_release: root.skip_login()
 
-            MDBoxLayout:
-                orientation: "horizontal"
-                size_hint: 1, 1
-                padding: dp(25)
-                spacing: dp(20)
-
-                MDLabel:
-                    text: "Skip"
-                    color: "#080808"
-                    pos_hint: {"center_y": 0.5}
-                    font_size: root.height * 0.025
-                    halign: "left"
-
-                MDIcon:
-                    icon: "skip-next-circle"
-                    color: "#080808"
-                    pos_hint: {"center_y": 0.5}
-                    font_size: root.height * 0.03
-                    halign: "right"
 
