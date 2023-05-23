@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.screen import MDScreen
@@ -12,6 +13,8 @@ from app.backend.netflixtoplists import NetflixTopLists
 from app.backend.tmdbapi import single_movie_search
 from libs.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
+user_file = os.path.abspath("app/backend/files/Netflix/test.csv")
+user_file_last = os.path.abspath("app/backend/files/Netflix/LastTestFile.csv")
 
 class CustomOneLineListItem(OneLineListItem):
     pass
@@ -92,8 +95,10 @@ class NetflixUserScreen(MDScreen):
         self.__generate_history(text)
 
     def __generate_history(self, text):
-        df = pd.read_csv("app/backend/files/Netflix/test.csv")
-        data_array = None
+        try:
+            df = pd.read_csv(user_file)
+        except  pd.errors.EmptyDataError:
+            df = pd.read_csv(user_file_last)
         if text.strip() == "":
             data_array = df.to_dict("records")
         else:
