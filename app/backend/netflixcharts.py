@@ -2,10 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import re
+import os
 
+final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
+last_data = os.path.abspath("app/backend/files/Netflix/LastData.csv")
 
 class NetflixCharts:
-    def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
+    def __init__(self, file=final_data):
         self.csv_file = self.read_csv_file(file)
 
     def read_csv_file(self, file):
@@ -14,7 +17,7 @@ class NetflixCharts:
             return file
         except pd.errors.EmptyDataError:
             pass
-        file = "app/backend/files/Netflix/LastData.csv"
+        file = last_data
         try:
             df = pd.read_csv(file)
             return file
@@ -41,7 +44,7 @@ class NetflixCharts:
 
     def dates_chart(self):
         self.data_array = pd.read_csv(
-            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+            self.read_csv_file(final_data)
         )
         dates_counter = {}
         for ind, row in self.data_array.iterrows():
@@ -142,7 +145,7 @@ class NetflixCharts:
     def genres_chart(self):
         genres_counter = {}
         self.data_array = pd.read_csv(
-            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+            self.read_csv_file(final_data)
         )
         for ind, row in self.data_array.iterrows():
             genres_tmp = row["genres"]
@@ -220,7 +223,7 @@ class NetflixCharts:
 
     def favourite_year(self):
         release_year = pd.read_csv(
-            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+            self.read_csv_file(final_data)
         )
         release_year["Release Date"] = release_year["Release Date"].str.slice(0, 4)
         release_year = release_year[["title", "Release Date"]]
@@ -258,7 +261,7 @@ class NetflixCharts:
 
     def time_at_series(self):
         dataArray = pd.read_csv(
-            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+            self.read_csv_file(final_data)
         )
         if np.isnan(dataArray.iloc[0, 6]):
             dataArray = dataArray.sort_values("number_of_episodes").tail(20)
