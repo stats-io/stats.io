@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
+import os
 
+adapter_path = os.path.abspath('./app/backend/files/Netflix/adapted_data.csv')
 
 class NetflixDataAdapter:
     def __init__(self, path):
@@ -14,8 +16,8 @@ class NetflixDataAdapter:
             self.remake_file_short()
 
     def get_total_time(self, data):
-        self.title = {}
-        self.title_final = {}
+        title = {}
+        title_final = {}
 
         for row in data.iterrows():
             time_str = row[1][2]
@@ -24,152 +26,152 @@ class NetflixDataAdapter:
 
             key = row[1][4]
 
-            if key in self.title:
-                self.title[key] += time_in_seconds
+            if key in title:
+                title[key] += time_in_seconds
             else:
-                self.title[key] = time_in_seconds
+                title[key] = time_in_seconds
 
-        for key, value in self.title.items():
+        for key, value in title.items():
             vkey = key.split(":")[0]
-            if vkey in self.title_final:
-                self.title_final[vkey] += self.title[key]
+            if vkey in title_final:
+                title_final[vkey] += title[key]
             else:
-                self.title_final[vkey] = self.title[key]
-        return self.title_final
+                title_final[vkey] = title[key]
+        return title_final
 
     def film_or_series(self, data):
-        self.film_tab = {}
-        self.series_tab = {}
+        film_tab = {}
+        series_tab = {}
         for row in data.iterrows():
             title = row[1][4]
             if ":" in title:
-                self.type = "series"
+                type = "series"
                 title = row[1][4].split(":")[0]
-                self.series_tab[title] = self.series_tab.get(title, 0) + 1
+                series_tab[title] = series_tab.get(title, 0) + 1
             else:
-                self.type = "film"
-                self.film_tab[title] = self.film_tab.get(title, 0) + 1
-        return self.film_tab, self.series_tab
+                type = "film"
+                film_tab[title] = film_tab.get(title, 0) + 1
+        return film_tab, series_tab
 
     def film_or_series_dates_short(self, data):
-        self.film_tab = {}
-        self.series_tab = {}
-        self.film_tab_dates = {}
-        self.series_tab_dates = {}
+        film_tab = {}
+        series_tab = {}
+        film_tab_dates = {}
+        series_tab_dates = {}
         for row in data.iterrows():
             title = row[1][0]
             if ":" in title:
-                self.type = "series"
+                type = "series"
                 title = row[1][0].split(":")[0]
-                if title in self.series_tab_dates:
-                    self.series_tab_dates[title].append(row[1][1])
+                if title in series_tab_dates:
+                    series_tab_dates[title].append(row[1][1])
                 else:
-                    self.series_tab_dates[title] = []
-                    self.series_tab_dates[title].append(row[1][1])
-                self.series_tab[title] = self.series_tab.get(title, 0) + 1
+                    series_tab_dates[title] = []
+                    series_tab_dates[title].append(row[1][1])
+                series_tab[title] = series_tab.get(title, 0) + 1
             else:
-                self.type = "film"
-                if title in self.film_tab_dates:
-                    self.film_tab_dates[title].append(row[1][1])
+                type = "film"
+                if title in film_tab_dates:
+                    film_tab_dates[title].append(row[1][1])
                 else:
-                    self.film_tab_dates[title] = []
-                    self.film_tab_dates[title].append(row[1][1])
-                self.film_tab[title] = self.film_tab.get(title, 0) + 1
+                    film_tab_dates[title] = []
+                    film_tab_dates[title].append(row[1][1])
+                film_tab[title] = film_tab.get(title, 0) + 1
         return (
-            self.film_tab,
-            self.series_tab,
-            self.film_tab_dates,
-            self.series_tab_dates,
+            film_tab,
+            series_tab,
+            film_tab_dates,
+            series_tab_dates,
         )
 
     def get_data(self, data):
-        self.title = {}
+        titles = {}
         for row in data.iterrows():
             title = row[1][4].split(":")[0]
             date = row[1][1].split(" ")[0]
-            if title in self.title:
-                self.title[title].append(date)
+            if title in titles:
+                titles[title].append(date)
             else:
-                self.title[title] = []
-                self.title[title].append(date)
-        self.title_final = {}
-        for key, value in self.title.items():
+                titles[title] = []
+                titles[title].append(date)
+        title_final = {}
+        for key, value in titles.items():
             name = key.split(":")[0]
-            if name in self.title_final:
-                self.title_final[name].append(self.title[key])
+            if name in title_final:
+                title_final[name].append(titles[key])
             else:
-                self.title_final[name] = []
-                self.title_final[name].append(self.title[key])
-        return self.title_final
+                title_final[name] = []
+                title_final[name].append(titles[key])
+        return title_final
 
     def remake_file_long(self):
-        self.data = pd.read_csv(self.csv_file)
-        self.data = self.data.loc[self.data["Supplemental Video Type"].isna()]
-        self.total_data = self.get_data(self.data)
-        self.total_time = self.get_total_time(self.data)
-        self.film_ep, self.series_ep = self.film_or_series(self.data)
-        self.adapted_data = []
-        for key, value in self.film_ep.items():
+        data = self.data
+        data = data.loc[data["Supplemental Video Type"].isna()]
+        total_data = self.get_data(data)
+        total_time = self.get_total_time(data)
+        film_ep, series_ep = self.film_or_series(data)
+        adapted_data = []
+        for key, value in film_ep.items():
             new = {
                 "title": f"{key}",
                 "type": "film",
                 "number_of_episodes": value,
-                "SumOfTime": self.total_time[key],
-                "Dates": self.total_data[key],
+                "SumOfTime": total_time[key],
+                "Dates": total_data[key],
             }
-            self.adapted_data.append(new)
-        for key, value in self.series_ep.items():
+            adapted_data.append(new)
+        for key, value in series_ep.items():
             new = {
                 "title": f"{key}",
                 "type": "series",
                 "number_of_episodes": value,
-                "SumOfTime": self.total_time[key],
-                "Dates": self.total_data[key],
+                "SumOfTime": total_time[key],
+                "Dates": total_data[key],
             }
-            self.adapted_data.append(new)
+            adapted_data.append(new)
 
-        self.df = pd.DataFrame(self.adapted_data)
-        self.df.insert(3, "genres", value=np.nan)
-        self.df.insert(4, "popularity", value=np.nan)
-        self.df.insert(7, "TMBDid", value=np.nan)
-        self.df.insert(8, "Release Date", value=np.nan)
-        self.df.insert(5, "actress", value=np.nan)
-        self.df.to_csv("app/backend/files/Netflix/adapted_data.csv", index=False)
-        self.csv_file = "app/backend/files/Netflix/adapted_data.csv"
+        df = pd.DataFrame(adapted_data)
+        df.insert(3, "genres", value=np.nan)
+        df.insert(4, "popularity", value=np.nan)
+        df.insert(7, "TMBDid", value=np.nan)
+        df.insert(8, "Release Date", value=np.nan)
+        df.insert(5, "actress", value=np.nan)
+        df.to_csv(adapter_path, index=False)
+        self.csv_file = adapter_path
 
     def remake_file_short(self):
-        self.data = pd.read_csv(self.csv_file)
+        data = self.data
         (
-            self.film_ep,
-            self.series_ep,
-            self.film_dates,
-            self.series_dates,
-        ) = self.film_or_series_dates_short(self.data)
-        self.adapted_data = []
+            film_ep,
+            series_ep,
+            film_dates,
+            series_dates,
+        ) = self.film_or_series_dates_short(data)
+        adapted_data = []
 
-        for key, value in self.film_ep.items():
+        for key, value in film_ep.items():
             new = {
                 "title": f"{key}",
                 "type": "film",
                 "number_of_episodes": value,
-                "Dates": self.film_dates[key],
+                "Dates": film_dates[key],
             }
-            self.adapted_data.append(new)
-        for key, value in self.series_ep.items():
+            adapted_data.append(new)
+        for key, value in series_ep.items():
             new = {
                 "title": f"{key}",
                 "type": "series",
                 "number_of_episodes": value,
-                "Dates": self.series_dates[key],
+                "Dates": series_dates[key],
             }
-            self.adapted_data.append(new)
+            adapted_data.append(new)
 
-        self.df = pd.DataFrame(self.adapted_data)
-        self.df.insert(3, "genres", value=np.nan)
-        self.df.insert(4, "popularity", value=np.nan)
-        self.df.insert(5, "actress", value=np.nan)
-        self.df.insert(6, "SumOfTime", value=np.nan)
-        self.df.insert(8, "TMBDid", value=np.nan)
-        self.df.insert(9, "Release Date", value=np.nan)
-        self.df.to_csv("app/backend/files/Netflix/adapted_data.csv", index=False)
-        self.csv_file = "app/backend/files/Netflix/adapted_data.csv"
+        df = pd.DataFrame(adapted_data)
+        df.insert(3, "genres", value=np.nan)
+        df.insert(4, "popularity", value=np.nan)
+        df.insert(5, "actress", value=np.nan)
+        df.insert(6, "SumOfTime", value=np.nan)
+        df.insert(8, "TMBDid", value=np.nan)
+        df.insert(9, "Release Date", value=np.nan)
+        df.to_csv(adapter_path, index=False)
+        self.csv_file = adapter_path
