@@ -8,6 +8,7 @@ import app.backend.netflixloading as Loading
 
 
 class NetflixLoadingScreen(MDScreen):
+
     def _update_label(self, *args):
         if self.__counter < self.__num and self.__loading_screen.finished_loading == 0:
             self.__counter += 1
@@ -26,12 +27,8 @@ class NetflixLoadingScreen(MDScreen):
 
     def _animation_handler(self, *args):
         self.__loading_screen = Loading.NetflixLoadingScreen()
-        est_time, self.__num = self.__loading_screen.get_estimated_time(
-            self.__file_path
-        )
-        backend_thread = Thread(
-            target=self.__loading_screen.start_processing_data
-        ).start()
+        est_time, self.__num = self.__loading_screen.get_estimated_time(self.__file_path)
+        backend_thread = Thread(target=self.__loading_screen.start_processing_data).start()
         self.manager.get_screen(
             "netflixloadingscreen"
         ).ids.estimatedtime.text = f"Estimated time: {round(self.__num * est_time)}s"
