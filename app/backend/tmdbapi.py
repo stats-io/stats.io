@@ -1,7 +1,9 @@
 import json
 import pandas as pd
 import requests
+import os
 
+genres_path = os.path.abspath("app/backend/files/Netflix/genres.csv")
 
 class TMBDApi:
     def __init__(self, path="", get_act_and_gen=0, data_array=None):
@@ -83,7 +85,7 @@ class TMBDApi:
             self.data_array.at[i, "actress"] = credits
 
     def get_genres(self):
-        genres_df = pd.read_csv("app/backend/files/Netflix/genres.csv")
+        genres_df = pd.read_csv(genres_path)
         genres_dict = dict(zip(genres_df["id"], genres_df["name"]))
         for i, row in self.data_array.iterrows():
             genres = row["genres"]
@@ -95,7 +97,7 @@ class TMBDApi:
 
 
 def get_genres(gen: list) -> str:
-    with open("app/backend/files/Netflix/genres.csv", "r") as f:
+    with open(genres_path, "r") as f:
         genres_df = pd.read_csv(f)
         genres_dict = dict(zip(genres_df["id"], genres_df["name"]))
         for i in range(len(gen)):
