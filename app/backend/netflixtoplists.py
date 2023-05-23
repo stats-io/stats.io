@@ -1,10 +1,13 @@
 import re
 import numpy as np
 import pandas as pd
+import os
 
+final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
+last_data = os.path.abspath("app/backend/files/Netflix/LastData.csv")
 
 class NetflixTopLists:
-    def __init__(self, file="app/backend/files/Netflix/Final_Data.csv"):
+    def __init__(self, file=final_data):
         self.csv_file = self.read_csv_file(file)
         if self.csv_file is not None:
             self.top_actors = self.get_top_actors()
@@ -19,7 +22,7 @@ class NetflixTopLists:
             return file
         except pd.errors.EmptyDataError:
             pass
-        file = "app/backend/files/Netflix/LastData.csv"
+        file = last_data
         try:
             df = pd.read_csv(file)
             return file
@@ -28,7 +31,7 @@ class NetflixTopLists:
 
     def get_top_actors(self):
         self.data_array = pd.read_csv(
-            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+            self.read_csv_file(final_data)
         )
         actor_counter = {}
         for ind, row in self.data_array.iterrows():
@@ -59,7 +62,7 @@ class NetflixTopLists:
 
     def get_top_genres(self):
         self.data_array = pd.read_csv(
-            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+            self.read_csv_file(final_data)
         )
         genres_counter = {}
         for ind, row in self.data_array.iterrows():
@@ -108,7 +111,7 @@ class NetflixTopLists:
 
     def get_top_series(self):
         data_array = pd.read_csv(
-            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+            self.read_csv_file(final_data)
         )
         if np.isnan(data_array.iloc[0, 6]):
             data_array = data_array.sort_values(
@@ -131,7 +134,7 @@ class NetflixTopLists:
 
     def get_most_popular_watched(self):
         data_array = pd.read_csv(
-            self.read_csv_file("app/backend/files/Netflix/Final_Data.csv")
+            self.read_csv_file(final_data)
         )
         data_array = data_array.sort_values("popularity", ascending=False).head(10)
         result = data_array[["title", "popularity"]].copy()
