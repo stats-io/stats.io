@@ -6,7 +6,9 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
-
+from kivy.core.window import Window
+from kivy.config import Config
+Config.set('kivy', 'exit_on_escape', '0')
 from app.backend.netflixcharts import NetflixCharts
 from app.backend.netflixmain import NetflixMainScreen
 from app.backend.netflixtoplists import NetflixTopLists
@@ -15,9 +17,13 @@ from libs.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 user_file = os.path.abspath("app/backend/files/Netflix/test.csv")
 user_file_last = os.path.abspath("app/backend/files/Netflix/LastTestFile.csv")
+user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
+netflix_final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
+
 
 class CustomOneLineListItem(OneLineListItem):
     pass
+
 
 class CustomTwoLineListItem(TwoLineListItem):
     pass
@@ -159,7 +165,8 @@ class NetflixUserScreen(MDScreen):
 
         index = 1
         for serie, hours in netflix_top_lists.top_series.iterrows():
-            time = hours[1].split(':')
+            if type(hours[1]) != int:
+                time = hours[1].split(':')
             list_item = CustomTwoLineListItem(
                 text=f"{index}. {hours[0]}",
                 secondary_text=f"Number of episodes: {hours[1]}" if type(hours[1]) == int else f"{time[0]}h {time[1]}m {time[2]}s"
@@ -187,3 +194,18 @@ class NetflixUserScreen(MDScreen):
             )
             index += 1
             custom_list.add_widget(list_item, 0)
+
+    def on_enter(self):
+        Window.bind(on_keyboard=self.back_click)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.back_click)
+
+    def back_click(self, window, key, keycode, *largs):
+        if key == 27:
+            with open(netflix_final_data, "w", newline="") as csv_file:
+                csv_file.truncate()
+            with open(user_data, "w", newline="") as csv_file:
+                csv_file.truncate()
+            self.parent.current = "mainscreen"
+

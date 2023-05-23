@@ -1,12 +1,11 @@
 from kivymd.uix.screen import MDScreen
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from config import (
-    CLIENT_ID,
-    CLIENT_SECRET,
-    REDIRECT_URI,
-    SCOPE,
-)
+
+CLIENT_ID = "fb34b1a1fb884d5794990d691867df0f"
+CLIENT_SECRET = "185c998c2b0449378b992a237cc418ea"
+REDIRECT_URI = "http://localhost:8888/callback"
+SCOPE = "user-read-recently-played user-top-read"
 
 
 class SpotifyLoginScreen(MDScreen):

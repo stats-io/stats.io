@@ -1,5 +1,8 @@
 import os
 import pandas as pd
+from kivy.core.window import Window
+from kivy.config import Config
+Config.set('kivy', 'exit_on_escape', '0')
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
@@ -10,10 +13,11 @@ user_file_last = os.path.abspath("app/backend/files/Netflix/LastTestFile.csv")
 user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
 last_data = os.path.abspath('app/backend/files/Netflix/LastData.csv')
 
+
 class NetflixNewDataScreen(MDScreen):
     __banner_open = False
     dialog = None
-
+    button_press = 0
     def help_banner_handler(self):
         if not self.__banner_open:
             self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
@@ -109,3 +113,15 @@ Follow the instructions above""",
 
         else:
             pass
+
+    def on_enter(self):
+        Window.bind(on_keyboard=self.back_click)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.back_click)
+
+    def back_click(self, window, key, keycode, *largs):
+        if key == 27:
+                self.parent.current = "mainscreen"
+
+

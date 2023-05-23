@@ -2,6 +2,8 @@ import os
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
+from kivy.core.window import Window
+from kivy.config import Config
 import app.backend.tmdbapi
 from app.frontend.mainscreen.mainscreen import MainScreen
 from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadingScreen
