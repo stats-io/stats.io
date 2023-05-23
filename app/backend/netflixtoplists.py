@@ -104,8 +104,10 @@ class NetflixTopLists:
         hours = sec // 3600
         minutes = (sec % 3600) // 60
         seconds = sec % 60
-        return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
-
+        if int(hours) >= 100:
+            return "{:03d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
+        else:
+            return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
     def reverse_date(self, date):
         return date[::-1]
 
