@@ -1,3 +1,4 @@
+import os
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
@@ -21,6 +22,9 @@ Builder.load_file("app/frontend/spotifynewdatascreen/spotifynewdatascreen.kv")
 Builder.load_file("app/frontend/spotifyuserscreen/spotifyuserscreen.kv")
 Builder.load_file("app/frontend/spotifyloadingscreen/spotifyloadingscreen.kv")
 
+user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
+spotify_final_data = os.path.abspath("app/backend/files/Spotify/Spotify_Data.csv.csv")
+netflix_final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
 
 class WindowManager(MDScreenManager):
     pass
@@ -33,11 +37,15 @@ class StatsApp(MDApp):
 
     def on_stop(self):
         with open(
-            "app/backend/files/Netflix/Final_Data.csv", "w", newline=""
+            netflix_final_data, "w", newline=""
         ) as csv_file:
             csv_file.truncate()
         with open(
-            "app/backend/files/Spotify/Spotify_Data.csv", "w", newline=""
+            user_data, "w", newline=""
+        ) as csv_file:
+            csv_file.truncate()
+        with open(
+            spotify_final_data, "w", newline=""
         ) as csv_file:
             csv_file.truncate()
 
