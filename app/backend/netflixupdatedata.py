@@ -2,7 +2,11 @@ import numpy as np
 import pandas as pd
 import app.backend.netflixdataadapter as adapter
 import app.backend.tmdbapi as TMBD
+import os
 
+last_data = os.path.abspath("app/backend/files/Netflix/LastData.csv")
+final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
+UserDB = os.path.abspath("app/backend/files/Netflix/UserDB.csv")
 
 class NetflixUpdateData:
     def __init__(self, path):
@@ -11,55 +15,46 @@ class NetflixUpdateData:
         self.csv_file = data.csv_file
 
     def format_user_data(self):
-        self.data_array = pd.read_csv(self.csv_file)
-        self.data_array = pd.DataFrame(self.data_array)
-        self.db_exsist = 0
+        data_array = pd.read_csv(self.csv_file)
+        data_array = pd.DataFrame(data_array)
+        try:
+            df = pd.read_csv(UserDB)
+            db_exsist = 1
+        except pd.errors.EmptyDataError:
+            db_exsist = 0
 
-        with open(
-            "app/backend/files/Netflix/UserDB.csv", "r", encoding="utf-8"
-        ) as file:
-            first_line = file.readline()
-            if not first_line:
-                pass
+        if db_exsist == 0:
+            data_array = self.look_into_tmbd(self.csv_file, 1)
+            if np.isnan(data_array.iloc[0, 6]):
+                data_array.to_csv(final_data, index=False)
+                data_array.to_csv(last_data, index=False )
+                self.fetch_into_local_db(data_array, 0)
             else:
-                self.db_exsist = 1
-
-        if self.db_exsist == 0:
-            self.data_array = self.look_into_tmbd(self.csv_file, 1)
-            if np.isnan(self.data_array.iloc[0, 6]):
-                self.data_array.to_csv(
-                    "app/backend/files/Netflix/Final_Data.csv", index=False
+                data_array.to_csv(
+                    last_data, index=False
                 )
-                self.data_array.to_csv(
-                    "app/backend/files/Netflix/LastData.csv", index=False
+                data_array.to_csv(
+                    final_data, index=False
                 )
-                self.fetch_into_local_db(self.data_array, 0)
-            else:
-                self.data_array.to_csv(
-                    "app/backend/files/Netflix/LastData.csv", index=False
-                )
-                self.data_array.to_csv(
-                    "app/backend/files/Netflix/Final_Data.csv", index=False
-                )
-                self.data_array["SumOfTime"] = np.nan
-                self.data_array["Dates"] = np.nan
-                self.fetch_into_local_db(self.data_array, 0)
+                data_array["SumOfTime"] = np.nan
+                data_array["Dates"] = np.nan
+                self.fetch_into_local_db(data_array, 0)
         else:
-            self.data_array = self.look_into_tmbd(self.csv_file)
-            self.data_array = self.look_into_local_db(self.data_array)
-            self.dataArray_from_db = self.data_array[self.data_array["actress"].notna()]
-            self.data_from_api = self.data_array[~self.data_array["actress"].notna()]
-            self.data_from_api = self.get_genres_and_actors(self.data_from_api)
-            self.data_array = pd.concat(
-                [self.data_from_api, self.dataArray_from_db], ignore_index=True
+            data_array = self.look_into_tmbd(self.csv_file)
+            data_array = self.look_into_local_db(data_array)
+            dataArray_from_db = data_array[data_array["actress"].notna()]
+            data_from_api = data_array[~data_array["actress"].notna()]
+            data_from_api = self.get_genres_and_actors(data_from_api)
+            data_array = pd.concat(
+                [data_from_api,dataArray_from_db], ignore_index=True
             )
-            self.data_array.to_csv(
-                "app/backend/files/Netflix/LastData.csv", index=False
+            data_array.to_csv(
+                last_data, index=False
             )
-            self.data_array.to_csv(
-                "app/backend/files/Netflix/Final_Data.csv", index=False
+            data_array.to_csv(
+                final_data, index=False
             )
-            self.fetch_into_local_db(self.data_array, 1)
+            self.fetch_into_local_db(data_array, 1)
         return 1
 
     def get_genres_and_actors(self, dataArray):
@@ -73,10 +68,10 @@ class NetflixUpdateData:
         return api.data_array
 
     def look_into_local_db(self, dataArray):
-        self.data = pd.read_csv("app/backend/files/Netflix/UserDB.csv")
+        data = pd.read_csv(UserDB)
         for ind, row in dataArray.iterrows():
             try:
-                filtered_df = self.data.loc[(self.data["title"] == row[0])]
+                filtered_df = data.loc[(data["title"] == row[0])]
                 filtered_df = filtered_df.loc[filtered_df["type"] == row[1]]
                 if len(filtered_df) > 0:
                     dataArray.loc[ind, ["genres", "actress"]] = [
@@ -94,11 +89,10 @@ class NetflixUpdateData:
         dataArray["Dates"] = np.nan
         dataArray["popularity"] = np.nan
         dataArray["number_of_episodes"] = np.nan
-        self.user_db = "app/backend/files/Netflix/UserDB.csv"
         if x == 0:
-            dataArray.to_csv(self.user_db, index=False)
+            dataArray.to_csv(UserDB, index=False)
         else:
-            dataArray.to_csv(self.user_db, index=False, mode="a", header=False)
-            self.df = pd.read_csv(self.user_db)
-            self.df = self.df.drop_duplicates(subset=["title"])
-            self.df.to_csv(self.user_db, index=False, mode="w")
+            dataArray.to_csv(UserDB, index=False, mode="a", header=False)
+            df = pd.read_csv(UserDB)
+            df = df.drop_duplicates(subset=["title"])
+            df.to_csv(UserDB, index=False, mode="w")
