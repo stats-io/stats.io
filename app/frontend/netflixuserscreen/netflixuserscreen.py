@@ -160,9 +160,10 @@ class NetflixUserScreen(MDScreen):
 
         index = 1
         for serie, hours in netflix_top_lists.top_series.iterrows():
+            time = hours[1].split(':')
             list_item = CustomTwoLineListItem(
                 text=f"{index}. {hours[0]}",
-                secondary_text=f"Number of episodes: {hours[1]}" if type(hours[1]) == int else f"{hours[1][0:2]}h {hours[1][3:5]}m {hours[1][6:8]}s"
+                secondary_text=f"Number of episodes: {hours[1]}" if type(hours[1]) == int else f"{time[0]}h {time[1]}m {time[2]}s"
             )
             index += 1
             custom_list.add_widget(list_item, 4)
