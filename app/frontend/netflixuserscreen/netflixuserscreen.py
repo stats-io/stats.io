@@ -19,7 +19,6 @@ user_file_last = os.path.abspath("app/backend/files/Netflix/LastTestFile.csv")
 class CustomOneLineListItem(OneLineListItem):
     pass
 
-
 class CustomTwoLineListItem(TwoLineListItem):
     pass
 
