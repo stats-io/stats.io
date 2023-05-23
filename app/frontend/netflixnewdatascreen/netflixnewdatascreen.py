@@ -26,6 +26,7 @@ class NetflixNewDataScreen(MDScreen):
     def start_processing_data(self):
         try:
             df = pd.read_csv(user_data)
+            df.to_csv(user_file_last, index=False)
             self.parent.get_screen("netflixloadingscreen").start_processing(self.destination_path)
             self.parent.current = "netflixloadingscreen"
         except pd.errors.EmptyDataError:
@@ -48,6 +49,8 @@ class NetflixNewDataScreen(MDScreen):
     def skip_processing_data(self):
         try:
             df = pd.read_csv(last_data)
+            with open(user_data, "w", newline="") as csv_file:
+                csv_file.truncate()
             self.parent.get_screen("netflixloadingscreen").skip_processing()
             self.parent.current = "netflixuserscreen"
         except pd.errors.EmptyDataError:
@@ -63,21 +66,46 @@ follow the instructions above and add a csv file!""",
                     ),
                 ],
             )
-        self.dialog.open()
-
+            self.dialog.open()
 
     def file_manager_open(self):
         filechooser.open_file(on_selection=self.__handle_selection)
 
+
+    def WrongFile(self):
+        self.dialog = MDDialog(
+            text="""You add a Wrong file!!!
+Follow the instructions above""",
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    theme_text_color="Custom",
+                    text_color="#080808",
+                    on_release=self.close_dialog,
+                ),
+            ],
+        )
+        self.dialog.open()
+
     def __handle_selection(self, selection):
         if selection:
             file_path = selection[0]
-            df = pd.read_csv(file_path)
-            self.destination_path = os.path.join(app_folder,'test.csv')
-            df.to_csv(self.destination_path,index=False)
-            df.to_csv(user_file_last,index=False)
-            self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
-            self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
-            self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{selection[0]}"
+            try:
+                df = pd.read_csv(file_path)
+                required_columns_1 = ["Title", "Date"]
+                required_columns_2 = ["Profile Name", "Start Time", "Duration", "Attributes", "Title",
+                                      "Supplemental Video Type", "Device Type", "Bookmark", "Latest Bookmark",
+                                      "Country"]
+                if all(column in df.columns for column in required_columns_1) or all(column in df.columns for column in required_columns_2):
+                    self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
+                    self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
+                    self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{selection[0]}"
+                    self.destination_path = os.path.join(app_folder, 'test.csv')
+                    df.to_csv(self.destination_path, index=False)
+                else:
+                    self.WrongFile()
+            except Exception:
+                self.WrongFile()
+
         else:
             pass
