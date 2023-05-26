@@ -1,12 +1,16 @@
 import os
+from os.path import exists
+
 import pandas as pd
 from kivy.core.window import Window
 from kivy.config import Config
+from kivy.logger import Logger
 Config.set('kivy', 'exit_on_escape', '0')
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from plyer import filechooser
+from androidstorage4kivy import SharedStorage, Chooser
 
 app_folder = os.path.abspath('app/backend/files/Netflix')
 user_file_last = os.path.abspath("app/backend/files/Netflix/LastTestFile.csv")
@@ -18,6 +22,17 @@ class NetflixNewDataScreen(MDScreen):
     __banner_open = False
     dialog = None
     button_press = 0
+    private_files = []
+
+    def chooser_callback(self, shared_file_list):
+        ss = SharedStorage()
+        for shared_file in shared_file_list:
+            self.private_files.append(ss.copy_from_shared(shared_file))
+        del self.chooser
+
+
+
+
     def help_banner_handler(self):
         if not self.__banner_open:
             self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
@@ -29,9 +44,12 @@ class NetflixNewDataScreen(MDScreen):
 
     def start_processing_data(self):
         try:
-            df = pd.read_csv(user_data)
-            df.to_csv(user_file_last, index=False)
-            self.parent.get_screen("netflixloadingscreen").start_processing(self.destination_path)
+
+
+            # self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = str(self.private_files[0])
+            # df = pd.read_csv(user_data)
+            # df.to_csv(user_file_last, index=False)
+            self.parent.get_screen("netflixloadingscreen").start_processing(str(self.private_files[0]))
             self.parent.current = "netflixloadingscreen"
         except pd.errors.EmptyDataError:
             self.dialog = MDDialog(
@@ -73,7 +91,9 @@ follow the instructions above and add a csv file!""",
             self.dialog.open()
 
     def file_manager_open(self):
-        filechooser.open_file(on_selection=self.__handle_selection)
+        self.chooser = Chooser(self.chooser_callback)
+        self.chooser.choose_content('*/*')
+        self.parent.current = "netflixnewdatascreen"
 
 
     def WrongFile(self):
@@ -93,24 +113,13 @@ Follow the instructions above""",
 
     def __handle_selection(self, selection):
         if selection:
-            file_path = selection[0]
-            try:
-                df = pd.read_csv(file_path)
-                required_columns_1 = ["Title", "Date"]
-                required_columns_2 = ["Profile Name", "Start Time", "Duration", "Attributes", "Title",
-                                      "Supplemental Video Type", "Device Type", "Bookmark", "Latest Bookmark",
-                                      "Country"]
-                if all(column in df.columns for column in required_columns_1) or all(column in df.columns for column in required_columns_2):
-                    self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
-                    self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
-                    self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{selection[0]}"
-                    self.destination_path = os.path.join(app_folder, 'test.csv')
-                    df.to_csv(self.destination_path, index=False)
-                else:
-                    self.WrongFile()
-            except Exception:
-                self.WrongFile()
-
+            file_path = os.path.abspath(selection[0])
+            file_path = os.path.normpath(file_path)
+            file_path = "storage//emulated//0//Downloads//BigCsv.csv"
+            self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
+            self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
+            self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{selection[0]}"
+            self.destination_path = "storage//emulated//0//Downloads//BigCsv.csv"
         else:
             pass
 
