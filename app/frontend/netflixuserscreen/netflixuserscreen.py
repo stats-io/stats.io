@@ -88,9 +88,9 @@ class NetflixUserScreen(MDScreen):
         charts_screen.years_chart.add_widget(
             FigureCanvasKivyAgg(charts.favourite_year())
         )
-        charts_screen.watch_count_chart.add_widget(
-            FigureCanvasKivyAgg(charts.dates_chart())
-        )
+        # charts_screen.watch_count_chart.add_widget(
+        #     FigureCanvasKivyAgg(charts.dates_chart())
+        # )
         charts_screen.time_at_series.add_widget(
             FigureCanvasKivyAgg(charts.time_at_series())
         )
@@ -101,7 +101,7 @@ class NetflixUserScreen(MDScreen):
 
     def __generate_history(self, text):
         try:
-            df = pd.read_csv(user_file)
+            df = pd.read_csv(netflix_final_data)
         except  pd.errors.EmptyDataError:
             df = pd.read_csv(user_file_last)
         if text.strip() == "":
@@ -182,18 +182,18 @@ class NetflixUserScreen(MDScreen):
             index += 1
             custom_list.add_widget(list_item, 2)
 
-        index = 1
-        for date, titles in netflix_top_lists.top_day_watched.iterrows():
-            list_item = CustomThreeLineListItem(
-                font_style="H6",
-                text_color="#E0E0E0",
-                secondary_text_color="#A7F500",
-                text=f"{index}. {date}",
-                secondary_text=f"{titles[0]} titles",
-                tertiary_text=", ".join([f"{item} - {count}" for item, count in sorted(titles[1].items(), key=lambda x: -int(x[1]))]),
-            )
-            index += 1
-            custom_list.add_widget(list_item, 0)
+        # index = 1
+        # for date, titles in netflix_top_lists.top_day_watched.iterrows():
+        #     list_item = CustomThreeLineListItem(
+        #         font_style="H6",
+        #         text_color="#E0E0E0",
+        #         secondary_text_color="#A7F500",
+        #         text=f"{index}. {date}",
+        #         secondary_text=f"{titles[0]} titles",
+        #         tertiary_text=", ".join([f"{item} - {count}" for item, count in sorted(titles[1].items(), key=lambda x: -int(x[1]))]),
+        #     )
+        #     index += 1
+        #     custom_list.add_widget(list_item, 0)
 
     def on_enter(self):
         Window.bind(on_keyboard=self.back_click)

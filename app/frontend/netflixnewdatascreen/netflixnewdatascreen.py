@@ -30,9 +30,6 @@ class NetflixNewDataScreen(MDScreen):
             self.private_files.append(ss.copy_from_shared(shared_file))
         del self.chooser
 
-
-
-
     def help_banner_handler(self):
         if not self.__banner_open:
             self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
@@ -44,12 +41,9 @@ class NetflixNewDataScreen(MDScreen):
 
     def start_processing_data(self):
         try:
-
-
-            # self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = str(self.private_files[0])
             # df = pd.read_csv(user_data)
             # df.to_csv(user_file_last, index=False)
-            self.parent.get_screen("netflixloadingscreen").start_processing(str(self.private_files[0]))
+            self.parent.get_screen("netflixloadingscreen").start_processing(self.private_files[0])
             self.parent.current = "netflixloadingscreen"
         except pd.errors.EmptyDataError:
             self.dialog = MDDialog(
@@ -93,7 +87,6 @@ follow the instructions above and add a csv file!""",
     def file_manager_open(self):
         self.chooser = Chooser(self.chooser_callback)
         self.chooser.choose_content('*/*')
-        self.parent.current = "netflixnewdatascreen"
 
 
     def WrongFile(self):

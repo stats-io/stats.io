@@ -4,6 +4,8 @@ from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
 from kivy.core.window import Window
 from kivy.config import Config
+from kivy import platform
+from android.permissions import request_permissions, Permission
 import app.backend.tmdbapi
 from app.frontend.mainscreen.mainscreen import MainScreen
 from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadingScreen
@@ -27,6 +29,13 @@ Builder.load_file("app/frontend/spotifyloadingscreen/spotifyloadingscreen.kv")
 user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
 spotify_final_data = os.path.abspath("app/backend/files/Spotify/Spotify_Data.csv.csv")
 netflix_final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
+
+request_permissions([
+    Permission.INTERNET,
+    Permission.READ_MEDIA_IMAGES,
+    Permission.READ_MEDIA_VIDEO,
+    Permission.READ_MEDIA_AUDIO
+])
 
 class WindowManager(MDScreenManager):
     pass

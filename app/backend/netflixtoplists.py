@@ -14,7 +14,7 @@ class NetflixTopLists:
             self.top_genres = self.get_top_genres()
             self.top_series = self.get_top_series()
             self.most_popular_watched = self.get_most_popular_watched()
-            self.top_day_watched = self.get_top_day_watched()
+            # self.top_day_watched = self.get_top_day_watched()
 
     def read_csv_file(self, file):
         try:
@@ -144,53 +144,53 @@ class NetflixTopLists:
         result.drop("index", inplace=True, axis=1)
         return result
 
-    def get_top_day_watched(self):
-        dates_counter = {}
-        for ind, row in self.data_array.iterrows():
-            dates = row["Dates"]
-            dates = eval(dates)
-            for dates1 in dates:
-                if type(dates1) != list:
-                    dates_counter[dates1] = dates_counter.get(dates1, 0) + 1
-                else:
-                    for date in dates1:
-                        dates_counter[date] = dates_counter.get(date, 0) + 1
-        top_dates = pd.DataFrame.from_dict(
-            dates_counter, orient="index", columns=["value"]
-        )
-        top_dates = top_dates.sort_values("value", ascending=False).head(10)
-        top_dates.insert(1, "titles", value=np.nan)
-
-        top_dates.loc[:, ("titles")] = top_dates.loc[:, ("titles")].apply(
-            lambda x: [] if pd.isna(x) else eval(x)
-        )
-
-        for ind1, row1 in top_dates.iterrows():
-            title = {}
-            for ind2, row2 in self.data_array.iterrows():
-                dates = row2["Dates"]
-                dates = eval(dates)
-                for dates1 in dates:
-                    if type(dates1) != list:
-                        if dates1 == ind1:
-                            title[row2["title"]] = title.get(row2["title"], 0) + 1
-                    else:
-                        for date in dates1:
-                            if date == ind1:
-                                title[row2["title"]] = title.get(row2["title"], 0) + 1
-            top_dates.at[ind1, "titles"] = title
-        y = top_dates.index
-        big_csv = 0
-        tmp = pd.DataFrame(columns=["date"])
-        for i, date in enumerate(y):
-            if date[2] == "/" or date[1] == "/":
-                tmp.loc[i] = self.format_data(date)
-            else:
-                big_csv = 1
-                break
-        if big_csv == 0:
-            top_dates.index = tmp["date"]
-        top_dates.index = pd.to_datetime(top_dates.index, format="%Y-%m-%d").strftime(
-            "%d-%m-%Y"
-        )
+    # def get_top_day_watched(self):
+    #     dates_counter = {}
+    #     for ind, row in self.data_array.iterrows():
+    #         dates = row["Dates"]
+    #         dates = eval(dates)
+    #         for dates1 in dates:
+    #             if type(dates1) != list:
+    #                 dates_counter[dates1] = dates_counter.get(dates1, 0) + 1
+    #             else:
+    #                 for date in dates1:
+    #                     dates_counter[date] = dates_counter.get(date, 0) + 1
+    #     top_dates = pd.DataFrame.from_dict(
+    #         dates_counter, orient="index", columns=["value"]
+    #     )
+    #     top_dates = top_dates.sort_values("value", ascending=False).head(10)
+    #     top_dates.insert(1, "titles", value=np.nan)
+    #
+    #     top_dates.loc[:, ("titles")] = top_dates.loc[:, ("titles")].apply(
+    #         lambda x: [] if pd.isna(x) else eval(x)
+    #     )
+    #
+    #     for ind1, row1 in top_dates.iterrows():
+    #         title = {}
+    #         for ind2, row2 in self.data_array.iterrows():
+    #             dates = row2["Dates"]
+    #             dates = eval(dates)
+    #             for dates1 in dates:
+    #                 if type(dates1) != list:
+    #                     if dates1 == ind1:
+    #                         title[row2["title"]] = title.get(row2["title"], 0) + 1
+    #                 else:
+    #                     for date in dates1:
+    #                         if date == ind1:
+    #                             title[row2["title"]] = title.get(row2["title"], 0) + 1
+    #         top_dates.at[ind1, "titles"] = title
+    #     # y = top_dates.index
+    #     # big_csv = 0
+    #     # tmp = pd.DataFrame(columns=["date"])
+    #     # for i, date in enumerate(y):
+    #     #     if date[2] == "/" or date[1] == "/":
+    #     #         tmp.loc[i] = self.format_data(date)
+    #     #     else:
+    #     #         big_csv = 1
+    #     #         break
+    #     # if big_csv == 0:
+    #     #     top_dates.index = tmp["date"]
+    #     # top_dates.index = pd.to_datetime(top_dates.index, format="%Y-%m-%d").strftime(
+    #     #     "%d-%m-%Y"
+    #     # )
         return top_dates
