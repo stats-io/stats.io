@@ -6,7 +6,6 @@ import os
 final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
 last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
-
 class NetflixTopLists:
     def __init__(self, file=final_data):
         self.csv_file = self.read_csv_file(file)
@@ -109,7 +108,6 @@ class NetflixTopLists:
             return "{:03d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
         else:
             return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
-
     def reverse_date(self, date):
         return date[::-1]
 
@@ -181,18 +179,18 @@ class NetflixTopLists:
     #                         if date == ind1:
     #                             title[row2["title"]] = title.get(row2["title"], 0) + 1
     #         top_dates.at[ind1, "titles"] = title
-    #     # y = top_dates.index
-    #     # big_csv = 0
-    #     # tmp = pd.DataFrame(columns=["date"])
-    #     # for i, date in enumerate(y):
-    #     #     if date[2] == "/" or date[1] == "/":
-    #     #         tmp.loc[i] = self.format_data(date)
-    #     #     else:
-    #     #         big_csv = 1
-    #     #         break
-    #     # if big_csv == 0:
-    #     #     top_dates.index = tmp["date"]
-    #     # top_dates.index = pd.to_datetime(top_dates.index, format="%Y-%m-%d").strftime(
-    #     #     "%d-%m-%Y"
-    #     # )
+    #     y = top_dates.index
+    #     big_csv = 0
+    #     tmp = pd.DataFrame(columns=["date"])
+    #     for i, date in enumerate(y):
+    #         if date[2] == "/" or date[1] == "/":
+    #             tmp.loc[i] = self.format_data(date)
+    #         else:
+    #             big_csv = 1
+    #             break
+    #     if big_csv == 0:
+    #         top_dates.index = tmp["date"]
+    #     top_dates.index = pd.to_datetime(top_dates.index, format="%Y-%m-%d").strftime(
+    #         "%d-%m-%Y"
+    #     )
     #     return top_dates

@@ -6,9 +6,9 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
+from kivymd.uix.widget import MDWidget
 from kivy.core.window import Window
 from kivy.config import Config
-
 Config.set('kivy', 'exit_on_escape', '0')
 from app.backend.netflix.charts import NetflixCharts
 from app.backend.netflix.main_screen import NetflixMainScreen
@@ -88,9 +88,9 @@ class NetflixUserScreen(MDScreen):
         charts_screen.years_chart.add_widget(
             FigureCanvasKivyAgg(charts.favourite_year())
         )
-        charts_screen.watch_count_chart.add_widget(
-            FigureCanvasKivyAgg(charts.dates_chart())
-        )
+        # charts_screen.watch_count_chart.add_widget(
+        #     FigureCanvasKivyAgg(charts.dates_chart())
+        # )
         charts_screen.time_at_series.add_widget(
             FigureCanvasKivyAgg(charts.time_at_series())
         )
@@ -133,6 +133,8 @@ class NetflixUserScreen(MDScreen):
                 listelement.ids.two_text.text = data_array[row]["Start Time"][:10]
             row += 1
             root.add_widget(listelement)
+            space = MDWidget(height=self.height * 0.05)
+            root.add_widget(space)
         root.bind(minimum_height=root.setter("height"))
 
     def __generate_top_lists(self):
@@ -155,7 +157,7 @@ class NetflixUserScreen(MDScreen):
             custom_list.add_widget(list_item, 8)
 
         index = 1
-        for genre, number in netflix_top_lists.top_genres.iterrows():
+        for genre, number in  netflix_top_lists.top_genres.iterrows():
             list_item = CustomTwoLineListItem(
                 text=f"{index}. {genre}",
                 secondary_text=f"{number[0]} movies/series"
@@ -169,8 +171,7 @@ class NetflixUserScreen(MDScreen):
                 time = hours[1].split(':')
             list_item = CustomTwoLineListItem(
                 text=f"{index}. {hours[0]}",
-                secondary_text=f"Number of episodes: {hours[1]}" if type(
-                    hours[1]) == int else f"{time[0]}h {time[1]}m {time[2]}s"
+                secondary_text=f"Number of episodes: {hours[1]}" if type(hours[1]) == int else f"{time[0]}h {time[1]}m {time[2]}s"
             )
             index += 1
             custom_list.add_widget(list_item, 4)
@@ -183,19 +184,18 @@ class NetflixUserScreen(MDScreen):
             index += 1
             custom_list.add_widget(list_item, 2)
 
-        index = 1
-        for date, titles in netflix_top_lists.top_day_watched.iterrows():
-            list_item = CustomThreeLineListItem(
-                font_style="H6",
-                text_color="#E0E0E0",
-                secondary_text_color="#A7F500",
-                text=f"{index}. {date}",
-                secondary_text=f"{titles[0]} titles",
-                tertiary_text=", ".join(
-                    [f"{item} - {count}" for item, count in sorted(titles[1].items(), key=lambda x: -int(x[1]))]),
-            )
-            index += 1
-            custom_list.add_widget(list_item, 0)
+        # index = 1
+        # for date, titles in netflix_top_lists.top_day_watched.iterrows():
+        #     list_item = CustomThreeLineListItem(
+        #         font_style="H6",
+        #         text_color="#E0E0E0",
+        #         secondary_text_color="#A7F500",
+        #         text=f"{index}. {date}",
+        #         secondary_text=f"{titles[0]} titles",
+        #         tertiary_text=", ".join([f"{item} - {count}" for item, count in sorted(titles[1].items(), key=lambda x: -int(x[1]))]),
+        #     )
+        #     index += 1
+        #     custom_list.add_widget(list_item, 0)
 
     def on_enter(self):
         Window.bind(on_keyboard=self.back_click)
@@ -208,3 +208,4 @@ class NetflixUserScreen(MDScreen):
             with open(netflix_final_data, "w", newline="") as csv_file:
                 csv_file.truncate()
             self.parent.current = "mainscreen"
+

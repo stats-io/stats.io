@@ -32,5 +32,7 @@ class SpotifyLoadingScreen(MDScreen):
         self.__timer.schedule_once(self._animation, 0)
 
     def skip_processing(self):
+        process = SpotifyProcessData()
+        process.process_data_from_spotipy(self.sp)
         self.manager.get_screen("spotifyuserscreen").generate_screens()
         self.manager.current = "spotifyuserscreen"

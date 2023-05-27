@@ -1,12 +1,10 @@
 import os
 from kivy.lang import Builder
-from kivymd.app import MDApp
-from kivymd.uix.screenmanager import MDScreenManager
-from kivy.core.window import Window
 from kivy.config import Config
 from kivy import platform
-from android.permissions import request_permissions, Permission
-import app.backend.tmdbapi
+from kivymd.app import MDApp
+from kivymd.uix.screenmanager import MDScreenManager
+
 from app.frontend.mainscreen.mainscreen import MainScreen
 from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadingScreen
 from app.frontend.netflixnewdatascreen.netflixnewdatascreen import NetflixNewDataScreen
@@ -15,6 +13,7 @@ from app.frontend.spotifyloginscreen.spotifyloginscreen import SpotifyLoginScree
 from app.frontend.spotifynewdatascreen.spotifynewdatascreen import SpotifyNewDataScreen
 from app.frontend.spotifyuserscreen.spotifyuserscreen import SpotifyUserScreen
 from app.frontend.spotifyloadingscreen.spotifyloadingscreen import SpotifyLoadingScreen
+
 
 Builder.load_file("main.kv")
 Builder.load_file("app/frontend/mainscreen/mainscreen.kv")
@@ -26,16 +25,17 @@ Builder.load_file("app/frontend/spotifynewdatascreen/spotifynewdatascreen.kv")
 Builder.load_file("app/frontend/spotifyuserscreen/spotifyuserscreen.kv")
 Builder.load_file("app/frontend/spotifyloadingscreen/spotifyloadingscreen.kv")
 
-user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
-spotify_final_data = os.path.abspath("app/backend/files/Spotify/Spotify_Data.csv.csv")
-netflix_final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
+spotify_final_data = os.path.abspath("app/backend/spotify/database/new_data.csv")
+netflix_final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
 
-request_permissions([
-    Permission.INTERNET,
-    Permission.READ_MEDIA_IMAGES,
-    Permission.READ_MEDIA_VIDEO,
-    Permission.READ_MEDIA_AUDIO
-])
+if platform == "android":
+    from android.permissions import request_permissions, Permission
+    request_permissions([
+        Permission.INTERNET,
+        Permission.READ_MEDIA_IMAGES,
+        Permission.READ_MEDIA_VIDEO,
+        Permission.READ_MEDIA_AUDIO
+    ])
 
 class WindowManager(MDScreenManager):
     pass
@@ -48,15 +48,11 @@ class StatsApp(MDApp):
 
     def on_stop(self):
         with open(
-            netflix_final_data, "w", newline=""
+                netflix_final_data, "w", newline=""
         ) as csv_file:
             csv_file.truncate()
         with open(
-            user_data, "w", newline=""
-        ) as csv_file:
-            csv_file.truncate()
-        with open(
-            spotify_final_data, "w", newline=""
+                spotify_final_data, "w", newline=""
         ) as csv_file:
             csv_file.truncate()
 
