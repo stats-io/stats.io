@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+from collections import defaultdict
 
 adapter_path = os.path.abspath('./app/backend/netflix/database/adapted_data.csv')
 
@@ -85,24 +86,15 @@ class NetflixDataAdapter:
         )
 
     def get_data(self, data):
-        titles = {}
+        titles = defaultdict(list)
         for row in data.iterrows():
             title = row[1][4].split(":")[0]
-            date = row[1][1].split(" ")[0]
-            if title in titles:
-                titles[title].append(date)
-            else:
-                titles[title] = []
-                titles[title].append(date)
-        title_final = {}
-        for key, value in titles.items():
-            name = key.split(":")[0]
-            if name in title_final:
-                title_final[name].append(titles[key])
-            else:
-                title_final[name] = []
-                title_final[name].append(titles[key])
-        return title_final
+            date = (row[1][1].split(" ")[0]).split("-")
+            date[0], date[2] = date[2], date[0]
+            date = '.'.join(date)
+            titles[title].append(date)
+
+        return titles
 
     def remake_file_long(self):
         data = self.data
