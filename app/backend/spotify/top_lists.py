@@ -6,8 +6,8 @@ class SpotifyTopList:
         self.csv_file = self.read_csv()
 
     def read_csv(self):
-        self.last = "app/backend/files/Spotify/Last_Data.csv"
-        self.new = "app/backend/files/Spotify/Spotify_Data.csv"
+        self.last = "app/backend/spotify/database/last_data.csv"
+        self.new = "app/backend/spotify/database/new_data.csv"
         try:
             self.data_array = pd.read_csv(self.new)
             return self.new

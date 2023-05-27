@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 
-adapter_path = os.path.abspath('./app/backend/files/Netflix/adapted_data.csv')
+adapter_path = os.path.abspath('./app/backend/netflix/database/adapted_data.csv')
 
 class NetflixDataAdapter:
     def __init__(self, path):

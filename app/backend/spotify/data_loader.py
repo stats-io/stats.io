@@ -1,4 +1,4 @@
-import spotifyproccesdata as PD
+import data_updater as PD
 
 
 class SpotifyLoadingScreen:

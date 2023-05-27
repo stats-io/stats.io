@@ -7,11 +7,12 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from plyer import filechooser
+import shutil
 
-app_folder = os.path.abspath('app/backend/files/Netflix')
-user_file_last = os.path.abspath("app/backend/files/Netflix/LastTestFile.csv")
-user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
-last_data = os.path.abspath('app/backend/files/Netflix/LastData.csv')
+app_folder = os.path.abspath("app/backend/files/Netflix")
+user_file = os.path.abspath("app/backend/netflix/database/last_upload.csv")
+user_data = os.path.abspath("app/backend/files/Netflix/test.csv")
+last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
 
 class NetflixNewDataScreen(MDScreen):
@@ -29,8 +30,7 @@ class NetflixNewDataScreen(MDScreen):
 
     def start_processing_data(self):
         try:
-            df = pd.read_csv(user_data)
-            df.to_csv(user_file_last, index=False)
+            shutil.copy(self.destination_path, user_file)
             self.parent.get_screen("netflixloadingscreen").start_processing(self.destination_path)
             self.parent.current = "netflixloadingscreen"
         except pd.errors.EmptyDataError:
@@ -53,8 +53,6 @@ class NetflixNewDataScreen(MDScreen):
     def skip_processing_data(self):
         try:
             df = pd.read_csv(last_data)
-            with open(user_data, "w", newline="") as csv_file:
-                csv_file.truncate()
             self.parent.get_screen("netflixloadingscreen").skip_processing()
             self.parent.current = "netflixuserscreen"
         except pd.errors.EmptyDataError:
@@ -103,8 +101,8 @@ Follow the instructions above""",
                 if all(column in df.columns for column in required_columns_1) or all(column in df.columns for column in required_columns_2):
                     self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
                     self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
-                    self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{selection[0]}"
-                    self.destination_path = os.path.join(app_folder, 'test.csv')
+                    self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{file_path}"
+                    self.destination_path = file_path
                     df.to_csv(self.destination_path, index=False)
                 else:
                     self.WrongFile()
@@ -124,4 +122,6 @@ Follow the instructions above""",
         if key == 27:
                 self.parent.current = "mainscreen"
 
-
+#
+# x = NetflixNewDataScreen()
+# x.start_processing_data()

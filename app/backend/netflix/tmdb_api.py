@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 import os
 
-genres_path = os.path.abspath("app/backend/files/Netflix/genres.csv")
+genres_path = os.path.abspath("app/backend/netflix/database/genres.csv")
 
 class TMBDApi:
     def __init__(self, path="", get_act_and_gen=0, data_array=None):

@@ -2,9 +2,8 @@ import os
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
-from kivy.core.window import Window
 from kivy.config import Config
-import app.backend.tmdbapi
+
 from app.frontend.mainscreen.mainscreen import MainScreen
 from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadingScreen
 from app.frontend.netflixnewdatascreen.netflixnewdatascreen import NetflixNewDataScreen
@@ -13,6 +12,7 @@ from app.frontend.spotifyloginscreen.spotifyloginscreen import SpotifyLoginScree
 from app.frontend.spotifynewdatascreen.spotifynewdatascreen import SpotifyNewDataScreen
 from app.frontend.spotifyuserscreen.spotifyuserscreen import SpotifyUserScreen
 from app.frontend.spotifyloadingscreen.spotifyloadingscreen import SpotifyLoadingScreen
+
 
 Builder.load_file("main.kv")
 Builder.load_file("app/frontend/mainscreen/mainscreen.kv")
@@ -24,9 +24,9 @@ Builder.load_file("app/frontend/spotifynewdatascreen/spotifynewdatascreen.kv")
 Builder.load_file("app/frontend/spotifyuserscreen/spotifyuserscreen.kv")
 Builder.load_file("app/frontend/spotifyloadingscreen/spotifyloadingscreen.kv")
 
-user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
-spotify_final_data = os.path.abspath("app/backend/files/Spotify/Spotify_Data.csv.csv")
-netflix_final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
+spotify_final_data = os.path.abspath("app/backend/spotify/database/new_data.csv")
+netflix_final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
+adapter_path = os.path.abspath("app/backend/netflix/database/adapted_data.csv")
 
 class WindowManager(MDScreenManager):
     pass
@@ -43,13 +43,10 @@ class StatsApp(MDApp):
         ) as csv_file:
             csv_file.truncate()
         with open(
-            user_data, "w", newline=""
-        ) as csv_file:
-            csv_file.truncate()
-        with open(
             spotify_final_data, "w", newline=""
         ) as csv_file:
             csv_file.truncate()
+        os.remove(adapter_path)
 
 
 if __name__ == "__main__":

@@ -2,8 +2,8 @@ import time
 import pandas as pd
 import os
 
-final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
-last_data = os.path.abspath("app/backend/files/Netflix/LastData.csv")
+final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
+last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
 class NetflixMainScreen:
     def __init__(self, file=final_data):

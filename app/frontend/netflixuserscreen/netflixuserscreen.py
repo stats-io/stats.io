@@ -9,16 +9,15 @@ from kivymd.uix.button import MDFlatButton
 from kivy.core.window import Window
 from kivy.config import Config
 Config.set('kivy', 'exit_on_escape', '0')
-from app.backend.netflixcharts import NetflixCharts
-from app.backend.netflixmain import NetflixMainScreen
-from app.backend.netflixtoplists import NetflixTopLists
-from app.backend.tmdbapi import single_movie_search
+from app.backend.netflix.charts import NetflixCharts
+from app.backend.netflix.main_screen import NetflixMainScreen
+from app.backend.netflix.top_lists import NetflixTopLists
+from app.backend.netflix.tmdb_api import single_movie_search
 from libs.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
-user_file = os.path.abspath("app/backend/files/Netflix/test.csv")
-user_file_last = os.path.abspath("app/backend/files/Netflix/LastTestFile.csv")
-user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
-netflix_final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
+user_file_last = os.path.abspath("app/backend/netflix/database/last_file.csv")
+netflix_final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
+last_upload = os.path.abspath("app/backend/netflix/database/last_upload.csv")
 
 
 class CustomOneLineListItem(OneLineListItem):
@@ -101,8 +100,8 @@ class NetflixUserScreen(MDScreen):
 
     def __generate_history(self, text):
         try:
-            df = pd.read_csv(user_file)
-        except  pd.errors.EmptyDataError:
+            df = pd.read_csv(last_upload)
+        except pd.errors.EmptyDataError:
             df = pd.read_csv(user_file_last)
         if text.strip() == "":
             data_array = df.to_dict("records")
@@ -204,8 +203,6 @@ class NetflixUserScreen(MDScreen):
     def back_click(self, window, key, keycode, *largs):
         if key == 27:
             with open(netflix_final_data, "w", newline="") as csv_file:
-                csv_file.truncate()
-            with open(user_data, "w", newline="") as csv_file:
                 csv_file.truncate()
             self.parent.current = "mainscreen"
 

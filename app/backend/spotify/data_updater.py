@@ -127,8 +127,8 @@ class SpotifyProcessData:
         )
         self.data_array = self.data_array.iloc[::-1]
         self.data_array = self.data_array.reset_index(drop=True)
-        self.data_array.to_csv("app/backend/files/Spotify/Spotify_Data.csv")
+        self.data_array.to_csv("app/backend/files/Spotify/new_data.csv")
         self.save_last_data()
 
     def save_last_data(self):
-        self.data_array.to_csv("app/backend/files/Spotify/Last_Data.csv")
+        self.data_array.to_csv("app/backend/spotify/database/last_data.csv")
