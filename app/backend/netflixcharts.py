@@ -4,8 +4,8 @@ import pandas as pd
 import re
 import os
 
-final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
-last_data = os.path.abspath("app/backend/files/Netflix/LastData.csv")
+final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
+last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
 class NetflixCharts:
     def __init__(self, file=final_data):
@@ -42,66 +42,68 @@ class NetflixCharts:
             year = "20" + match.group(3).zfill(2)
             return f"{year}-{month}-{day}"
 
-    # def dates_chart(self):
-    #     self.data_array = pd.read_csv(
-    #         self.read_csv_file(final_data)
-    #     )
-    #     dates_counter = {}
-    #     for ind, row in self.data_array.iterrows():
-    #         dates_tmp = row["Dates"]
-    #         dates_tmp = eval(dates_tmp)
-    #         for dates1 in dates_tmp:
-    #             if type(dates1) != list:
-    #                 dates_counter[dates1] = dates_counter.get(dates1, 0) + 1
-    #             else:
-    #                 for date in dates1:
-    #                     dates_counter[date] = dates_counter.get(date, 0) + 1
-    #     dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
-    #     dates = dates.sort_values("value", ascending=False)
-    #     y = dates.index
-    #     tmp = pd.DataFrame(columns=["date"])
-    #     is_big = 0
-    #
-    #     for i, date in enumerate(y):
-    #         if date[2] == "/" or date[1] == "/":
-    #             tmp.loc[i] = self.format_data(date)
-    #         else:
-    #             is_big = 1
-    #             break
-    #
-    #     if is_big == 0:
-    #         tmp["date"] = pd.to_datetime(tmp["date"], format="%Y-%m-%d")
-    #         dates.index = tmp["date"]
-    #     else:
-    #         tmp["date"] = dates.index
-    #         dates.index = tmp["date"]
-    #
-    #     dates = dates.sort_values("date")
-    #     y = dates.index
-    #     tmp = pd.DataFrame(columns=["date"])
-    #     for i, date in enumerate(y):
-    #         data = str(date)
-    #         if is_big == 0:
-    #             tmp.loc[i] = data[0:-12]
-    #         else:
-    #             tmp.loc[i] = data[0:-3]
-    #     dates.index = tmp["date"]
-    #     dates = dates.groupby(dates.index).sum()
-    #     dates.index = pd.to_datetime(dates.index)
-    #     dates = dates.resample("6M").sum()
-    #     dates.index = pd.to_datetime(dates.index).strftime("%Y-%m")
-    #     fig, ax = plt.subplots(figsize=(10, 5))
-    #     dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
-    #     plt.xticks(fontsize=8)
-    #     plt.xticks(rotation=0)
-    #     ax.set_xlabel("Date")
-    #     ax.set_ylabel("Value")
-    #     ax.set_title(
-    #         "Number of watched shows",
-    #         fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
-    #     )
-    #     self._adjust_colors_candles(fig, ax)
-    #     return plt.gcf()
+    def dates_chart(self):
+        self.data_array = pd.read_csv(
+            self.read_csv_file(final_data)
+        )
+        dates_counter = {}
+        for ind, row in self.data_array.iterrows():
+            dates_tmp = row["Dates"]
+            dates_tmp = eval(dates_tmp)
+            for dates1 in dates_tmp:
+                if type(dates1) != list:
+                    dates_counter[dates1] = dates_counter.get(dates1, 0) + 1
+                else:
+                    for date in dates1:
+                        dates_counter[date] = dates_counter.get(date, 0) + 1
+                        
+        dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
+        dates = dates.sort_values("value", ascending=False)
+        y = dates.index
+        tmp = pd.DataFrame(columns=["date"])
+        is_big = 0
+
+        for i, date in enumerate(y):
+            if date[2] == "/" or date[1] == "/":
+                tmp.loc[i] = self.format_data(date)
+            else:
+                is_big = 1
+                break
+
+        if is_big == 0:
+            tmp["date"] = pd.to_datetime(tmp["date"], format="%Y-%m-%d")
+            dates.index = tmp["date"]
+        else:
+            tmp["date"] = dates.index
+            dates.index = tmp["date"]
+
+        dates = dates.sort_values("date")
+        y = dates.index
+        tmp = pd.DataFrame(columns=["date"])
+        for i, date in enumerate(y):
+            data = str(date)
+            if is_big == 0:
+                tmp.loc[i] = data[0:-12]
+            else:
+                tmp.loc[i] = data[0:]
+
+        dates.index = tmp["date"]
+        dates = dates.groupby(dates.index).sum()
+        dates.index = pd.to_datetime(dates.index, format="%d.%m.%Y")
+        dates = dates.resample("6M").sum()
+        dates.index = pd.to_datetime(dates.index, format="%d.%m.%Y").strftime("%Y-%m")
+        fig, ax = plt.subplots(figsize=(10, 5))
+        dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
+        plt.xticks(fontsize=8)
+        plt.xticks(rotation=0)
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Value")
+        ax.set_title(
+            "Number of watched shows",
+            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+        )
+        self._adjust_colors_candles(fig, ax)
+        return plt.gcf()
 
     def series_vs_film_chart(self):
         film_counter = len(self.data_array[self.data_array["type"] == "film"])

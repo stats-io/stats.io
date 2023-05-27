@@ -59,7 +59,7 @@ class NetflixUpdateData:
 
     def get_genres_and_actors(self, dataArray):
         api = TMBD.TMBDApi("", 1, dataArray)
-        api.get_genres()
+        api.get_actors_genres()
         return api.data_array
 
     def look_into_tmbd(self, csvFile, get_act_and_gen=0):

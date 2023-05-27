@@ -24,7 +24,7 @@ class NetflixLoadingScreen:
 
     def get_estimated_time(self, file_path):
         self.update = UpdateData(file_path)
-        return [self.__test_time_on_sample()*(2), len(pd.read_csv(self.update.csv_file))]
+        return [self.__test_time_on_sample() * 0.5, len(pd.read_csv(self.update.csv_file))]
 
     def start_processing_data(self):
         self.update.format_user_data()
