@@ -1,8 +1,9 @@
 import os
 from kivy.lang import Builder
+from kivy.config import Config
+from kivy import platform
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
-from kivy.config import Config
 
 from app.frontend.mainscreen.mainscreen import MainScreen
 from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadingScreen
@@ -26,7 +27,15 @@ Builder.load_file("app/frontend/spotifyloadingscreen/spotifyloadingscreen.kv")
 
 spotify_final_data = os.path.abspath("app/backend/spotify/database/new_data.csv")
 netflix_final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
-adapter_path = os.path.abspath("app/backend/netflix/database/adapted_data.csv")
+
+if platform == "android":
+    from android.permissions import request_permissions, Permission
+    request_permissions([
+        Permission.INTERNET,
+        Permission.READ_MEDIA_IMAGES,
+        Permission.READ_MEDIA_VIDEO,
+        Permission.READ_MEDIA_AUDIO
+    ])
 
 class WindowManager(MDScreenManager):
     pass
@@ -39,14 +48,13 @@ class StatsApp(MDApp):
 
     def on_stop(self):
         with open(
-            netflix_final_data, "w", newline=""
+                netflix_final_data, "w", newline=""
         ) as csv_file:
             csv_file.truncate()
         with open(
-            spotify_final_data, "w", newline=""
+                spotify_final_data, "w", newline=""
         ) as csv_file:
             csv_file.truncate()
-        os.remove(adapter_path)
 
 
 if __name__ == "__main__":

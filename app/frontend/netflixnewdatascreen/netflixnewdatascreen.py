@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from kivy.core.window import Window
 from kivy.config import Config
+from kivy import platform
 Config.set('kivy', 'exit_on_escape', '0')
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
@@ -19,6 +20,7 @@ class NetflixNewDataScreen(MDScreen):
     __banner_open = False
     dialog = None
     button_press = 0
+    private_files = []
     def help_banner_handler(self):
         if not self.__banner_open:
             self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
@@ -30,8 +32,12 @@ class NetflixNewDataScreen(MDScreen):
 
     def start_processing_data(self):
         try:
-            shutil.copy(self.destination_path, user_file)
-            self.parent.get_screen("netflixloadingscreen").start_processing(self.destination_path)
+            if platform == "android":
+                shutil.copy(self.private_files[0], user_file)
+                self.parent.get_screen("netflixloadingscreen").start_processing(self.private_files[0])
+            else:
+                shutil.copy(self.destination_path, user_file)
+                self.parent.get_screen("netflixloadingscreen").start_processing(self.destination_path)
             self.parent.current = "netflixloadingscreen"
         except pd.errors.EmptyDataError:
             self.dialog = MDDialog(
@@ -71,8 +77,12 @@ follow the instructions above and add a csv file!""",
             self.dialog.open()
 
     def file_manager_open(self):
-        filechooser.open_file(on_selection=self.__handle_selection)
-
+        if platform == "android":
+            from androidstorage4kivy import Chooser
+            self.chooser = Chooser(self.chooser_callback)
+            self.chooser.choose_content('*/*')
+        else:
+            filechooser.open_file(on_selection=self.__handle_selection)
 
     def WrongFile(self):
         self.dialog = MDDialog(
@@ -112,6 +122,12 @@ Follow the instructions above""",
         else:
             pass
 
+    def chooser_callback(self, shared_file_list):
+        from androidstorage4kivy import SharedStorage
+        ss = SharedStorage()
+        for shared_file in shared_file_list:
+            self.private_files.append(ss.copy_from_shared(shared_file))
+
     def on_enter(self):
         Window.bind(on_keyboard=self.back_click)
 
@@ -120,8 +136,4 @@ Follow the instructions above""",
 
     def back_click(self, window, key, keycode, *largs):
         if key == 27:
-                self.parent.current = "mainscreen"
-
-#
-# x = NetflixNewDataScreen()
-# x.start_processing_data()
+            self.parent.current = "mainscreen"
