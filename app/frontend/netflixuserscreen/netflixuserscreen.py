@@ -6,6 +6,7 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
+from kivymd.uix.widget import MDWidget
 from kivy.core.window import Window
 from kivy.config import Config
 
@@ -88,9 +89,9 @@ class NetflixUserScreen(MDScreen):
         charts_screen.years_chart.add_widget(
             FigureCanvasKivyAgg(charts.favourite_year())
         )
-        charts_screen.watch_count_chart.add_widget(
-            FigureCanvasKivyAgg(charts.dates_chart())
-        )
+        # charts_screen.watch_count_chart.add_widget(
+        #     FigureCanvasKivyAgg(charts.dates_chart())
+        # )
         charts_screen.time_at_series.add_widget(
             FigureCanvasKivyAgg(charts.time_at_series())
         )
@@ -133,6 +134,8 @@ class NetflixUserScreen(MDScreen):
                 listelement.ids.two_text.text = data_array[row]["Start Time"][:10]
             row += 1
             root.add_widget(listelement)
+            space = MDWidget(height=self.height * 0.05)
+            root.add_widget(space)
         root.bind(minimum_height=root.setter("height"))
 
     def __generate_top_lists(self):
