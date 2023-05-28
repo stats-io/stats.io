@@ -62,11 +62,12 @@ class TMBDApi:
             hashmap = {key: value.replace('\xa0', ' ') if isinstance(value, str) else value for key, value in row.items()}
             self.movies_list.append(hashmap)
 
-        for index in range(len(self.movies_list) // 4):
-            threads = [threading.Thread(target=self.__get_title_data, args=(self.movies_list[index * 4 + i]["title"], self.movies_list[index * 4 + i]["type"], index * 4 + i)) for i in range(4)]
-            for i in range(4):
+        for index in range(len(self.movies_list) // 4 + 1):
+            length = 4 if index < len(self.movies_list) // 4 else len(self.movies_list) % 4
+            threads = [threading.Thread(target=self.__get_title_data, args=(self.movies_list[index * 4 + i]["title"], self.movies_list[index * 4 + i]["type"], index * 4 + i)) for i in range(length)]
+            for i in range(length):
                 threads[i].start()
-            for i in range(4):
+            for i in range(length):
                 threads[i].join()
 
         self.data_array = pd.DataFrame(self.movies_list)
