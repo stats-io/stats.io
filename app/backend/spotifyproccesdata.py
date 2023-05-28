@@ -4,7 +4,7 @@ import csv
 
 
 class SpotifyProcessData:
-    def __init__(self, file="app/backend/files/Spotify/my_spotify_data.zip"):
+    def __init__(self, file="app/backend/sample_data/listening_history.zip"):
         self.folder_dir = file
 
     def process_data_from_spotipy(self, sp):
