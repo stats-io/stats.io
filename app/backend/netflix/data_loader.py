@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 import time
-from app.backend.netflixupdatedata import NetflixUpdateData as UpdateData
+from app.backend.netflix.data_updater import NetflixUpdateData as UpdateData
 
 
 class NetflixLoadingScreen:

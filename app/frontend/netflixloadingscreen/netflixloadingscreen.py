@@ -1,7 +1,6 @@
 from time import sleep
 from threading import Thread
 from kivymd.app import MDApp
-import pandas as pd
 from kivy.core.window import Window
 from kivy.config import Config
 
@@ -9,11 +8,8 @@ Config.set('kivy', 'exit_on_escape', '0')
 from kivy.clock import Clock
 from kivymd.uix.screen import MDScreen
 import os
-import app.backend.netflixloading as Loading
+import app.backend.netflix.data_loader as Loading
 
-user_file_last = os.path.abspath("app/backend/files/Netflix/LastTestFile.csv")
-user_data = os.path.abspath('app/backend/files/Netflix/test.csv')
-netflix_final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
 
 class NetflixLoadingScreen(MDScreen):
 
@@ -59,7 +55,7 @@ class NetflixLoadingScreen(MDScreen):
     def on_pre_leave(self):
         Window.unbind(on_keyboard=self.back_click)
 
-    def back_click(self, window, key, keycode, *largs):
+    def back_click(self, window, key, keycode, *args):
         if key == 27:
             x = MDApp()
             x.stop()

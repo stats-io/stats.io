@@ -57,7 +57,7 @@ class NetflixNewDataScreen(MDScreen):
             )
             self.dialog.open()
 
-    def close_dialog(self,*args):
+    def close_dialog(self, *args):
         self.dialog.dismiss()
 
     def skip_processing_data(self):
@@ -67,7 +67,7 @@ class NetflixNewDataScreen(MDScreen):
             self.parent.current = "netflixuserscreen"
         except pd.errors.EmptyDataError:
             self.dialog = MDDialog(
-                text="""This is your first time using of this app,
+                text="""This is your first time using of this app, 
 follow the instructions above and add a csv file!""",
                 buttons=[
                     MDFlatButton(
@@ -114,7 +114,8 @@ Follow the instructions above""",
                 required_columns_2 = ["Profile Name", "Start Time", "Duration", "Attributes", "Title",
                                       "Supplemental Video Type", "Device Type", "Bookmark", "Latest Bookmark",
                                       "Country"]
-                if all(column in df.columns for column in required_columns_1) or all(column in df.columns for column in required_columns_2):
+                if all(column in df.columns for column in required_columns_1) or all(
+                        column in df.columns for column in required_columns_2):
                     self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
                     self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
                     self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{file_path}"

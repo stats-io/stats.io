@@ -1,5 +1,5 @@
 from kivymd.uix.screen import MDScreen
-from app.backend.spotifyproccesdata import SpotifyProcessData
+from app.backend.spotify.data_updater import SpotifyProcessData
 from kivy.clock import Clock
 
 

@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from collections import defaultdict
 
-adapter_path = os.path.abspath('./app/backend/files/Netflix/adapted_data.csv')
+adapter_path = os.path.abspath('./app/backend/netflix/database/adapted_data.csv')
 
 
 class NetflixDataAdapter:

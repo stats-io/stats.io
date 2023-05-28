@@ -1,12 +1,13 @@
 import numpy as np
 import pandas as pd
-import app.backend.netflixdataadapter as adapter
-import app.backend.tmdbapi as TMBD
+import app.backend.netflix.data_adapter as adapter
+import app.backend.netflix.tmdb_api as TMBD
 import os
 
-last_data = os.path.abspath("app/backend/files/Netflix/LastData.csv")
-final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
-UserDB = os.path.abspath("app/backend/files/Netflix/UserDB.csv")
+last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
+final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
+UserDB = os.path.abspath("app/backend/netflix/database/user.csv")
+
 
 
 class NetflixUpdateData:
