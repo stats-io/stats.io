@@ -3,13 +3,14 @@ import pandas as pd
 from kivy.core.window import Window
 from kivy.config import Config
 from kivy import platform
-Config.set('kivy', 'exit_on_escape', '0')
+
+Config.set("kivy", "exit_on_escape", "0")
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from plyer import filechooser
 import shutil
-from jnius import autoclass
+
 
 app_folder = os.path.abspath("app/backend/files/Netflix")
 user_file = os.path.abspath("app/backend/netflix/database/last_upload.csv")
@@ -26,22 +27,38 @@ class NetflixNewDataScreen(MDScreen):
     def help_banner_handler(self):
         if not self.__banner_open:
             self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
-            self.parent.get_screen("netflixnewdatascreen").ids.bannericon.icon = "chevron-up"
+            self.parent.get_screen(
+                "netflixnewdatascreen"
+            ).ids.bannericon.icon = "chevron-up"
         else:
             self.parent.get_screen("netflixnewdatascreen").ids.banner.hide()
-            self.parent.get_screen("netflixnewdatascreen").ids.bannericon.icon = "chevron-down"
+            self.parent.get_screen(
+                "netflixnewdatascreen"
+            ).ids.bannericon.icon = "chevron-down"
         self.__banner_open = not self.__banner_open
 
     def start_processing_data(self):
-        version = autoclass('android.os.Build$VERSION')
-        android_version = version.RELEASE
         try:
-            if platform == "android" and int(android_version) >= 10:
-                shutil.copy(self.private_files[0], user_file)
-                self.parent.get_screen("netflixloadingscreen").start_processing(self.private_files[0])
+            if platform == "android":
+                from jnius import autoclass
+
+                version = autoclass("android.os.Build$VERSION")
+                android_version = version.RELEASE
+                if int(android_version) >= 10:
+                    shutil.copy(self.private_files[0], user_file)
+                    self.parent.get_screen("netflixloadingscreen").start_processing(
+                        self.private_files[0]
+                    )
+                else:
+                    shutil.copy(self.destination_path, user_file)
+                    self.parent.get_screen("netflixloadingscreen").start_processing(
+                        self.destination_path
+                    )
             else:
                 shutil.copy(self.destination_path, user_file)
-                self.parent.get_screen("netflixloadingscreen").start_processing(self.destination_path)
+                self.parent.get_screen("netflixloadingscreen").start_processing(
+                    self.destination_path
+                )
             self.parent.current = "netflixloadingscreen"
         except pd.errors.EmptyDataError:
             self.dialog = MDDialog(
@@ -81,12 +98,18 @@ follow the instructions above and add a csv file!""",
             self.dialog.open()
 
     def file_manager_open(self):
-        version = autoclass('android.os.Build$VERSION')
-        android_version = version.RELEASE
-        if platform == "android" and int(android_version) >= 10:
-            from androidstorage4kivy import Chooser
-            self.chooser = Chooser(self.chooser_callback)
-            self.chooser.choose_content('*/*')
+        if platform == "android":
+            from jnius import autoclass
+
+            version = autoclass("android.os.Build$VERSION")
+            android_version = version.RELEASE
+            if int(android_version) >= 10:
+                from androidstorage4kivy import Chooser
+
+                self.chooser = Chooser(self.chooser_callback)
+                self.chooser.choose_content("*/*")
+            else:
+                filechooser.open_file(on_selection=self.__handle_selection)
         else:
             filechooser.open_file(on_selection=self.__handle_selection)
 
@@ -111,14 +134,30 @@ Follow the instructions above""",
             try:
                 df = pd.read_csv(file_path)
                 required_columns_1 = ["Title", "Date"]
-                required_columns_2 = ["Profile Name", "Start Time", "Duration", "Attributes", "Title",
-                                      "Supplemental Video Type", "Device Type", "Bookmark", "Latest Bookmark",
-                                      "Country"]
+                required_columns_2 = [
+                    "Profile Name",
+                    "Start Time",
+                    "Duration",
+                    "Attributes",
+                    "Title",
+                    "Supplemental Video Type",
+                    "Device Type",
+                    "Bookmark",
+                    "Latest Bookmark",
+                    "Country",
+                ]
                 if all(column in df.columns for column in required_columns_1) or all(
-                        column in df.columns for column in required_columns_2):
-                    self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
-                    self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
-                    self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{file_path}"
+                    column in df.columns for column in required_columns_2
+                ):
+                    self.parent.get_screen(
+                        "netflixnewdatascreen"
+                    ).ids.filemanagericon.icon = "check-circle"
+                    self.parent.get_screen(
+                        "netflixnewdatascreen"
+                    ).ids.fileadd.text = "Chosen file"
+                    self.parent.get_screen(
+                        "netflixnewdatascreen"
+                    ).ids.filename.text = f"{file_path}"
                     self.destination_path = file_path
                     df.to_csv(self.destination_path, index=False)
                 else:
@@ -131,14 +170,19 @@ Follow the instructions above""",
 
     def chooser_callback(self, shared_file_list):
         from androidstorage4kivy import SharedStorage
+
         ss = SharedStorage()
         for shared_file in shared_file_list:
             self.private_files.append(ss.copy_from_shared(shared_file))
 
         if self.private_files:
             path = self.private_files[0]
-            self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
-            self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
+            self.parent.get_screen(
+                "netflixnewdatascreen"
+            ).ids.filemanagericon.icon = "check-circle"
+            self.parent.get_screen(
+                "netflixnewdatascreen"
+            ).ids.fileadd.text = "Chosen file"
             self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{path}"
 
     def on_enter(self):

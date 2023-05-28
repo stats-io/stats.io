@@ -5,7 +5,7 @@ from kivy.config import Config
 from kivy import platform
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
-from jnius import autoclass
+
 
 from app.frontend.mainscreen.mainscreen import MainScreen
 from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadingScreen
@@ -31,22 +31,29 @@ spotify_final_data = os.path.abspath("app/backend/spotify/database/new_data.csv"
 netflix_final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
 
 if platform == "android":
+    from jnius import autoclass
     from android.permissions import request_permissions, Permission
-    version = autoclass('android.os.Build$VERSION')
+
+    version = autoclass("android.os.Build$VERSION")
     android_version = version.RELEASE
     if int(android_version) >= 10:
-        request_permissions([
-            Permission.INTERNET,
-            Permission.READ_MEDIA_IMAGES,
-            Permission.READ_MEDIA_VIDEO,
-            Permission.READ_MEDIA_AUDIO
-        ])
+        request_permissions(
+            [
+                Permission.INTERNET,
+                Permission.READ_MEDIA_IMAGES,
+                Permission.READ_MEDIA_VIDEO,
+                Permission.READ_MEDIA_AUDIO,
+            ]
+        )
     else:
-        request_permissions([
-            Permission.INTERNET,
-            Permission.READ_EXTERNAL_STORAGE,
-            Permission.WRITE_EXTERNAL_STORAGE
-        ])
+        request_permissions(
+            [
+                Permission.INTERNET,
+                Permission.READ_EXTERNAL_STORAGE,
+                Permission.WRITE_EXTERNAL_STORAGE,
+            ]
+        )
+
 
 class WindowManager(MDScreenManager):
     pass
@@ -58,13 +65,9 @@ class StatsApp(MDApp):
         return WindowManager()
 
     def on_stop(self):
-        with open(
-                netflix_final_data, "w", newline=""
-        ) as csv_file:
+        with open(netflix_final_data, "w", newline="") as csv_file:
             csv_file.truncate()
-        with open(
-                spotify_final_data, "w", newline=""
-        ) as csv_file:
+        with open(spotify_final_data, "w", newline="") as csv_file:
             csv_file.truncate()
 
 
