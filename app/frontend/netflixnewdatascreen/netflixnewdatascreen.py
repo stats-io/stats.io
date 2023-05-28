@@ -9,9 +9,7 @@ from kivymd.uix.button import MDFlatButton
 from plyer import filechooser
 import shutil
 
-app_folder = os.path.abspath("app/backend/files/Netflix")
 user_file = os.path.abspath("app/backend/netflix/database/last_upload.csv")
-user_data = os.path.abspath("app/backend/files/Netflix/test.csv")
 last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
 
