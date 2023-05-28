@@ -33,8 +33,10 @@ class NetflixNewDataScreen(MDScreen):
         self.__banner_open = not self.__banner_open
 
     def start_processing_data(self):
+        version = autoclass('android.os.Build$VERSION')
+        android_version = version.RELEASE
         try:
-            if platform == "android":
+            if platform == "android" and int(android_version) >= 10:
                 shutil.copy(self.private_files[0], user_file)
                 self.parent.get_screen("netflixloadingscreen").start_processing(self.private_files[0])
             else:
