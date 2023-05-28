@@ -4,7 +4,7 @@ import csv
 
 
 class SpotifyProcessData:
-    def __init__(self, file="app/backend/sample_data/listening_history.zip"):
+    def __init__(self, file="app/backend/.sample_data/listening_history.zip"):
         self.folder_dir = file
 
     def process_data_from_spotipy(self, sp):
@@ -17,10 +17,10 @@ class SpotifyProcessData:
         results = sp.current_user_recently_played(limit=50)
 
         with open(
-            "app/backend/files/Spotify/recently_played_tracks.csv",
-            "w",
-            newline="",
-            encoding="utf-8",
+                "app/backend/files/Spotify/recently_played_tracks.csv",
+                "w",
+                newline="",
+                encoding="utf-8",
         ) as file:
             writer = csv.writer(file)
 
@@ -39,10 +39,10 @@ class SpotifyProcessData:
         results = sp.current_user_top_tracks(limit=50)
 
         with open(
-            "app/backend/files/Spotify/top_tracks.csv",
-            "w",
-            newline="",
-            encoding="utf-8",
+                "app/backend/files/Spotify/top_tracks.csv",
+                "w",
+                newline="",
+                encoding="utf-8",
         ) as file:
             writer = csv.writer(file)
 
@@ -59,10 +59,10 @@ class SpotifyProcessData:
         results = sp.current_user_top_artists(limit=50)
 
         with open(
-            "app/backend/files/Spotify/top_artists.csv",
-            "w",
-            newline="",
-            encoding="utf-8",
+                "app/backend/files/Spotify/top_artists.csv",
+                "w",
+                newline="",
+                encoding="utf-8",
         ) as file:
             writer = csv.writer(file)
 
@@ -87,10 +87,10 @@ class SpotifyProcessData:
         results = sp.recommendations(limit=20, seed_artists=artists)
 
         with open(
-            "app/backend/files/Spotify/recommendations.csv",
-            "w",
-            newline="",
-            encoding="utf-8",
+                "app/backend/files/Spotify/recommendations.csv",
+                "w",
+                newline="",
+                encoding="utf-8",
         ) as file:
             writer = csv.writer(file)
 

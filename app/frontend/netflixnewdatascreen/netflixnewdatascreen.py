@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from kivy.core.window import Window
 from kivy.config import Config
+
 Config.set('kivy', 'exit_on_escape', '0')
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
@@ -17,6 +18,7 @@ class NetflixNewDataScreen(MDScreen):
     __banner_open = False
     dialog = None
     button_press = 0
+
     def help_banner_handler(self):
         if not self.__banner_open:
             self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
@@ -45,7 +47,7 @@ class NetflixNewDataScreen(MDScreen):
             )
             self.dialog.open()
 
-    def close_dialog(self,*args):
+    def close_dialog(self, *args):
         self.dialog.dismiss()
 
     def skip_processing_data(self):
@@ -71,7 +73,6 @@ follow the instructions above and add a csv file!""",
     def file_manager_open(self):
         filechooser.open_file(on_selection=self.__handle_selection)
 
-
     def WrongFile(self):
         self.dialog = MDDialog(
             text="""You add a Wrong file!!!
@@ -96,7 +97,8 @@ Follow the instructions above""",
                 required_columns_2 = ["Profile Name", "Start Time", "Duration", "Attributes", "Title",
                                       "Supplemental Video Type", "Device Type", "Bookmark", "Latest Bookmark",
                                       "Country"]
-                if all(column in df.columns for column in required_columns_1) or all(column in df.columns for column in required_columns_2):
+                if all(column in df.columns for column in required_columns_1) or all(
+                        column in df.columns for column in required_columns_2):
                     self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
                     self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
                     self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{file_path}"
@@ -118,7 +120,7 @@ Follow the instructions above""",
 
     def back_click(self, window, key, keycode, *largs):
         if key == 27:
-                self.parent.current = "mainscreen"
+            self.parent.current = "mainscreen"
 
 #
 # x = NetflixNewDataScreen()

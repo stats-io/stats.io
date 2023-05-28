@@ -3,6 +3,7 @@ from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivy.core.window import Window
 from kivy.config import Config
+
 Config.set('kivy', 'exit_on_escape', '0')
 import os
 import spotipy
@@ -40,4 +41,3 @@ class MainScreen(MDScreen):
         if key == 27:
             x = MDApp()
             x.stop()
-

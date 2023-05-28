@@ -3,6 +3,7 @@ from threading import Thread
 from kivymd.app import MDApp
 from kivy.core.window import Window
 from kivy.config import Config
+
 Config.set('kivy', 'exit_on_escape', '0')
 from kivy.clock import Clock
 from kivymd.uix.screen import MDScreen

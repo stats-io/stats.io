@@ -5,6 +5,7 @@ import os
 final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
 last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
+
 class NetflixMainScreen:
     def __init__(self, file=final_data):
         self.csv_file = self.read_csv_file(file)
