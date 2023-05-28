@@ -9,6 +9,7 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.widget import MDWidget
 from kivy.core.window import Window
 from kivy.config import Config
+
 Config.set('kivy', 'exit_on_escape', '0')
 from app.backend.netflix.charts import NetflixCharts
 from app.backend.netflix.main_screen import NetflixMainScreen
@@ -157,7 +158,7 @@ class NetflixUserScreen(MDScreen):
             custom_list.add_widget(list_item, 8)
 
         index = 1
-        for genre, number in  netflix_top_lists.top_genres.iterrows():
+        for genre, number in netflix_top_lists.top_genres.iterrows():
             list_item = CustomTwoLineListItem(
                 text=f"{index}. {genre}",
                 secondary_text=f"{number[0]} movies/series"
@@ -171,7 +172,8 @@ class NetflixUserScreen(MDScreen):
                 time = hours[1].split(':')
             list_item = CustomTwoLineListItem(
                 text=f"{index}. {hours[0]}",
-                secondary_text=f"Number of episodes: {hours[1]}" if type(hours[1]) == int else f"{time[0]}h {time[1]}m {time[2]}s"
+                secondary_text=f"Number of episodes: {hours[1]}" if type(
+                    hours[1]) == int else f"{time[0]}h {time[1]}m {time[2]}s"
             )
             index += 1
             custom_list.add_widget(list_item, 4)
@@ -192,7 +194,8 @@ class NetflixUserScreen(MDScreen):
         #         secondary_text_color="#A7F500",
         #         text=f"{index}. {date}",
         #         secondary_text=f"{titles[0]} titles",
-        #         tertiary_text=", ".join([f"{item} - {count}" for item, count in sorted(titles[1].items(), key=lambda x: -int(x[1]))]),
+        #         tertiary_text=", ".join(
+        #             [f"{item} - {count}" for item, count in sorted(titles[1].items(), key=lambda x: -int(x[1]))]),
         #     )
         #     index += 1
         #     custom_list.add_widget(list_item, 0)
@@ -208,4 +211,3 @@ class NetflixUserScreen(MDScreen):
             with open(netflix_final_data, "w", newline="") as csv_file:
                 csv_file.truncate()
             self.parent.current = "mainscreen"
-

@@ -9,6 +9,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from plyer import filechooser
 import shutil
+from jnius import autoclass
 
 app_folder = os.path.abspath("app/backend/files/Netflix")
 user_file = os.path.abspath("app/backend/netflix/database/last_upload.csv")
@@ -21,6 +22,7 @@ class NetflixNewDataScreen(MDScreen):
     dialog = None
     button_press = 0
     private_files = []
+
     def help_banner_handler(self):
         if not self.__banner_open:
             self.parent.get_screen("netflixnewdatascreen").ids.banner.show()
@@ -63,7 +65,7 @@ class NetflixNewDataScreen(MDScreen):
             self.parent.current = "netflixuserscreen"
         except pd.errors.EmptyDataError:
             self.dialog = MDDialog(
-                text="""This is your first time using of this app, 
+                text="""This is your first time using of this app,
 follow the instructions above and add a csv file!""",
                 buttons=[
                     MDFlatButton(
@@ -77,7 +79,9 @@ follow the instructions above and add a csv file!""",
             self.dialog.open()
 
     def file_manager_open(self):
-        if platform == "android":
+        version = autoclass('android.os.Build$VERSION')
+        android_version = version.RELEASE
+        if platform == "android" and int(android_version) >= 10:
             from androidstorage4kivy import Chooser
             self.chooser = Chooser(self.chooser_callback)
             self.chooser.choose_content('*/*')
@@ -127,6 +131,12 @@ Follow the instructions above""",
         ss = SharedStorage()
         for shared_file in shared_file_list:
             self.private_files.append(ss.copy_from_shared(shared_file))
+
+        if self.private_files:
+            path = self.private_files[0]
+            self.parent.get_screen("netflixnewdatascreen").ids.filemanagericon.icon = "check-circle"
+            self.parent.get_screen("netflixnewdatascreen").ids.fileadd.text = "Chosen file"
+            self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{path}"
 
     def on_enter(self):
         Window.bind(on_keyboard=self.back_click)

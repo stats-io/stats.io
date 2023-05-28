@@ -1,9 +1,11 @@
 import os
+import platform
 from kivy.lang import Builder
 from kivy.config import Config
 from kivy import platform
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
+from jnius import autoclass
 
 from app.frontend.mainscreen.mainscreen import MainScreen
 from app.frontend.netflixloadingscreen.netflixloadingscreen import NetflixLoadingScreen
@@ -30,12 +32,21 @@ netflix_final_data = os.path.abspath("app/backend/netflix/database/final_data.cs
 
 if platform == "android":
     from android.permissions import request_permissions, Permission
-    request_permissions([
-        Permission.INTERNET,
-        Permission.READ_MEDIA_IMAGES,
-        Permission.READ_MEDIA_VIDEO,
-        Permission.READ_MEDIA_AUDIO
-    ])
+    version = autoclass('android.os.Build$VERSION')
+    android_version = version.RELEASE
+    if int(android_version) >= 10:
+        request_permissions([
+            Permission.INTERNET,
+            Permission.READ_MEDIA_IMAGES,
+            Permission.READ_MEDIA_VIDEO,
+            Permission.READ_MEDIA_AUDIO
+        ])
+    else:
+        request_permissions([
+            Permission.INTERNET,
+            Permission.READ_EXTERNAL_STORAGE,
+            Permission.WRITE_EXTERNAL_STORAGE
+        ])
 
 class WindowManager(MDScreenManager):
     pass

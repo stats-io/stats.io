@@ -6,6 +6,7 @@ import os
 final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
 last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
+
 class NetflixTopLists:
     def __init__(self, file=final_data):
         self.csv_file = self.read_csv_file(file)
@@ -108,6 +109,7 @@ class NetflixTopLists:
             return "{:03d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
         else:
             return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
+
     def reverse_date(self, date):
         return date[::-1]
 
@@ -190,7 +192,7 @@ class NetflixTopLists:
     #             break
     #     if big_csv == 0:
     #         top_dates.index = tmp["date"]
-    #     top_dates.index = pd.to_datetime(top_dates.index, format="%Y-%m-%d").strftime(
+    #     top_dates.index = pd.to_datetime(top_dates.index, format="%d.%m.%Y").strftime(
     #         "%d-%m-%Y"
     #     )
     #     return top_dates

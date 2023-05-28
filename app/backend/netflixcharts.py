@@ -7,6 +7,7 @@ import os
 final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
 last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
+
 class NetflixCharts:
     def __init__(self, file=final_data):
         self.csv_file = self.read_csv_file(file)
@@ -56,6 +57,7 @@ class NetflixCharts:
     #             else:
     #                 for date in dates1:
     #                     dates_counter[date] = dates_counter.get(date, 0) + 1
+    #
     #     dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
     #     dates = dates.sort_values("value", ascending=False)
     #     y = dates.index
@@ -84,12 +86,13 @@ class NetflixCharts:
     #         if is_big == 0:
     #             tmp.loc[i] = data[0:-12]
     #         else:
-    #             tmp.loc[i] = data[0:-3]
+    #             tmp.loc[i] = data[0:]
+    #
     #     dates.index = tmp["date"]
     #     dates = dates.groupby(dates.index).sum()
-    #     dates.index = pd.to_datetime(dates.index)
+    #     dates.index = pd.to_datetime(dates.index, format="%d.%m.%Y")
     #     dates = dates.resample("6M").sum()
-    #     dates.index = pd.to_datetime(dates.index).strftime("%Y-%m")
+    #     dates.index = pd.to_datetime(dates.index, format="%d.%m.%Y").strftime("%Y-%m")
     #     fig, ax = plt.subplots(figsize=(10, 5))
     #     dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
     #     plt.xticks(fontsize=8)
