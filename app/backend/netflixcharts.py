@@ -7,6 +7,7 @@ import os
 final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
 last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
+
 class NetflixCharts:
     def __init__(self, file=final_data):
         self.csv_file = self.read_csv_file(file)
@@ -56,7 +57,7 @@ class NetflixCharts:
                 else:
                     for date in dates1:
                         dates_counter[date] = dates_counter.get(date, 0) + 1
-                        
+
         dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
         dates = dates.sort_values("value", ascending=False)
         y = dates.index

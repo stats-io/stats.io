@@ -8,6 +8,7 @@ last_data = os.path.abspath("app/backend/files/Netflix/LastData.csv")
 final_data = os.path.abspath("app/backend/files/Netflix/Final_Data.csv")
 UserDB = os.path.abspath("app/backend/files/Netflix/UserDB.csv")
 
+
 class NetflixUpdateData:
     def __init__(self, path):
         data = adapter.NetflixDataAdapter(path)
@@ -27,7 +28,7 @@ class NetflixUpdateData:
             data_array = self.look_into_tmbd(self.csv_file, 1)
             if np.isnan(data_array.iloc[0, 6]):
                 data_array.to_csv(final_data, index=False)
-                data_array.to_csv(last_data, index=False )
+                data_array.to_csv(last_data, index=False)
                 self.fetch_into_local_db(data_array, 0)
             else:
                 data_array.to_csv(
@@ -46,7 +47,7 @@ class NetflixUpdateData:
             data_from_api = data_array[~data_array["actress"].notna()]
             data_from_api = self.get_genres_and_actors(data_from_api)
             data_array = pd.concat(
-                [data_from_api,dataArray_from_db], ignore_index=True
+                [data_from_api, dataArray_from_db], ignore_index=True
             )
             data_array.to_csv(
                 last_data, index=False

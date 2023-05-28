@@ -5,6 +5,7 @@ from collections import defaultdict
 
 adapter_path = os.path.abspath('./app/backend/files/Netflix/adapted_data.csv')
 
+
 class NetflixDataAdapter:
     def __init__(self, path):
         self.csv_file = path

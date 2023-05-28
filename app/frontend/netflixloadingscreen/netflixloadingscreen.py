@@ -4,6 +4,7 @@ from kivymd.app import MDApp
 import pandas as pd
 from kivy.core.window import Window
 from kivy.config import Config
+
 Config.set('kivy', 'exit_on_escape', '0')
 from kivy.clock import Clock
 from kivymd.uix.screen import MDScreen

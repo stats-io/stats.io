@@ -2,12 +2,10 @@ import json
 import pandas as pd
 import requests
 import os
-
-import time
-
-import threading
+from threading import Thread
 
 genres_path = os.path.abspath("app/backend/netflix/database/genres.csv")
+
 
 class TMBDApi:
     def __init__(self, path="", get_act_and_gen=0, data_array=None):
@@ -16,7 +14,7 @@ class TMBDApi:
         else:
             self.data_array = pd.read_csv(path, encoding='utf-8')
         self.get_act_and_gen = get_act_and_gen
-        
+
     def __get_movie_data(self, title):
         url = "https://api.themoviedb.org/3/search/movie?api_key=2fd4f8fec4042fda3466a92e18309708&query="
         response = json.loads((requests.get(f"{url}{title}")).content)
@@ -25,7 +23,7 @@ class TMBDApi:
             return ("film", str(res["id"]), res["genre_ids"], res["popularity"], res["release_date"])
         except IndexError:
             None
-    
+
     def __get_series_data(self, title):
         url = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
         response = json.loads((requests.get(f"{url}{title}")).content)
@@ -50,21 +48,23 @@ class TMBDApi:
             return
         lst = self.movies_list[index]
         lst["type"], lst["TMBDid"], lst["genres"], lst["popularity"], lst["Release Date"] = result
-        
 
     def get_movie_data(self):
         self.data_array["genres"] = self.data_array["genres"].apply(
             lambda x: [] if pd.isna(x) else eval(x)
         )
-        
+
         self.movies_list = []
         for _, row in self.data_array.iterrows():
-            hashmap = {key: value.replace('\xa0', ' ') if isinstance(value, str) else value for key, value in row.items()}
+            hashmap = {key: value.replace('\xa0', ' ') if isinstance(value, str) else value for key, value in
+                       row.items()}
             self.movies_list.append(hashmap)
 
         for index in range(len(self.movies_list) // 4 + 1):
             length = 4 if index < len(self.movies_list) // 4 else len(self.movies_list) % 4
-            threads = [threading.Thread(target=self.__get_title_data, args=(self.movies_list[index * 4 + i]["title"], self.movies_list[index * 4 + i]["type"], index * 4 + i)) for i in range(length)]
+            threads = [Thread(target=self.__get_title_data, args=(
+            self.movies_list[index * 4 + i]["title"], self.movies_list[index * 4 + i]["type"], index * 4 + i)) for i in
+                       range(length)]
             for i in range(length):
                 threads[i].start()
             for i in range(length):
@@ -86,7 +86,7 @@ class TMBDApi:
         series_url = "https://api.themoviedb.org/3/tv/"
         movie_url = "https://api.themoviedb.org/3/movie/"
         credits_url = "/credits?api_key=2fd4f8fec4042fda3466a92e18309708"
-        
+
         for i, row in self.data_array.iterrows():
             tmdb_id = row["TMBDid"]
             if row["type"] == "series":

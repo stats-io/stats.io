@@ -6,6 +6,7 @@ import os
 final_data = os.path.abspath("app/backend/netflix/database/final_data.csv")
 last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
+
 class NetflixTopLists:
     def __init__(self, file=final_data):
         self.csv_file = self.read_csv_file(file)
@@ -108,6 +109,7 @@ class NetflixTopLists:
             return "{:03d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
         else:
             return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
+
     def reverse_date(self, date):
         return date[::-1]
 

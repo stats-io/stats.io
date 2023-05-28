@@ -12,8 +12,6 @@ REDIRECT_URI = "http://localhost:8888/callback"
 SCOPE = "user-read-recently-played user-top-read"
 
 
-
-
 class CustomOneLineListItem(OneLineListItem):
     pass
 
