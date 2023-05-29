@@ -72,7 +72,7 @@ class NetflixCharts:
                 break
 
         if is_big == 0:
-            tmp["date"] = pd.to_datetime(tmp["date"], format="%Y-%m-%d")
+            tmp["date"] = pd.to_datetime(tmp["date"], format="%d.%m.%Y")
             dates.index = tmp["date"]
         else:
             tmp["date"] = dates.index

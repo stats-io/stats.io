@@ -121,7 +121,3 @@ Follow the instructions above""",
     def back_click(self, window, key, keycode, *largs):
         if key == 27:
             self.parent.current = "mainscreen"
-
-#
-# x = NetflixNewDataScreen()
-# x.start_processing_data()

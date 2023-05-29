@@ -1,13 +1,19 @@
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.card import MDCard
+from kivymd.uix.label import MDLabel
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.textfield import MDTextField
+from kivymd.uix.list import MDList
+from kivymd.uix.boxlayout import MDBoxLayout
 import pandas as pd
 import random
 import spotipy
 from spotipy import SpotifyOAuth
 
 CLIENT_ID = "fb34b1a1fb884d5794990d691867df0f"
-CLIENT_SECRET = "185c998c2b0449378b992a237cc418ea"
+CLIENT_SECRET = "-"
 REDIRECT_URI = "http://localhost:8888/callback"
 SCOPE = "user-read-recently-played user-top-read"
 
@@ -28,7 +34,25 @@ class CustomMDCard(MDCard):
     pass
 
 
+class CustomButton(MDCard):
+    pass
+
+
+class CustomMDLabel(MDLabel):
+    pass
+
+
+class CustomMDTextField(MDTextField):
+    pass
+
+
+class CustomMDRaisedButton(MDRaisedButton):
+    pass
+
+    
 class SpotifyUserScreen(MDScreen):
+    __detailed_history = False
+
     def generate_screens(self):
         self.__generate_main_screen()
         self.__generate_history()
@@ -46,7 +70,7 @@ class SpotifyUserScreen(MDScreen):
             )
         )
 
-        data_array = pd.read_csv("app/backend/files/Spotify/top_artists.csv")
+        data_array = pd.read_csv("app/backend/spotify/database/top_artists.csv")
         number_of_lines = len(data_array)
         number_of_random_artist = random.randint(0, number_of_lines - 1)
         artist = data_array.iloc[number_of_random_artist]
@@ -65,12 +89,21 @@ class SpotifyUserScreen(MDScreen):
             card.ids.image_url.source = url
             screen.add_widget(card)
 
-    def __generate_history(self):
-        custom_list = self.manager.get_screen(
-            "spotifyuserscreen"
-        ).ids.spotifyhistoryscreen
+    def history_screen_handler(self):
+        self.manager.get_screen("spotifyuserscreen").ids.scrollview.clear_widgets()
+        if self.__detailed_history:
+            self.manager.get_screen("spotifyuserscreen").ids.top_app_bar.title = "Change to detailed history"
+            self.__custom_list = None
+            self.__generate_history()
+        else:
+            self.manager.get_screen("spotifyuserscreen").ids.top_app_bar.title = "Change to short history"
+            self.__generate_detailed_history()
+        self.__detailed_history = not self.__detailed_history
+            
 
-        data_array = pd.read_csv("app/backend/files/Spotify/recently_played_tracks.csv")
+    def __generate_history(self):
+        custom_list = MDList(divider_color="#E0E0E0",divider="Full",spacing=10,padding=20)
+        data_array = pd.read_csv("app/backend/spotify/database/recently_played_tracks.csv")
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomThreeLineListItem(
@@ -80,13 +113,56 @@ class SpotifyUserScreen(MDScreen):
             )
             index += 1
             custom_list.add_widget(list_item)
+        self.manager.get_screen("spotifyuserscreen").ids.scrollview.add_widget(custom_list)
+
+    def __generate_detailed_history(self):
+        self.__custom_list = MDGridLayout(cols=1, padding=20, spacing=10, size_hint_y=None)
+        self.__custom_list.add_widget(CustomMDLabel())
+        self.__text_field = CustomMDTextField()
+        self.__custom_list.add_widget(self.__text_field)
+        self.__custom_list.add_widget(CustomMDRaisedButton(on_release=lambda x: self.search_history()))
+
+        df = self.__read_file()
+        data_array = df.to_dict("records")
+        self.__generate_list(data_array)
+
+        self.manager.get_screen("spotifyuserscreen").ids.scrollview.add_widget(self.__custom_list)
+            
+    def __read_file(self):
+        try:
+            df = pd.read_csv("app/backend/spotify/database/new_data.csv")
+        except pd.errors.EmptyDataError:
+            df = pd.read_csv("app/backend/spotify/database/last_data.csv")
+        return df
+
+    def __generate_list(self, data_array):
+        for row in range(min(100, len(data_array))):
+            listelement = CustomButton(size_hint_y=None, height=80)
+            listelement.ids.one_text.text = data_array[row]["Title"]
+            listelement.ids.two_text.text = data_array[row]["Date"]
+            self.__custom_list.add_widget(listelement)
+        self.__custom_list.bind(minimum_height=self.__custom_list.setter("height"))
+
+    def search_history(self):
+        df = self.__read_file()
+        text = self.__text_field.text
+        if text.strip() != "":
+            df = df[df["Title"].str.contains(text, case=False)]
+            df = df.drop_duplicates(subset=['Title'])
+        data_array = df.to_dict("records")
+
+        children = self.__custom_list.children
+        excess_children = children[:-3]
+        for child in excess_children:
+            self.__custom_list.remove_widget(child)
+        self.__generate_list(data_array)
 
     def __generate_top_lists(self):
         custom_list = self.manager.get_screen(
             "spotifyuserscreen"
         ).ids.spotifytoplistscreen
 
-        data_array = pd.read_csv("app/backend/files/Spotify/top_tracks.csv")
+        data_array = pd.read_csv("app/backend/spotify/database/top_tracks.csv")
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomTwoLineListItem(
@@ -95,14 +171,14 @@ class SpotifyUserScreen(MDScreen):
             index += 1
             custom_list.add_widget(list_item, 2)
 
-        data_array = pd.read_csv("app/backend/files/Spotify/top_artists.csv")
+        data_array = pd.read_csv("app/backend/spotify/database/top_artists.csv")
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomOneLineListItem(text=f"{index}. {row[1]}")
             index += 1
             custom_list.add_widget(list_item, 1)
 
-        data_array = pd.read_csv("app/backend/files/Spotify/recommendations.csv")
+        data_array = pd.read_csv("app/backend/spotify/database/recommendations.csv")
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomTwoLineListItem(
