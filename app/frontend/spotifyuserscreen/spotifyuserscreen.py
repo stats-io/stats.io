@@ -1,5 +1,8 @@
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.gridlayout import MDGridLayout
+from kivy.core.window import Window
+from kivy.config import Config
+Config.set('kivy', 'exit_on_escape', '0')
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
@@ -13,7 +16,7 @@ import spotipy
 from spotipy import SpotifyOAuth
 
 CLIENT_ID = "fb34b1a1fb884d5794990d691867df0f"
-CLIENT_SECRET = "-"
+CLIENT_SECRET = "5cbcea13936c443690e519058bd63ac5"
 REDIRECT_URI = "http://localhost:8888/callback"
 SCOPE = "user-read-recently-played user-top-read"
 
@@ -186,3 +189,13 @@ class SpotifyUserScreen(MDScreen):
             )
             index += 1
             custom_list.add_widget(list_item, 0)
+
+    def on_enter(self):
+        Window.bind(on_keyboard=self.back_click)
+
+    def on_pre_leave(self):
+        Window.unbind(on_keyboard=self.back_click)
+
+    def back_click(self, window, key, keycode, *largs):
+        if key == 27:
+            self.parent.current = "mainscreen"
