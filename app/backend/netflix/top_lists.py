@@ -192,7 +192,4 @@ class NetflixTopLists:
                 break
         if big_csv == 0:
             top_dates.index = tmp["date"]
-        top_dates.index = pd.to_datetime(top_dates.index, format="%d.%m.%Y").strftime(
-            "%d-%m-%Y"
-        )
         return top_dates
