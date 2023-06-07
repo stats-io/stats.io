@@ -125,7 +125,7 @@ class NetflixUserScreen(MDScreen):
             if data_array[row]["Title"].find("_") != -1:
                 possible, row = possible + 1, row + 1
                 continue
-            listelement = CustomButton(size_hint_y=None, height=80)
+            listelement = CustomButton(size_hint_y=None)
             listelement.ids.one_text.text = data_array[row]["Title"]
             try:
                 listelement.ids.two_text.text = data_array[row]["Date"]

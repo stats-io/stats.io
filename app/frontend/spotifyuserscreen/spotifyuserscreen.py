@@ -140,7 +140,7 @@ class SpotifyUserScreen(MDScreen):
 
     def __generate_list(self, data_array):
         for row in range(min(100, len(data_array))):
-            listelement = CustomButton(size_hint_y=None, height=80)
+            listelement = CustomButton(size_hint_y=None)
             listelement.ids.one_text.text = data_array[row]["Title"]
             listelement.ids.two_text.text = data_array[row]["Date"]
             self.__custom_list.add_widget(listelement)
