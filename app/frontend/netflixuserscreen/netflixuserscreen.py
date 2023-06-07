@@ -79,6 +79,16 @@ class NetflixUserScreen(MDScreen):
     def __generate_charts(self):
         charts = NetflixCharts()
         charts_screen = self.manager.get_screen("netflixuserscreen").ids
+
+        self.__charts_list = [
+            charts_screen.genres_chart,
+            charts_screen.movies_series_chart,
+            charts_screen.years_chart,
+            charts_screen.watch_count_chart,
+            charts_screen.time_at_series
+        ]
+        self.__current_chart = 0
+
         charts_screen.genres_chart.add_widget(
             FigureCanvasKivyAgg(charts.genres_chart())
         )
@@ -94,6 +104,11 @@ class NetflixUserScreen(MDScreen):
         charts_screen.time_at_series.add_widget(
             FigureCanvasKivyAgg(charts.time_at_series())
         )
+
+    def change_chart(self, *args):
+        self.__charts_list[self.__current_chart].size_hint_y = 0.0001
+        self.__current_chart = (self.__current_chart + 1) % len(self.__charts_list)
+        self.__charts_list[self.__current_chart].size_hint_y = 1
 
     def search_history(self):
         text = self.manager.get_screen("netflixuserscreen").ids.textfield.text
