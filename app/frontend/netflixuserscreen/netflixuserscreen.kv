@@ -148,62 +148,48 @@
                 icon: "chart-line"
 
                 MDBoxLayout:
+                    id: genres_chart
+                    size_hint_y: 1
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size_hint_x: None
+                    width: 0.8 * root.width
+                
+                MDBoxLayout:
+                    id: movies_series_chart
+                    size_hint_y: 0.0001
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size_hint_x: None
+                    width: 0.8 * root.width
 
-                    MDSwiper:
-                        size_hint: None, None
-                        width: root.width
-                        height: root.height
-                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                MDBoxLayout:
+                    id: watch_count_chart
+                    size_hint_y: 0.0001
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size_hint_x: None
+                    width: 0.8 * root.width
 
-                        MDSwiperItem:
-                            MDCard:
-                                id: genres_chart
-                                size_hint_y: None
-                                height: root.height
-                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                MDBoxLayout:
+                    id: years_chart
+                    size_hint_y: 0.0001
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size_hint_x: None
+                    width: 0.8 * root.width
 
-                        MDSwiperItem:
-                            MDCard:
-                                id: movies_series_chart
-                                size_hint_y: None
-                                height: root.height
-                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                MDBoxLayout:
+                    id: time_at_series
+                    size_hint_y: 0.0001
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    size_hint_x: None
+                    width: 0.8 * root.width
 
-                        MDSwiperItem:
-                            MDCard:
-                                id: watch_count_chart
-                                size_hint_y: None
-                                height: root.height * 0.75
-                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-                        MDSwiperItem:
-                            MDCard:
-                                id: years_chart
-                                size_hint_y: None
-                                height: root.height * 0.75
-                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-                        MDSwiperItem:
-                            MDCard:
-                                id: time_at_series
-                                size_hint_y: None
-                                height: root.height * 0.75
-                                pos_hint: {"center_x": 0.5, "center_y": 0.5}
-
-                            # scrollable
-                            # MDScrollView:
-                            #     size: root.width, root.height
-                            #     do_scroll_y: True
-                            #     do_scroll_x: False
-                            #     pos_hint: {"top": 1.25}
-
-                            #     GridLayout:
-                            #         id: time_at_series
-                            #         cols: 1
-                            #         size_hint_y: None
-                            #         row_default_height: 2000
-                            #         height: self.minimum_height
-
+                MDFloatingActionButton:
+                    icon: "chevron-right"
+                    md_bg_color: "#080808"
+                    pos_hint: {"center_x": 0.9, "center_y": 0.1}
+                    theme_icon_color: "Custom"
+                    icon_color: "#E0E0E0"
+                    on_release: root.change_chart()
+                    
 
             MDBottomNavigationItem:
                 name: "netflixtoplistscreen"
