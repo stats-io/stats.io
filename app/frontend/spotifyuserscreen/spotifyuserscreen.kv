@@ -34,16 +34,20 @@
                 text: "History"
                 icon: "history"
 
-                MDScrollView:
-                    size_hint: 1, 1
-                    pos_hint: {"center_x": .5, "center_y": .5}
-
-                    MDList:
-                        id: spotifyhistoryscreen
-                        divider_color: "#E0E0E0"
-                        divider: "Full"
-                        spacing: dp(10)
-                        padding: dp(20)
+                MDBoxLayout:
+                    orientation: "vertical"
+                    MDTopAppBar:
+                        id: top_app_bar
+                        title: "Change to detailed history"
+                        headline_text: "Bar"
+                        size_hint_y: None
+                        right_action_items: [["chevron-right", lambda x: root.history_screen_handler()]]
+                        md_bg_color: "#E0E0E0"
+                        specific_text_color: "#080808"
+                    MDScrollView:
+                        id: scrollview
+                        size_hint: 1, 1
+                        pos_hint: {"center_x": .5, "center_y": .5}
 
             MDBottomNavigationItem:
                 name: "spotifytoplistscreen"
@@ -176,3 +180,34 @@
                 pos_hint: {"center_y": 0.5}
                 font_size: root.height * 0.10
                 halign: "left"
+
+<CustomMDLabel>:
+    text: "Your listening history"
+    theme_text_color: "Custom"
+    text_color: "#E0E0E0"
+    font_style: "H6"
+    halign: "center"
+    bold: True
+    size_hint_y: None
+    height: dp(60)
+
+<CustomMDTextField>:
+    id: textfield
+    hint_text: "Search"
+    icon_right: "magnify"
+    mode: "rectangle"
+    line_color_normal: "#E0E0E0"
+    line_color_focus: "#A7F500"
+    hint_text_color_normal: "#E0E0E0"
+    hint_text_color_focus: "#A7F500"
+    text_color_normal: "#E0E0E0"
+    text_color_focus: "#A7F500"
+    icon_right_color_normal: "#E0E0E0"
+    icon_right_color_focus: "#A7F500"
+
+<CustomMDRaisedButton>:
+    text: "Search film or series"
+    size_hint: 1, None
+    height: dp(80)
+    md_bg_color: "#A7F500"
+    text_color: "#080808"

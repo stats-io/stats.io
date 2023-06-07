@@ -17,7 +17,7 @@ class SpotifyProcessData:
         results = sp.current_user_recently_played(limit=50)
 
         with open(
-                "app/backend/files/Spotify/recently_played_tracks.csv",
+                "app/backend/spotify/database/recently_played_tracks.csv",
                 "w",
                 newline="",
                 encoding="utf-8",
@@ -39,7 +39,7 @@ class SpotifyProcessData:
         results = sp.current_user_top_tracks(limit=50)
 
         with open(
-                "app/backend/files/Spotify/top_tracks.csv",
+                "app/backend/spotify/database/top_tracks.csv",
                 "w",
                 newline="",
                 encoding="utf-8",
@@ -59,7 +59,7 @@ class SpotifyProcessData:
         results = sp.current_user_top_artists(limit=50)
 
         with open(
-                "app/backend/files/Spotify/top_artists.csv",
+                "app/backend/spotify/database/top_artists.csv",
                 "w",
                 newline="",
                 encoding="utf-8",
@@ -76,7 +76,7 @@ class SpotifyProcessData:
                 writer.writerow(row)
 
     def get_recommendations(self, sp):
-        top_artists = pd.read_csv("app/backend/files/Spotify/top_artists.csv")
+        top_artists = pd.read_csv("app/backend/spotify/database/top_artists.csv")
         artists = []
 
         for i in range(2):
@@ -87,7 +87,7 @@ class SpotifyProcessData:
         results = sp.recommendations(limit=20, seed_artists=artists)
 
         with open(
-                "app/backend/files/Spotify/recommendations.csv",
+                "app/backend/spotify/database/recommendations.csv",
                 "w",
                 newline="",
                 encoding="utf-8",
@@ -127,7 +127,7 @@ class SpotifyProcessData:
         )
         self.data_array = self.data_array.iloc[::-1]
         self.data_array = self.data_array.reset_index(drop=True)
-        self.data_array.to_csv("app/backend/files/Spotify/new_data.csv")
+        self.data_array.to_csv("app/backend/spotify/database/new_data.csv")
         self.save_last_data()
 
     def save_last_data(self):

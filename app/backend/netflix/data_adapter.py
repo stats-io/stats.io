@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
 import os
-from collections import defaultdict
 
 adapter_path = os.path.abspath('./app/backend/netflix/database/adapted_data.csv')
-
 
 class NetflixDataAdapter:
     def __init__(self, path):
@@ -55,41 +53,30 @@ class NetflixDataAdapter:
                 film_tab[title] = film_tab.get(title, 0) + 1
         return film_tab, series_tab
 
-    def __adapt_date_format(self, date_string):
-        formats = [
-            '%Y-%m-%d',
-            '%m-%d-%Y',
-            '%d-%m-%Y',
-            '%Y/%m/%d',
-            '%m/%d/%Y',
-            '%d/%m/%Y',
-            '%Y.%m.%d',
-            '%m.%d.%Y',
-            '%d.%m.%Y',
-        ]
-        for fmt in formats:
-            try:
-                date_series = pd.to_datetime(date_string, format=fmt)
-                return date_series.strftime('%d.%m.%Y')
-            except ValueError:
-                pass
-
     def film_or_series_dates_short(self, data):
-        film_tab = defaultdict(int)
-        series_tab = defaultdict(int)
-        film_tab_dates = defaultdict(list)
-        series_tab_dates = defaultdict(list)
+        film_tab = {}
+        series_tab = {}
+        film_tab_dates = {}
+        series_tab_dates = {}
         for row in data.iterrows():
             title = row[1][0]
             if ":" in title:
                 type = "series"
                 title = row[1][0].split(":")[0]
-                series_tab_dates[title].append(self.__adapt_date_format(row[1][1]))
-                series_tab[title] += 1
+                if title in series_tab_dates:
+                    series_tab_dates[title].append(row[1][1])
+                else:
+                    series_tab_dates[title] = []
+                    series_tab_dates[title].append(row[1][1])
+                series_tab[title] = series_tab.get(title, 0) + 1
             else:
                 type = "film"
-                film_tab_dates[title].append(self.__adapt_date_format(row[1][1]))
-                film_tab[title] += 1
+                if title in film_tab_dates:
+                    film_tab_dates[title].append(row[1][1])
+                else:
+                    film_tab_dates[title] = []
+                    film_tab_dates[title].append(row[1][1])
+                film_tab[title] = film_tab.get(title, 0) + 1
         return (
             film_tab,
             series_tab,
@@ -98,12 +85,24 @@ class NetflixDataAdapter:
         )
 
     def get_data(self, data):
-        titles = defaultdict(list)
+        titles = {}
         for row in data.iterrows():
             title = row[1][4].split(":")[0]
-            date = self.__adapt_date_format(row[1][1].split(" ")[0])
-            titles[title].append(date)
-        return titles
+            date = row[1][1].split(" ")[0]
+            if title in titles:
+                titles[title].append(date)
+            else:
+                titles[title] = []
+                titles[title].append(date)
+        title_final = {}
+        for key, value in titles.items():
+            name = key.split(":")[0]
+            if name in title_final:
+                title_final[name].append(titles[key])
+            else:
+                title_final[name] = []
+                title_final[name].append(titles[key])
+        return title_final
 
     def remake_file_long(self):
         data = self.data

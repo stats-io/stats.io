@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from kivy.core.window import Window
 from kivy.config import Config
-from kivy import platform
+
 Config.set('kivy', 'exit_on_escape', '0')
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
@@ -10,9 +10,7 @@ from kivymd.uix.button import MDFlatButton
 from plyer import filechooser
 import shutil
 
-app_folder = os.path.abspath("app/backend/files/Netflix")
 user_file = os.path.abspath("app/backend/netflix/database/last_upload.csv")
-user_data = os.path.abspath("app/backend/files/Netflix/test.csv")
 last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 
 
@@ -83,7 +81,6 @@ follow the instructions above and add a csv file!""",
             self.chooser.choose_content('*/*')
         else:
             filechooser.open_file(on_selection=self.__handle_selection)
-
 
     def WrongFile(self):
         self.dialog = MDDialog(

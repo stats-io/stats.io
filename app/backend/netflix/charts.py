@@ -43,6 +43,19 @@ class NetflixCharts:
             year = "20" + match.group(3).zfill(2)
             return f"{year}-{month}-{day}"
 
+    def find_next_six(self): pass
+
+    def Six_Months(self,dataarray):
+        result = {}
+        for date,row in dataarray.iterrows():
+            year,month,day = map(int,date.split('-'))
+            half_year = 1 if month <= 6 else 2
+            year_key = f"{year}" if half_year == 1 else f"{year}-6"
+            if year_key not in result:
+                result[year_key] = 0
+            result[year_key] += row['value']
+        return result
+
     def dates_chart(self):
         self.data_array = pd.read_csv(
             self.read_csv_file(final_data)
@@ -62,37 +75,18 @@ class NetflixCharts:
         dates = dates.sort_values("value", ascending=False)
         y = dates.index
         tmp = pd.DataFrame(columns=["date"])
-        is_big = 0
 
         for i, date in enumerate(y):
             if date[2] == "/" or date[1] == "/":
                 tmp.loc[i] = self.format_data(date)
             else:
-                is_big = 1
-                break
-
-        if is_big == 0:
-            tmp["date"] = pd.to_datetime(tmp["date"], format="%Y-%m-%d")
-            dates.index = tmp["date"]
-        else:
-            tmp["date"] = dates.index
-            dates.index = tmp["date"]
-
-        dates = dates.sort_values("date")
-        y = dates.index
-        tmp = pd.DataFrame(columns=["date"])
-        for i, date in enumerate(y):
-            data = str(date)
-            if is_big == 0:
-                tmp.loc[i] = data[0:-12]
-            else:
-                tmp.loc[i] = data[0:]
+                tmp.loc[i] = date
 
         dates.index = tmp["date"]
         dates = dates.groupby(dates.index).sum()
-        dates.index = pd.to_datetime(dates.index, format="%d.%m.%Y")
-        dates = dates.resample("6M").sum()
-        dates.index = pd.to_datetime(dates.index, format="%d.%m.%Y").strftime("%Y-%m")
+        dates = self.Six_Months(dates)
+        dates = pd.DataFrame(list(dates.items()),columns=["Year","Sum"])
+        dates = dates.set_index("Year")
         fig, ax = plt.subplots(figsize=(10, 5))
         dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
         plt.xticks(fontsize=8)
