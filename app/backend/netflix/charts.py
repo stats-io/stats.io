@@ -89,13 +89,12 @@ class NetflixCharts:
         dates = dates.set_index("Year")
         fig, ax = plt.subplots(figsize=(10, 5))
         dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
-        plt.xticks(fontsize=8)
         plt.xticks(rotation=0)
         ax.set_xlabel("Date")
         ax.set_ylabel("Value")
         ax.set_title(
             "Number of watched shows",
-            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+            fontdict={"color": "#E0E0E0", "weight": "bold"},
         )
         self._adjust_colors_candles(fig, ax)
         return plt.gcf()
@@ -113,7 +112,6 @@ class NetflixCharts:
             startangle=90,
             textprops={
                 "color": "#080808",
-                "fontsize": 8,
                 "horizontalalignment": "center",
                 "verticalalignment": "center",
             },
@@ -123,7 +121,6 @@ class NetflixCharts:
             labels,
             loc="upper center",
             bbox_to_anchor=(0.5, -0.1),
-            fontsize=8,
             ncol=2,
             edgecolor="#080808",
         )
@@ -132,7 +129,7 @@ class NetflixCharts:
             text.set_color("#E0E0E0")
         ax.set_title(
             "Series to films ratio",
-            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+            fontdict={"color": "#E0E0E0", "weight": "bold"},
         )
         leg._legend_title_box._text.set_color("#E0E0E0")
         leg.get_frame().set_facecolor("#080808")
@@ -199,7 +196,7 @@ class NetflixCharts:
 
         ax.set_title(
             "Genres chart",
-            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+            fontdict={"color": "#E0E0E0", "weight": "bold"},
         )
         fig.patch.set_facecolor("#080808")
         ax.set_xlabel(None)
@@ -207,7 +204,6 @@ class NetflixCharts:
             genres.index,
             loc="upper center",
             bbox_to_anchor=(0.5, -0.1),
-            fontsize=8,
             ncol=2,
             edgecolor="#080808",
         )
@@ -248,7 +244,7 @@ class NetflixCharts:
         ax.set_yticks(ax.get_yticks()[-1::-2])
         ax.set_title(
             "Most watched films from years",
-            fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+            fontdict={"color": "#E0E0E0", "weight": "bold"},
         )
         ax.set_xlabel("Date")
         ax.set_ylabel("Number of films/series")
@@ -272,7 +268,7 @@ class NetflixCharts:
             self._adjust_colors_candles(fig, ax)
             ax.set_title(
                 "Most episodes watched",
-                fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+                fontdict={"color": "#E0E0E0", "weight": "bold"},
             )
         else:
             dataArray = dataArray.sort_values("SumOfTime").tail(20)
@@ -286,7 +282,7 @@ class NetflixCharts:
             self._adjust_colors_candles(fig, ax)
             ax.set_title(
                 "Most time spent shows",
-                fontdict={"fontsize": 14, "color": "#E0E0E0", "weight": "bold"},
+                fontdict={"color": "#E0E0E0", "weight": "bold"},
             )
 
         return plt.gcf()
