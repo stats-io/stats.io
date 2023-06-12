@@ -225,4 +225,8 @@ class NetflixUserScreen(MDScreen):
         if key == 27:
             with open(netflix_final_data, "w", newline="") as csv_file:
                 csv_file.truncate()
+            self.manager.get_screen("netflixuserscreen").ids.genres_chart.clear_widgets()
+            self.manager.get_screen("netflixuserscreen").ids.movies_series_chart.clear_widgets()
+            self.manager.get_screen("netflixuserscreen").ids.years_chart.clear_widgets()
+            self.manager.get_screen("netflixuserscreen").ids.time_at_series.clear_widgets()
             self.parent.current = "mainscreen"
