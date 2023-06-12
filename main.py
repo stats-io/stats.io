@@ -1,6 +1,5 @@
 import os
 from kivy.lang import Builder
-from kivy.config import Config
 from kivy import platform
 from kivymd.app import MDApp
 from kivymd.uix.screenmanager import MDScreenManager
@@ -13,7 +12,6 @@ from app.frontend.spotifyloginscreen.spotifyloginscreen import SpotifyLoginScree
 from app.frontend.spotifynewdatascreen.spotifynewdatascreen import SpotifyNewDataScreen
 from app.frontend.spotifyuserscreen.spotifyuserscreen import SpotifyUserScreen
 from app.frontend.spotifyloadingscreen.spotifyloadingscreen import SpotifyLoadingScreen
-
 
 Builder.load_file("main.kv")
 Builder.load_file("app/frontend/mainscreen/mainscreen.kv")
@@ -36,6 +34,7 @@ if platform == "android":
         Permission.READ_MEDIA_VIDEO,
         Permission.READ_MEDIA_AUDIO
     ])
+
 
 class WindowManager(MDScreenManager):
     pass
