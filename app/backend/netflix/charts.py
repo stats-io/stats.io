@@ -56,48 +56,48 @@ class NetflixCharts:
             result[year_key] += row['value']
         return result
 
-    def dates_chart(self):
-        self.data_array = pd.read_csv(
-            self.read_csv_file(final_data)
-        )
-        dates_counter = {}
-        for ind, row in self.data_array.iterrows():
-            dates_tmp = row["Dates"]
-            dates_tmp = eval(dates_tmp)
-            for dates1 in dates_tmp:
-                if type(dates1) != list:
-                    dates_counter[dates1] = dates_counter.get(dates1, 0) + 1
-                else:
-                    for date in dates1:
-                        dates_counter[date] = dates_counter.get(date, 0) + 1
-
-        dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
-        dates = dates.sort_values("value", ascending=False)
-        y = dates.index
-        tmp = pd.DataFrame(columns=["date"])
-
-        for i, date in enumerate(y):
-            if date[2] == "/" or date[1] == "/":
-                tmp.loc[i] = self.format_data(date)
-            else:
-                tmp.loc[i] = date
-
-        dates.index = tmp["date"]
-        dates = dates.groupby(dates.index).sum()
-        dates = self.Six_Months(dates)
-        dates = pd.DataFrame(list(dates.items()),columns=["Year","Sum"])
-        dates = dates.set_index("Year")
-        fig, ax = plt.subplots(figsize=(10, 5))
-        dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
-        plt.xticks(rotation=0)
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Value")
-        ax.set_title(
-            "Number of watched shows",
-            fontdict={"color": "#E0E0E0", "weight": "bold"},
-        )
-        self._adjust_colors_candles(fig, ax)
-        return plt.gcf()
+    # def dates_chart(self):
+    #     self.data_array = pd.read_csv(
+    #         self.read_csv_file(final_data)
+    #     )
+    #     dates_counter = {}
+    #     for ind, row in self.data_array.iterrows():
+    #         dates_tmp = row["Dates"]
+    #         dates_tmp = eval(dates_tmp)
+    #         for dates1 in dates_tmp:
+    #             if type(dates1) != list:
+    #                 dates_counter[dates1] = dates_counter.get(dates1, 0) + 1
+    #             else:
+    #                 for date in dates1:
+    #                     dates_counter[date] = dates_counter.get(date, 0) + 1
+    #
+    #     dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
+    #     dates = dates.sort_values("value", ascending=False)
+    #     y = dates.index
+    #     tmp = pd.DataFrame(columns=["date"])
+    #
+    #     for i, date in enumerate(y):
+    #         if date[2] == "/" or date[1] == "/":
+    #             tmp.loc[i] = self.format_data(date)
+    #         else:
+    #             tmp.loc[i] = date
+    #
+    #     dates.index = tmp["date"]
+    #     dates = dates.groupby(dates.index).sum()
+    #     dates = self.Six_Months(dates)
+    #     dates = pd.DataFrame(list(dates.items()),columns=["Year","Sum"])
+    #     dates = dates.set_index("Year")
+    #     fig, ax = plt.subplots(figsize=(10, 5))
+    #     dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
+    #     plt.xticks(rotation=0)
+    #     ax.set_xlabel("Date")
+    #     ax.set_ylabel("Value")
+    #     ax.set_title(
+    #         "Number of watched shows",
+    #         fontdict={"color": "#E0E0E0", "weight": "bold"},
+    #     )
+    #     self._adjust_colors_candles(fig, ax)
+    #     return plt.gcf()
 
     def series_vs_film_chart(self):
         film_counter = len(self.data_array[self.data_array["type"] == "film"])

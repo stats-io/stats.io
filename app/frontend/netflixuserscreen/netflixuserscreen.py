@@ -85,7 +85,7 @@ class NetflixUserScreen(MDScreen):
             charts_screen.genres_chart,
             charts_screen.movies_series_chart,
             charts_screen.years_chart,
-            charts_screen.watch_count_chart,
+            # charts_screen.watch_count_chart,
             charts_screen.time_at_series
         ]
         self.__current_chart = 0
