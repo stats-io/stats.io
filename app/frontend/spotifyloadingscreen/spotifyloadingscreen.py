@@ -10,10 +10,13 @@ class SpotifyLoadingScreen(MDScreen):
     sp = None
     _counter = 0
 
-    def start_processing(self):
+    def start_processing(self, file_path):
         self.start_animation()
-        process = SpotifyProcessData()
+        process = SpotifyProcessData(file_path)
+        process.process_data_from_file()
         process.process_data_from_spotipy(self.sp)
+        self.manager.get_screen("spotifyuserscreen").generate_screens()
+        self.manager.current = "spotifyuserscreen"
 
     def _update_label(self, *args):
         if self._counter < 100:
@@ -23,7 +26,6 @@ class SpotifyLoadingScreen(MDScreen):
             ).ids.loadinglabel.text = f"{self._counter}%"
         else:
             self.__timer.cancel()
-            self.skip_processing()
             self.manager.current = "spotifyuserscreen"
 
     def _animation(self, *args):
