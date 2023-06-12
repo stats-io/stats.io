@@ -1,6 +1,14 @@
 import pandas as pd
 import zipfile
 import csv
+import os
+
+new_data = os.path.abspath("app/backend/spotify/database/new_data.csv")
+last_data = os.path.abspath("app/backend/spotify/database/last_data.csv")
+recently_played_data = os.path.abspath("app/backend/spotify/database/recently_played_tracks.csv")
+top_tracks_data = os.path.abspath("app/backend/spotify/database/top_tracks.csv")
+top_artists_data = os.path.abspath("app/backend/spotify/database/top_artists.csv")
+recommendations_data = os.path.abspath("app/backend/spotify/database/recommendations.csv")
 
 
 class SpotifyProcessData:
@@ -17,7 +25,7 @@ class SpotifyProcessData:
         results = sp.current_user_recently_played(limit=50)
 
         with open(
-                "app/backend/spotify/database/recently_played_tracks.csv",
+                recently_played_data,
                 "w",
                 newline="",
                 encoding="utf-8",
@@ -39,7 +47,7 @@ class SpotifyProcessData:
         results = sp.current_user_top_tracks(limit=50)
 
         with open(
-                "app/backend/spotify/database/top_tracks.csv",
+                top_tracks_data,
                 "w",
                 newline="",
                 encoding="utf-8",
@@ -59,7 +67,7 @@ class SpotifyProcessData:
         results = sp.current_user_top_artists(limit=50)
 
         with open(
-                "app/backend/spotify/database/top_artists.csv",
+                top_artists_data,
                 "w",
                 newline="",
                 encoding="utf-8",
@@ -76,7 +84,7 @@ class SpotifyProcessData:
                 writer.writerow(row)
 
     def get_recommendations(self, sp):
-        top_artists = pd.read_csv("app/backend/spotify/database/top_artists.csv")
+        top_artists = pd.read_csv(top_artists_data)
         artists = []
 
         for i in range(2):
@@ -87,7 +95,7 @@ class SpotifyProcessData:
         results = sp.recommendations(limit=20, seed_artists=artists)
 
         with open(
-                "app/backend/spotify/database/recommendations.csv",
+                recommendations_data,
                 "w",
                 newline="",
                 encoding="utf-8",
@@ -127,8 +135,8 @@ class SpotifyProcessData:
         )
         self.data_array = self.data_array.iloc[::-1]
         self.data_array = self.data_array.reset_index(drop=True)
-        self.data_array.to_csv("app/backend/spotify/database/new_data.csv")
+        self.data_array.to_csv(new_data)
         self.save_last_data()
 
     def save_last_data(self):
-        self.data_array.to_csv("app/backend/spotify/database/last_data.csv")
+        self.data_array.to_csv(last_data)
