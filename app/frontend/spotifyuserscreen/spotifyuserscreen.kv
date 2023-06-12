@@ -78,6 +78,7 @@
                                     orientation: "vertical"
 
                                     MDLabel:
+                                        id: top_tracks
                                         text: "Top tracks"
                                         color: "#A7F500"
                                         font_size: root.height * 0.03
@@ -94,6 +95,7 @@
                                     orientation: "vertical"
 
                                     MDLabel:
+                                        id: top_artists
                                         text: "Top artists"
                                         font_size: root.height * 0.03
                                         pos_hint: {"center_x": 0.5, "center_y": 0.5}
@@ -111,6 +113,7 @@
                                     orientation: "vertical"
 
                                     MDLabel:
+                                        id: recommendations
                                         text: "Recommendations"
                                         color: "#A7F500"
                                         font_size: root.height * 0.03
@@ -118,6 +121,12 @@
                                         halign: "center"
 
 <CustomOneLineListItem>:
+    text_color: "#E0E0E0"
+    theme_text_color: "Custom"
+    font_style: "H6"
+
+<CustomMoreListItem>:
+    id: more
     text_color: "#E0E0E0"
     theme_text_color: "Custom"
     font_style: "H6"
@@ -140,6 +149,14 @@
     secondary_font_style: "Caption"
     tertiary_font_style: "Caption"
 
+<MoreButton>:
+    md_bg_color: "#080808"
+    orientation: "vertical"
+
+    MDLabel:
+        id: one_text
+        text: ""
+        color: "#A7F500"
 
 <CustomMDCard>:
     size_hint: 0.8, 0.1

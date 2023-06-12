@@ -9,20 +9,28 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.list import MDList
-from kivymd.uix.boxlayout import MDBoxLayout
 import pandas as pd
 import random
 import spotipy
+import os
 from spotipy import SpotifyOAuth
+from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE
 
-CLIENT_ID = "fb34b1a1fb884d5794990d691867df0f"
-CLIENT_SECRET = "5cbcea13936c443690e519058bd63ac5"
-REDIRECT_URI = "http://localhost:8888/callback"
-SCOPE = "user-read-recently-played user-top-read"
+new_data = os.path.abspath("app/backend/spotify/database/new_data.csv")
+last_data = os.path.abspath("app/backend/spotify/database/last_data.csv")
+recently_played_data = os.path.abspath("app/backend/spotify/database/recently_played_tracks.csv")
+top_tracks_data = os.path.abspath("app/backend/spotify/database/top_tracks.csv")
+top_artists_data = os.path.abspath("app/backend/spotify/database/top_artists.csv")
+recommendations_data = os.path.abspath("app/backend/spotify/database/recommendations.csv")
 
 
 class CustomOneLineListItem(OneLineListItem):
     pass
+
+
+class CustomMoreListItem(OneLineListItem):
+    pass
+
 
 
 class CustomTwoLineListItem(TwoLineListItem):
@@ -73,7 +81,7 @@ class SpotifyUserScreen(MDScreen):
             )
         )
 
-        data_array = pd.read_csv("app/backend/spotify/database/top_artists.csv")
+        data_array = pd.read_csv(top_artists_data)
         number_of_lines = len(data_array)
         number_of_random_artist = random.randint(0, number_of_lines - 1)
         artist = data_array.iloc[number_of_random_artist]
@@ -93,20 +101,29 @@ class SpotifyUserScreen(MDScreen):
             screen.add_widget(card)
 
     def history_screen_handler(self):
-        self.manager.get_screen("spotifyuserscreen").ids.scrollview.clear_widgets()
+        check = False
         if self.__detailed_history:
+            self.manager.get_screen("spotifyuserscreen").ids.scrollview.clear_widgets()
             self.manager.get_screen("spotifyuserscreen").ids.top_app_bar.title = "Change to detailed history"
             self.__custom_list = None
             self.__generate_history()
+            check = True
         else:
-            self.manager.get_screen("spotifyuserscreen").ids.top_app_bar.title = "Change to short history"
-            self.__generate_detailed_history()
-        self.__detailed_history = not self.__detailed_history
-            
+            try:
+                df = self.__read_file()
+                self.manager.get_screen("spotifyuserscreen").ids.scrollview.clear_widgets()
+                self.manager.get_screen("spotifyuserscreen").ids.top_app_bar.title = "Change to short history"
+                self.__generate_detailed_history()
+                check = True
+            except pd.errors.EmptyDataError:
+                pass
+
+        if check:
+            self.__detailed_history = not self.__detailed_history
 
     def __generate_history(self):
         custom_list = MDList(divider_color="#E0E0E0",divider="Full",spacing=10,padding=20)
-        data_array = pd.read_csv("app/backend/spotify/database/recently_played_tracks.csv")
+        data_array = pd.read_csv(recently_played_data)
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomThreeLineListItem(
@@ -128,44 +145,56 @@ class SpotifyUserScreen(MDScreen):
         df = self.__read_file()
         data_array = df.to_dict("records")
         self.__generate_list(data_array)
-
+        self.count = 1
         self.manager.get_screen("spotifyuserscreen").ids.scrollview.add_widget(self.__custom_list)
             
     def __read_file(self):
         try:
-            df = pd.read_csv("app/backend/spotify/database/new_data.csv")
+            df = pd.read_csv(new_data)
         except pd.errors.EmptyDataError:
-            df = pd.read_csv("app/backend/spotify/database/last_data.csv")
+            df = pd.read_csv(last_data)
         return df
 
     def __generate_list(self, data_array):
         for row in range(min(100, len(data_array))):
-            listelement = CustomButton(size_hint_y=None)
-            listelement.ids.one_text.text = data_array[row]["Title"]
-            listelement.ids.two_text.text = data_array[row]["Date"]
+            listelement = CustomTwoLineListItem(
+                text=data_array[row]["Title"],
+                secondary_text=data_array[row]["Date"]
+            )
             self.__custom_list.add_widget(listelement)
         self.__custom_list.bind(minimum_height=self.__custom_list.setter("height"))
+        listelement = CustomMoreListItem(
+            text="More"
+        )
+        listelement.bind(on_release=self.__add_more_tracks)
+        self.__custom_list.add_widget(listelement)
 
-    def search_history(self):
+    def __add_more_tracks(self, instance):
+        parent = instance.parent
+        parent.remove_widget(instance)
         df = self.__read_file()
-        text = self.__text_field.text
-        if text.strip() != "":
-            df = df[df["Title"].str.contains(text, case=False)]
-            df = df.drop_duplicates(subset=['Title'])
         data_array = df.to_dict("records")
-
-        children = self.__custom_list.children
-        excess_children = children[:-3]
-        for child in excess_children:
-            self.__custom_list.remove_widget(child)
-        self.__generate_list(data_array)
+        for row in range(min(100, len(data_array))):
+            if row + 100 * self.count < len(data_array):
+                listelement = CustomTwoLineListItem(
+                    text=data_array[row + 100 * self.count]["Title"],
+                    secondary_text=data_array[row + 100 * self.count]["Date"]
+                )
+                self.__custom_list.add_widget(listelement)
+        self.__custom_list.bind(minimum_height=self.__custom_list.setter("height"))
+        listelement = CustomMoreListItem(
+            text="More"
+        )
+        listelement.bind(on_release=self.__add_more_tracks)
+        self.count += 1
+        self.__custom_list.add_widget(listelement)
 
     def __generate_top_lists(self):
         custom_list = self.manager.get_screen(
             "spotifyuserscreen"
         ).ids.spotifytoplistscreen
 
-        data_array = pd.read_csv("app/backend/spotify/database/top_tracks.csv")
+        data_array = pd.read_csv(top_tracks_data)
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomTwoLineListItem(
@@ -174,14 +203,14 @@ class SpotifyUserScreen(MDScreen):
             index += 1
             custom_list.add_widget(list_item, 2)
 
-        data_array = pd.read_csv("app/backend/spotify/database/top_artists.csv")
+        data_array = pd.read_csv(top_artists_data)
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomOneLineListItem(text=f"{index}. {row[1]}")
             index += 1
             custom_list.add_widget(list_item, 1)
 
-        data_array = pd.read_csv("app/backend/spotify/database/recommendations.csv")
+        data_array = pd.read_csv(recommendations_data)
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomTwoLineListItem(
