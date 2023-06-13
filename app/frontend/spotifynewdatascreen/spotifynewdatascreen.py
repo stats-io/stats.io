@@ -13,6 +13,7 @@ class SpotifyNewDataScreen(MDScreen):
     __banner_open = False
     dialog = None
     destination_path = None
+    private_files = []
 
     def help_banner_handler(self):
         if not self.__banner_open:
@@ -40,6 +41,7 @@ class SpotifyNewDataScreen(MDScreen):
 
     def file_manager_open(self):
         if platform == "android":
+            self.private_files = []
             from jnius import autoclass
 
             version = autoclass("android.os.Build$VERSION")
@@ -85,12 +87,12 @@ class SpotifyNewDataScreen(MDScreen):
             path = self.private_files[0]
             if "my_spotify_data.zip" in path:
                 self.parent.get_screen(
-                    "netflixnewdatascreen"
+                    "spotifynewdatascreen"
                 ).ids.filemanagericon.icon = "check-circle"
                 self.parent.get_screen(
-                    "netflixnewdatascreen"
+                    "spotifynewdatascreen"
                 ).ids.fileadd.text = "Chosen file"
-                self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{path}"
+                self.parent.get_screen("spotifynewdatascreen").ids.filename.text = f"{path}"
                 self.destination_path = path
             else:
                 self.wrong_file_notification()

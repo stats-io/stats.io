@@ -18,7 +18,6 @@ class SpotifyLoadingScreen(MDScreen):
         process.process_data_from_file()
         process.process_data_from_spotipy(self.sp)
         self.manager.get_screen("spotifyuserscreen").generate_screens()
-        self.manager.current = "spotifyuserscreen"
 
     def _update_label(self, *args):
         if self._counter < 100:

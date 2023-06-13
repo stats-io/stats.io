@@ -46,7 +46,7 @@ class NetflixNewDataScreen(MDScreen):
                     version = autoclass("android.os.Build$VERSION")
                     android_version = version.RELEASE
                     if int(android_version) >= 10:
-                        shutil.copy(self.private_files[0], user_file)
+                        shutil.copy(self.destination_path, user_file)
                         self.parent.get_screen("netflixloadingscreen").start_processing(
                             self.private_files[0]
                         )
@@ -113,6 +113,7 @@ follow the instructions above and add a csv file!""",
 
     def file_manager_open(self):
         if platform == "android":
+            self.private_files = []
             from jnius import autoclass
 
             version = autoclass("android.os.Build$VERSION")
