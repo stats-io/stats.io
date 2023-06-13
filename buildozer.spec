@@ -27,10 +27,10 @@ requirements = python3,kivy,kivymd,android,pandas,numpy,matplotlib,requests,spot
 # requirements.source.kivy = ../../kivy
 
 # (str) Presplash of the application
-presplash.filename = ./app/frontend/mainscreen/logo.png
+presplash.filename = ./images/presplash.png
 
 # (str) Icon of the application
-icon.filename = ./app/frontend/mainscreen/logo.png
+icon.filename = ./images/logo.png
 
 # (list) Supported orientations
 # Valid options are: landscape, portrait, portrait-reverse or landscape-reverse
