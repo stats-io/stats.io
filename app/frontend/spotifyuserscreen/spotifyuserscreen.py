@@ -15,7 +15,9 @@ import random
 import spotipy
 import os
 from spotipy import SpotifyOAuth
+from spotipy.exceptions import SpotifyException
 from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE
+from requests.exceptions import ConnectionError
 
 new_data = os.path.abspath("app/backend/spotify/database/new_data.csv")
 last_data = os.path.abspath("app/backend/spotify/database/last_data.csv")
@@ -86,19 +88,33 @@ class SpotifyUserScreen(MDScreen):
         number_of_random_artist = random.randint(0, number_of_lines - 1)
         artist = data_array.iloc[number_of_random_artist]
         artist_name = artist["Artist"]
-        search = sp.search(q=f"{artist_name}", type="artist")
-        artist_id = search["artists"]["items"][0]["id"]
-        results = sp.recommendations(limit=6, seed_artists=[artist_id])
 
-        for track in results["tracks"]:
-            card = CustomMDCard(pos_hint={"center_x": 0.5})
-            track_name = track["name"]
-            artist_name = track["artists"][0]["name"]
-            url = track["album"]["images"][0]["url"]
-            card.ids.title_name.text = f"Title:  {track_name}"
-            card.ids.artist_name.text = f"Artist: {artist_name}"
-            card.ids.image_url.source = url
-            screen.add_widget(card)
+        try:
+            try:
+                search = sp.search(q=f"{artist_name}", type="artist")
+                artist_id = search["artists"]["items"][0]["id"]
+                results = sp.recommendations(limit=6, seed_artists=[artist_id])
+            except SpotifyException:
+                results = sp.recommendations(limit=6, seed_genres=["pop"])
+
+            for track in results["tracks"]:
+                card = CustomMDCard(pos_hint={"center_x": 0.5})
+                track_name = track["name"]
+                artist_name = track["artists"][0]["name"]
+                url = track["album"]["images"][0]["url"]
+                card.ids.title_name.text = f"Title:  {track_name}"
+                card.ids.artist_name.text = f"Artist: {artist_name}"
+                card.ids.image_url.source = url
+                screen.add_widget(card)
+        except ConnectionError:
+            data_array = pd.read_csv(recommendations_data)
+            for i in range(6):
+                card = CustomMDCard(pos_hint={"center_x": 0.5})
+                track_name = data_array["Title"][i]
+                artist_name = data_array["Artist"][i]
+                card.ids.title_name.text = f"Title:  {track_name}"
+                card.ids.artist_name.text = f"Artist: {artist_name}"
+                screen.add_widget(card)
 
     def history_screen_handler(self):
         check = False
@@ -137,10 +153,6 @@ class SpotifyUserScreen(MDScreen):
 
     def __generate_detailed_history(self):
         self.__custom_list = MDGridLayout(cols=1, padding=20, spacing=10, size_hint_y=None)
-        self.__custom_list.add_widget(CustomMDLabel())
-        self.__text_field = CustomMDTextField()
-        self.__custom_list.add_widget(self.__text_field)
-        self.__custom_list.add_widget(CustomMDRaisedButton(on_release=lambda x: self.search_history()))
 
         df = self.__read_file()
         data_array = df.to_dict("records")
@@ -166,10 +178,10 @@ class SpotifyUserScreen(MDScreen):
         listelement = CustomMoreListItem(
             text="More"
         )
-        listelement.bind(on_release=self.__add_more_tracks)
+        listelement.bind(on_release=self._add_more_tracks)
         self.__custom_list.add_widget(listelement)
 
-    def __add_more_tracks(self, instance):
+    def _add_more_tracks(self, instance):
         parent = instance.parent
         parent.remove_widget(instance)
         df = self.__read_file()
@@ -185,7 +197,7 @@ class SpotifyUserScreen(MDScreen):
         listelement = CustomMoreListItem(
             text="More"
         )
-        listelement.bind(on_release=self.__add_more_tracks)
+        listelement.bind(on_release=self._add_more_tracks)
         self.count += 1
         self.__custom_list.add_widget(listelement)
 
