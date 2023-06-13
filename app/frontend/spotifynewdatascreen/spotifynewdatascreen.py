@@ -1,4 +1,6 @@
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDFlatButton
 from kivy.core.window import Window
 from kivy.config import Config
 from kivy import platform
@@ -55,17 +57,20 @@ class SpotifyNewDataScreen(MDScreen):
     def __handle_selection(self, selection):
         if selection:
             file_path = selection[0]
-            self.parent.get_screen(
-                "spotifynewdatascreen"
-            ).ids.filemanagericon.icon = "check-circle"
-            self.parent.get_screen(
-                "spotifynewdatascreen"
-            ).ids.fileadd.text = "Chosen file"
-            self.parent.get_screen(
-                "spotifynewdatascreen"
-            ).ids.filename.text = f"{file_path}"
-            self.destination_path = file_path
-            self.file_added = True
+            if "my_spotify_data.zip" in file_path:
+                self.parent.get_screen(
+                    "spotifynewdatascreen"
+                ).ids.filemanagericon.icon = "check-circle"
+                self.parent.get_screen(
+                    "spotifynewdatascreen"
+                ).ids.fileadd.text = "Chosen file"
+                self.parent.get_screen(
+                    "spotifynewdatascreen"
+                ).ids.filename.text = f"{file_path}"
+                self.destination_path = file_path
+                self.file_added = True
+            else:
+                self.wrong_file_notification()
         else:
             pass
 
@@ -78,14 +83,35 @@ class SpotifyNewDataScreen(MDScreen):
 
         if self.private_files:
             path = self.private_files[0]
-            self.parent.get_screen(
-                "netflixnewdatascreen"
-            ).ids.filemanagericon.icon = "check-circle"
-            self.parent.get_screen(
-                "netflixnewdatascreen"
-            ).ids.fileadd.text = "Chosen file"
-            self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{path}"
-            self.destination_path = path
+            if "my_spotify_data.zip" in path:
+                self.parent.get_screen(
+                    "netflixnewdatascreen"
+                ).ids.filemanagericon.icon = "check-circle"
+                self.parent.get_screen(
+                    "netflixnewdatascreen"
+                ).ids.fileadd.text = "Chosen file"
+                self.parent.get_screen("netflixnewdatascreen").ids.filename.text = f"{path}"
+                self.destination_path = path
+            else:
+                self.wrong_file_notification()
+
+    def wrong_file_notification(self):
+        self.dialog = MDDialog(
+            text="""You add a Wrong file!!!
+Follow the instructions above""",
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    theme_text_color="Custom",
+                    text_color="#080808",
+                    on_release=self.close_dialog,
+                ),
+            ],
+        )
+        self.dialog.open()
+
+    def close_dialog(self, *args):
+        self.dialog.dismiss()
 
     def on_enter(self):
         Window.bind(on_keyboard=self.back_click)
