@@ -97,7 +97,7 @@ class SpotifyProcessData:
                 search = sp.search(q=top_artists["Artist"][i], type="artist")
                 artist_id = search["artists"]["items"][0]["id"]
                 artists.append(artist_id)
-            results = sp.recommendations(limit=20, seed_genres=artists)
+            results = sp.recommendations(limit=20, seed_artists=artists)
         except SpotifyException:
             results = sp.recommendations(limit=20, seed_genres=["pop"])
 
