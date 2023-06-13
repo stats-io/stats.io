@@ -144,7 +144,7 @@ Follow the instructions above""",
                     "Country",
                 ]
                 if all(column in df.columns for column in required_columns_1) or all(
-                    column in df.columns for column in required_columns_2
+                        column in df.columns for column in required_columns_2
                 ):
                     self.parent.get_screen(
                         "netflixnewdatascreen"

@@ -22,7 +22,7 @@ class TMBDApi:
             res = response["results"][00]
             return ("film", str(res["id"]), res["genre_ids"], res["popularity"], res["release_date"])
         except IndexError:
-            None
+            return None
 
     def __get_series_data(self, title):
         url = "https://api.themoviedb.org/3/search/tv?api_key=2fd4f8fec4042fda3466a92e18309708&query="
@@ -63,7 +63,8 @@ class TMBDApi:
         for index in range(len(self.movies_list) // 4 + 1):
             length = 4 if index < len(self.movies_list) // 4 else len(self.movies_list) % 4
             threads = [Thread(target=self.__get_title_data, args=(
-            self.movies_list[index * 4 + i]["title"], self.movies_list[index * 4 + i]["type"], index * 4 + i)) for i in
+                self.movies_list[index * 4 + i]["title"], self.movies_list[index * 4 + i]["type"], index * 4 + i)) for i
+                       in
                        range(length)]
             for i in range(length):
                 threads[i].start()

@@ -4,7 +4,9 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivy.config import Config
+
 Config.set('kivy', 'exit_on_escape', '0')
+
 
 class SpotifyLoadingScreen(MDScreen):
     sp = None
@@ -41,7 +43,6 @@ class SpotifyLoadingScreen(MDScreen):
         process.process_data_from_spotipy(self.sp)
         self.manager.get_screen("spotifyuserscreen").generate_screens()
         self.manager.current = "spotifyuserscreen"
-
 
     def on_enter(self):
         Window.bind(on_keyboard=self.back_click)

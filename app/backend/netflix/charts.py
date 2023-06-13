@@ -43,62 +43,6 @@ class NetflixCharts:
             year = "20" + match.group(3).zfill(2)
             return f"{year}-{month}-{day}"
 
-    def find_next_six(self): pass
-
-    def Six_Months(self,dataarray):
-        result = {}
-        for date,row in dataarray.iterrows():
-            year,month,day = map(int,date.split('-'))
-            half_year = 1 if month <= 6 else 2
-            year_key = f"{year}" if half_year == 1 else f"{year}-6"
-            if year_key not in result:
-                result[year_key] = 0
-            result[year_key] += row['value']
-        return result
-
-    # def dates_chart(self):
-    #     self.data_array = pd.read_csv(
-    #         self.read_csv_file(final_data)
-    #     )
-    #     dates_counter = {}
-    #     for ind, row in self.data_array.iterrows():
-    #         dates_tmp = row["Dates"]
-    #         dates_tmp = eval(dates_tmp)
-    #         for dates1 in dates_tmp:
-    #             if type(dates1) != list:
-    #                 dates_counter[dates1] = dates_counter.get(dates1, 0) + 1
-    #             else:
-    #                 for date in dates1:
-    #                     dates_counter[date] = dates_counter.get(date, 0) + 1
-    #
-    #     dates = pd.DataFrame.from_dict(dates_counter, orient="index", columns=["value"])
-    #     dates = dates.sort_values("value", ascending=False)
-    #     y = dates.index
-    #     tmp = pd.DataFrame(columns=["date"])
-    #
-    #     for i, date in enumerate(y):
-    #         if date[2] == "/" or date[1] == "/":
-    #             tmp.loc[i] = self.format_data(date)
-    #         else:
-    #             tmp.loc[i] = date
-    #
-    #     dates.index = tmp["date"]
-    #     dates = dates.groupby(dates.index).sum()
-    #     dates = self.Six_Months(dates)
-    #     dates = pd.DataFrame(list(dates.items()),columns=["Year","Sum"])
-    #     dates = dates.set_index("Year")
-    #     fig, ax = plt.subplots(figsize=(10, 5))
-    #     dates.plot(kind="bar", ax=ax, color="#A7F500", legend=False)
-    #     plt.xticks(rotation=0)
-    #     ax.set_xlabel("Date")
-    #     ax.set_ylabel("Value")
-    #     ax.set_title(
-    #         "Number of watched shows",
-    #         fontdict={"color": "#E0E0E0", "weight": "bold"},
-    #     )
-    #     self._adjust_colors_candles(fig, ax)
-    #     return plt.gcf()
-
     def series_vs_film_chart(self):
         film_counter = len(self.data_array[self.data_array["type"] == "film"])
         series_counter = len(self.data_array[self.data_array["type"] == "series"])
@@ -253,12 +197,12 @@ class NetflixCharts:
         return plt.gcf()
 
     def time_at_series(self):
-        dataArray = pd.read_csv(
+        data_array = pd.read_csv(
             self.read_csv_file(final_data)
         )
-        if np.isnan(dataArray.iloc[0, 6]):
-            dataArray = dataArray.sort_values("number_of_episodes").tail(20)
-            result = dataArray[["title", "number_of_episodes"]].copy()
+        if np.isnan(data_array.iloc[0, 6]):
+            data_array = data_array.sort_values("number_of_episodes").tail(20)
+            result = data_array[["title", "number_of_episodes"]].copy()
             result = result[result["number_of_episodes"] >= 10]
             result = result.reset_index(drop=True)
             fig, ax = plt.subplots()
@@ -271,8 +215,8 @@ class NetflixCharts:
                 fontdict={"color": "#E0E0E0", "weight": "bold"},
             )
         else:
-            dataArray = dataArray.sort_values("SumOfTime").tail(20)
-            result = dataArray[["title", "SumOfTime"]].copy()
+            data_array = data_array.sort_values("SumOfTime").tail(20)
+            result = data_array[["title", "SumOfTime"]].copy()
             result = result[result["SumOfTime"] >= 600]
             result = result.reset_index(drop=True)
             fig, ax = plt.subplots()

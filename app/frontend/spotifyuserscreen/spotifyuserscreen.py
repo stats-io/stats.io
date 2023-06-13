@@ -2,6 +2,7 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.gridlayout import MDGridLayout
 from kivy.core.window import Window
 from kivy.config import Config
+
 Config.set('kivy', 'exit_on_escape', '0')
 from kivymd.uix.list import OneLineListItem, TwoLineListItem, ThreeLineListItem
 from kivymd.uix.card import MDCard
@@ -32,7 +33,6 @@ class CustomMoreListItem(OneLineListItem):
     pass
 
 
-
 class CustomTwoLineListItem(TwoLineListItem):
     pass
 
@@ -60,7 +60,7 @@ class CustomMDTextField(MDTextField):
 class CustomMDRaisedButton(MDRaisedButton):
     pass
 
-    
+
 class SpotifyUserScreen(MDScreen):
     __detailed_history = False
 
@@ -122,7 +122,7 @@ class SpotifyUserScreen(MDScreen):
             self.__detailed_history = not self.__detailed_history
 
     def __generate_history(self):
-        custom_list = MDList(divider_color="#E0E0E0",divider="Full",spacing=10,padding=20)
+        custom_list = MDList(divider_color="#E0E0E0", divider="Full", spacing=10, padding=20)
         data_array = pd.read_csv(recently_played_data)
         index = 1
         for i, row in data_array.iterrows():
@@ -147,7 +147,7 @@ class SpotifyUserScreen(MDScreen):
         self.__generate_list(data_array)
         self.count = 1
         self.manager.get_screen("spotifyuserscreen").ids.scrollview.add_widget(self.__custom_list)
-            
+
     def __read_file(self):
         try:
             df = pd.read_csv(new_data)

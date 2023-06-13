@@ -1,4 +1,4 @@
-import data_updater as PD
+from data_updater import SpotifyProcessData
 
 
 class SpotifyLoadingScreen:
@@ -6,6 +6,6 @@ class SpotifyLoadingScreen:
         self.finished_loading = 0
 
     def start_processing_data(self):
-        x = PD.SpotifyProcessData()
+        x = SpotifyProcessData()
         x.process_data_from_file()
         self.finished_loading = 1

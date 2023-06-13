@@ -4,6 +4,7 @@ import os
 
 adapter_path = os.path.abspath('./app/backend/netflix/database/adapted_data.csv')
 
+
 class NetflixDataAdapter:
     def __init__(self, path):
         self.csv_file = path
