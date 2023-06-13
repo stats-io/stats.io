@@ -9,6 +9,7 @@ from kivymd.uix.button import MDFlatButton
 from kivymd.uix.widget import MDWidget
 from kivy.core.window import Window
 from kivy.config import Config
+from requests.exceptions import ConnectionError
 
 Config.set('kivy', 'exit_on_escape', '0')
 from app.backend.netflix.charts import NetflixCharts
@@ -41,25 +42,27 @@ class CustomButton(MDCard):
         self.__dialog.dismiss()
 
     def show_bigger(self, title, date_watched):
-        overview, genres, actors = single_movie_search(title)
+        try:
+            overview, genres, actors = single_movie_search(title)
 
-        if not self.__dialog:
-            self.__dialog = MDDialog(
-                title=f"{title}\n{date_watched}",
-                text=f"Genres: {genres}\n\nActors: {actors}\n\nOverview: {overview}",
-                md_bg_color="#E0E0E0",
-                buttons=[
-                    MDFlatButton(
-                        text="CLOSE",
-                        theme_text_color="Custom",
-                        text_color="#080808",
-                        md_bg_color="#A7F500",
-                        on_release=self.close_dialog,
-                    )
-                ],
-            )
-        self.__dialog.open()
-
+            if not self.__dialog:
+                self.__dialog = MDDialog(
+                    title=f"{title}\n{date_watched}",
+                    text=f"Genres: {genres}\n\nActors: {actors}\n\nOverview: {overview}",
+                    md_bg_color="#E0E0E0",
+                    buttons=[
+                        MDFlatButton(
+                            text="CLOSE",
+                            theme_text_color="Custom",
+                            text_color="#080808",
+                            md_bg_color="#A7F500",
+                            on_release=self.close_dialog,
+                        )
+                    ],
+                )
+            self.__dialog.open()
+        except ConnectionError:
+            pass
 
 class NetflixUserScreen(MDScreen):
     def generate_screens(self):
