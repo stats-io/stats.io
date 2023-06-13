@@ -2,6 +2,8 @@ import pandas as pd
 import zipfile
 import csv
 import os
+from spotipy.exceptions import SpotifyException
+from requests.exceptions import ConnectionError
 
 new_data = os.path.abspath("app/backend/spotify/database/new_data.csv")
 last_data = os.path.abspath("app/backend/spotify/database/last_data.csv")
@@ -16,10 +18,13 @@ class SpotifyProcessData:
         self.folder_dir = file
 
     def process_data_from_spotipy(self, sp):
-        self.get_recently_played_tracks(sp)
-        self.get_top_tracks(sp)
-        self.get_top_artists(sp)
-        self.get_recommendations(sp)
+        try:
+            self.get_recently_played_tracks(sp)
+            self.get_top_tracks(sp)
+            self.get_top_artists(sp)
+            self.get_recommendations(sp)
+        except ConnectionError:
+            pass
 
     def get_recently_played_tracks(self, sp):
         results = sp.current_user_recently_played(limit=50)
@@ -87,12 +92,14 @@ class SpotifyProcessData:
         top_artists = pd.read_csv(top_artists_data)
         artists = []
 
-        for i in range(2):
-            search = sp.search(q=top_artists["Artist"][i], type="artist")
-            artist_id = search["artists"]["items"][0]["id"]
-            artists.append(artist_id)
-
-        results = sp.recommendations(limit=20, seed_artists=artists)
+        try:
+            for i in range(2):
+                search = sp.search(q=top_artists["Artist"][i], type="artist")
+                artist_id = search["artists"]["items"][0]["id"]
+                artists.append(artist_id)
+            results = sp.recommendations(limit=20, seed_genres=artists)
+        except SpotifyException:
+            results = sp.recommendations(limit=20, seed_genres=["pop"])
 
         with open(
                 recommendations_data,
