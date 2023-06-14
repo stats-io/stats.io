@@ -20,6 +20,8 @@ class NetflixLoadingScreen(MDScreen):
             self.manager.get_screen(
                 "netflixloadingscreen"
             ).ids.loadinglabel.text = f"{percent}%"
+        elif self.__loading_screen.finished_loading == 0:
+            pass
         else:
             self.manager.get_screen(
                 "netflixloadingscreen"
