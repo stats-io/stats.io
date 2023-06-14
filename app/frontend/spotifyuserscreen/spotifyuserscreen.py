@@ -141,14 +141,12 @@ class SpotifyUserScreen(MDScreen):
     def __generate_history(self):
         custom_list = MDList(divider_color="#E0E0E0", divider="Full", spacing=10, padding=20)
         data_array = pd.read_csv(recently_played_data)
-        index = 1
         for i, row in data_array.iterrows():
             list_item = CustomThreeLineListItem(
-                text=f"{index}. {row[1]}",
-                secondary_text=f"Artist: {row[2]}",
-                tertiary_text=f"Played at {row[3]}",
+                text=f"{row[1]}",
+                secondary_text=f"{row[2]}",
+                tertiary_text=f"{row[3]}",
             )
-            index += 1
             custom_list.add_widget(list_item)
         self.manager.get_screen("spotifyuserscreen").ids.scrollview.add_widget(custom_list)
 
@@ -170,9 +168,10 @@ class SpotifyUserScreen(MDScreen):
 
     def __generate_list(self, data_array):
         for row in range(min(100, len(data_array))):
-            listelement = CustomTwoLineListItem(
+            listelement = CustomThreeLineListItem(
                 text=data_array[row]["Title"],
-                secondary_text=data_array[row]["Date"]
+                secondary_text=data_array[row]["Artist"],
+                tertiary_text=data_array[row]["Date"]
             )
             self.__custom_list.add_widget(listelement)
         self.__custom_list.bind(minimum_height=self.__custom_list.setter("height"))
@@ -255,4 +254,3 @@ class SpotifyUserScreen(MDScreen):
         ).ids.spotifytoplistscreen
         for widget in self.widgets:
             custom_list.add_widget(widget)
-
