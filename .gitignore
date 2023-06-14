@@ -4,4 +4,3 @@
 **/venv
 config.py
 .cache
-**/database
