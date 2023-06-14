@@ -11,7 +11,12 @@ from config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE
 
 
 class MainScreen(MDScreen):
+    def netflix_screen(self):
+        self.manager.current = "netflixnewdatascreen"
+        self.manager.get_screen("netflixuserscreen").ids.navigation.switch_tab("netflixmainscreen")
+
     def login_screen(self):
+        self.manager.get_screen("spotifyuserscreen").ids.navigation.switch_tab("spotifymainscreen")
         if os.path.isfile(".cache"):
             sp = spotipy.Spotify(
                 auth_manager=SpotifyOAuth(
