@@ -7,7 +7,6 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.widget import MDWidget
-from kivy.core.window import Window
 from kivy.config import Config
 from requests.exceptions import ConnectionError
 
@@ -65,6 +64,8 @@ class CustomButton(MDCard):
             pass
 
 class NetflixUserScreen(MDScreen):
+    widgets = []
+
     def generate_screens(self):
         self.__generate_main_screen()
         self.__generate_charts()
@@ -153,6 +154,11 @@ class NetflixUserScreen(MDScreen):
         root.bind(minimum_height=root.setter("height"))
 
     def __generate_top_lists(self):
+        self.widgets = []
+        for widget in self.manager.get_screen("netflixuserscreen").ids.netflixtoplistscreen.children:
+            self.widgets.append(widget)
+        self.widgets.reverse()
+
         netflix_top_lists = NetflixTopLists()
         custom_list = self.manager.get_screen(
             "netflixuserscreen"
@@ -214,18 +220,26 @@ class NetflixUserScreen(MDScreen):
             index += 1
             custom_list.add_widget(list_item, 0)
 
-    def on_enter(self):
-        Window.bind(on_keyboard=self.back_click)
-
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=self.back_click)
-
-    def back_click(self, window, key, keycode, *largs):
-        if key == 27:
-            with open(netflix_final_data, "w", newline="") as csv_file:
-                csv_file.truncate()
-            self.manager.get_screen("netflixuserscreen").ids.genres_chart.clear_widgets()
-            self.manager.get_screen("netflixuserscreen").ids.movies_series_chart.clear_widgets()
-            self.manager.get_screen("netflixuserscreen").ids.years_chart.clear_widgets()
-            self.manager.get_screen("netflixuserscreen").ids.time_at_series.clear_widgets()
-            self.parent.current = "mainscreen"
+    def back_to_main_screen(self):
+        self.parent.current = "mainscreen"
+        with open(netflix_final_data, "w", newline="") as csv_file:
+            csv_file.truncate()
+        self.manager.get_screen("netflixuserscreen").ids.genres_chart.clear_widgets()
+        self.manager.get_screen("netflixuserscreen").ids.movies_series_chart.clear_widgets()
+        self.manager.get_screen("netflixuserscreen").ids.years_chart.clear_widgets()
+        self.manager.get_screen("netflixuserscreen").ids.time_at_series.clear_widgets()
+        self.manager.get_screen("netflixuserscreen").ids.netflixtoplistscreen.clear_widgets()
+        self.parent.get_screen(
+            "netflixnewdatascreen"
+        ).ids.filemanagericon.icon = "folder-plus"
+        self.parent.get_screen(
+            "netflixnewdatascreen"
+        ).ids.fileadd.text = "Add your file"
+        self.parent.get_screen(
+            "netflixnewdatascreen"
+        ).ids.filename.text = "Your file path"
+        custom_list = self.manager.get_screen(
+            "netflixuserscreen"
+        ).ids.netflixtoplistscreen
+        for widget in self.widgets:
+            custom_list.add_widget(widget)

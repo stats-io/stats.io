@@ -4,6 +4,7 @@
     MDFloatLayout:
 
         MDBottomNavigation:
+            id: navigation
             panel_color: "#E0E0E0"
             text_color_active: "#080808"
             use_text: False
@@ -299,6 +300,13 @@
 
                         MDWidget:
                             height: root.height * 0.5
+
+            MDBottomNavigationItem:
+                name: "return"
+                icon: "keyboard-return"
+                md_bg_color: "#080808"
+                on_tab_release: root.back_to_main_screen()
+
 
 
 <CustomOneLineListItem>:
