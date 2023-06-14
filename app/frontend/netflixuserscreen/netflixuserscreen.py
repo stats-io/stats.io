@@ -88,7 +88,6 @@ class NetflixUserScreen(MDScreen):
             charts_screen.genres_chart,
             charts_screen.movies_series_chart,
             charts_screen.years_chart,
-            # charts_screen.watch_count_chart,
             charts_screen.time_at_series
         ]
         self.__current_chart = 0
@@ -102,9 +101,6 @@ class NetflixUserScreen(MDScreen):
         charts_screen.years_chart.add_widget(
             FigureCanvasKivyAgg(charts.favourite_year())
         )
-        # charts_screen.watch_count_chart.add_widget(
-        #     FigureCanvasKivyAgg(charts.dates_chart())
-        # )
         charts_screen.time_at_series.add_widget(
             FigureCanvasKivyAgg(charts.time_at_series())
         )
