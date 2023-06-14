@@ -65,6 +65,7 @@ class CustomMDRaisedButton(MDRaisedButton):
 
 class SpotifyUserScreen(MDScreen):
     __detailed_history = False
+    widgets = []
 
     def generate_screens(self):
         self.__generate_main_screen()
@@ -202,6 +203,11 @@ class SpotifyUserScreen(MDScreen):
         self.__custom_list.add_widget(listelement)
 
     def __generate_top_lists(self):
+        self.widgets = []
+        for widget in self.manager.get_screen("spotifyuserscreen").ids.spotifytoplistscreen.children:
+            self.widgets.append(widget)
+        self.widgets.reverse()
+
         custom_list = self.manager.get_screen(
             "spotifyuserscreen"
         ).ids.spotifytoplistscreen
@@ -231,12 +237,22 @@ class SpotifyUserScreen(MDScreen):
             index += 1
             custom_list.add_widget(list_item, 0)
 
-    def on_enter(self):
-        Window.bind(on_keyboard=self.back_click)
+    def back_to_main_screen(self):
+        self.manager.current = "mainscreen"
+        self.manager.get_screen("spotifyuserscreen").ids.scrollview.clear_widgets()
+        self.manager.get_screen("spotifyuserscreen").ids.spotifymainscreen.clear_widgets()
+        self.manager.get_screen("spotifyuserscreen").ids.spotifytoplistscreen.clear_widgets()
+        self.__detailed_history = False
+        self.parent.get_screen(
+            "spotifynewdatascreen"
+        ).ids.filemanagericon.icon = "folder-plus"
+        self.parent.get_screen(
+            "spotifynewdatascreen"
+        ).ids.fileadd.text = "Add your file"
+        self.parent.get_screen("spotifynewdatascreen").ids.filename.text = "my_spotify_data.zip"
+        custom_list = self.manager.get_screen(
+            "spotifyuserscreen"
+        ).ids.spotifytoplistscreen
+        for widget in self.widgets:
+            custom_list.add_widget(widget)
 
-    def on_pre_leave(self):
-        Window.unbind(on_keyboard=self.back_click)
-
-    def back_click(self, window, key, keycode, *largs):
-        if key == 27:
-            self.parent.current = "mainscreen"

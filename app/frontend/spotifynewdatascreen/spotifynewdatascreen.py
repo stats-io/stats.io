@@ -32,6 +32,7 @@ class SpotifyNewDataScreen(MDScreen):
         if self.destination_path is not None:
             self.parent.get_screen("spotifyloadingscreen").start_processing(self.destination_path)
             self.parent.current = "spotifyloadingscreen"
+            self.destination_path = None
         else:
             self.skip_processing_data()
 
@@ -59,7 +60,7 @@ class SpotifyNewDataScreen(MDScreen):
     def __handle_selection(self, selection):
         if selection:
             file_path = selection[0]
-            if "my_spotify_data.zip" in file_path:
+            if "my_spotify_data" in file_path:
                 self.parent.get_screen(
                     "spotifynewdatascreen"
                 ).ids.filemanagericon.icon = "check-circle"
@@ -85,7 +86,7 @@ class SpotifyNewDataScreen(MDScreen):
 
         if self.private_files:
             path = self.private_files[0]
-            if "my_spotify_data.zip" in path:
+            if "my_spotify_data" in path:
                 self.parent.get_screen(
                     "spotifynewdatascreen"
                 ).ids.filemanagericon.icon = "check-circle"
