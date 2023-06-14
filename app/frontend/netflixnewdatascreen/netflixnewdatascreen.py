@@ -20,7 +20,6 @@ last_data = os.path.abspath("app/backend/netflix/database/last_file.csv")
 class NetflixNewDataScreen(MDScreen):
     __banner_open = False
     dialog = None
-    button_press = 0
     private_files = []
 
     def help_banner_handler(self):
@@ -61,6 +60,7 @@ class NetflixNewDataScreen(MDScreen):
                         self.destination_path
                     )
                 self.parent.current = "netflixloadingscreen"
+                del self.destination_path
             except AttributeError:
                 self.dialog = MDDialog(
                     text="Please, add a file to enjoy your data!",
