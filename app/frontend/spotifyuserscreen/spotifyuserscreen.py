@@ -188,9 +188,10 @@ class SpotifyUserScreen(MDScreen):
         data_array = df.to_dict("records")
         for row in range(min(100, len(data_array))):
             if row + 100 * self.count < len(data_array):
-                listelement = CustomTwoLineListItem(
+                listelement = CustomThreeLineListItem(
                     text=data_array[row + 100 * self.count]["Title"],
-                    secondary_text=data_array[row + 100 * self.count]["Date"]
+                    secondary_text=data_array[row + 100 * self.count]["Artist"],
+                    tertiary_text=data_array[row + 100 * self.count]["Date"]
                 )
                 self.__custom_list.add_widget(listelement)
         self.__custom_list.bind(minimum_height=self.__custom_list.setter("height"))
