@@ -1,5 +1,7 @@
 from kivymd.uix.screen import MDScreen
 from kivymd.app import MDApp
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDFlatButton
 from kivy.core.window import Window
 from kivy.config import Config
 
@@ -30,6 +32,23 @@ class MainScreen(MDScreen):
             self.parent.current = "spotifynewdatascreen"
         else:
             self.parent.current = "spotifyloginscreen"
+
+    def soon(self):
+        self.dialog = MDDialog(
+            text="Soon",
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    theme_text_color="Custom",
+                    text_color="#080808",
+                    on_release=self.close_dialog,
+                ),
+            ],
+        )
+        self.dialog.open()
+
+    def close_dialog(self, *args):
+        self.dialog.dismiss()
 
     def on_enter(self):
         Window.bind(on_keyboard=self.back_click)
