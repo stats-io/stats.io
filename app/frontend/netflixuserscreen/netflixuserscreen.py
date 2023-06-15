@@ -127,7 +127,7 @@ class NetflixUserScreen(MDScreen):
             data_array = data_array.to_dict("records")
 
         children = self.manager.get_screen("netflixuserscreen").ids.historylist.children
-        excess_children = children[:-3]
+        excess_children = children[:-4]
         for child in excess_children:
             self.manager.get_screen("netflixuserscreen").ids.historylist.remove_widget(
                 child

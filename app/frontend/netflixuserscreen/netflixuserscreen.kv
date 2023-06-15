@@ -106,7 +106,7 @@
                         id: historylist
                         cols: 1
                         padding: 20
-                        spacing: 20
+                        spacing: 50
                         size_hint_y: None
 
                         MDLabel:
@@ -140,6 +140,10 @@
                             md_bg_color: "#A7F500"
                             text_color: "#080808"
                             on_release: root.search_history()
+
+                        MDCard:
+                            size_hint: 0.8, 0.2
+                            md_bg_color: "#080808"
 
 
             MDBottomNavigationItem:
@@ -327,19 +331,20 @@
     on_release: root.show_bigger(one_text.text, two_text.text)
     orientation: "vertical"
 
-    MDLabel:
-        id: one_text
-        text: ""
-        color: "#A7F500"
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint: 1, 1
+        spacing: dp(30)
 
-    MDLabel:
-        text: ""
-        color: "#E0E0E0"
+        MDLabel:
+            id: one_text
+            text: ""
+            color: "#A7F500"
 
-    MDLabel:
-        id: two_text
-        text: ""
-        color: "#E0E0E0"
+        MDLabel:
+            id: two_text
+            text: ""
+            color: "#E0E0E0"
 
 <CustomThreeLineListItem>:
     theme_text_color: "Custom"
