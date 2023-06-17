@@ -1,18 +1,6 @@
-## Install and run the app
-Navigate to the target folder and run the following commands in terminal (python and git required):
-```CMD
-git clone https://github.com/stats-io/stats.io.git
-cd stats.io
-pip3 install -r ./requirements.txt
-python3 main.py
-```
+## stats.io
+Introducing stats.io, your all-in-one destination for Netflix and Spotify enthusiasts. Uncover fascinating insights from your viewing and listening history as we transform raw data into captivating charts and personalized top lists.
+With an intuitive interface and rich film/actor information, elevate your entertainment journey like never before.
 
-## How to run unittests for our app
-To run all application tests from our repository run the following commands while in the target folder if installed already only last two commands needed (python and git required):
-```CMD
-git clone https://github.com/stats-io/stats.io.git
-cd stats.io
-pip3 install -r ./requirements.txt
-cd tests
-python3 tester.py
-```
+## Installation
+Download the .apk file found in the release and install it on your smartphone.
