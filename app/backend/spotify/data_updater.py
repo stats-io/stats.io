@@ -37,7 +37,7 @@ class SpotifyProcessData:
         ) as file:
             writer = csv.writer(file)
 
-            headers = ["Nr", "Title", "Artists", "Date"]
+            headers = ["Nr", "Title", "Artists", "Date", "Link"]
             writer.writerow(headers)
 
             for i, item in enumerate(results["items"]):
@@ -45,7 +45,8 @@ class SpotifyProcessData:
                 artists = ", ".join([artist["name"] for artist in track["artists"]])
                 tmp_date = item["played_at"]
                 date = tmp_date[:-5].replace("T", " ")
-                row = [i + 1, track["name"], artists, date]
+                link = track["external_urls"]["spotify"]
+                row = [i + 1, track["name"], artists, date, link]
                 writer.writerow(row)
 
     def get_top_tracks(self, sp):
@@ -59,13 +60,14 @@ class SpotifyProcessData:
         ) as file:
             writer = csv.writer(file)
 
-            headers = ["Nr", "Title", "Artists"]
+            headers = ["Nr", "Title", "Artists", "Link"]
             writer.writerow(headers)
 
             for i, item in enumerate(results["items"]):
                 track = item["name"]
                 artist = item["artists"][0]["name"]
-                row = [i + 1, track, artist]
+                link = item["external_urls"]["spotify"]
+                row = [i + 1, track, artist, link]
                 writer.writerow(row)
 
     def get_top_artists(self, sp):
@@ -79,13 +81,13 @@ class SpotifyProcessData:
         ) as file:
             writer = csv.writer(file)
 
-            headers = ["Nr", "Artist"]
+            headers = ["Nr", "Artist", "Link"]
             writer.writerow(headers)
 
             for i, item in enumerate(results["items"]):
                 artist = item["name"]
-
-                row = [i + 1, artist]
+                link = item["external_urls"]["spotify"]
+                row = [i + 1, artist, link]
                 writer.writerow(row)
 
     def get_recommendations(self, sp):
@@ -109,14 +111,15 @@ class SpotifyProcessData:
         ) as file:
             writer = csv.writer(file)
 
-            headers = ["Nr", "Title", "Artist"]
+            headers = ["Nr", "Title", "Artist", "Link"]
             writer.writerow(headers)
 
             tracks = results["tracks"]
             index = 1
             for track in tracks:
                 artist = track["artists"][0]["name"]
-                row = [index, track["name"], artist]
+                link = track["external_urls"]["spotify"]
+                row = [index, track["name"], artist, link]
                 writer.writerow(row)
                 index += 1
 
