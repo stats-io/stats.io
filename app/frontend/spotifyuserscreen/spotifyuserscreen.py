@@ -28,7 +28,11 @@ recommendations_data = os.path.abspath("app/backend/spotify/database/recommendat
 
 
 class CustomOneLineListItem(OneLineListItem):
-    pass
+    url = ""
+
+    def on_release(self):
+        import webbrowser
+        webbrowser.open(self.url)
 
 
 class CustomMoreListItem(OneLineListItem):
@@ -36,15 +40,28 @@ class CustomMoreListItem(OneLineListItem):
 
 
 class CustomTwoLineListItem(TwoLineListItem):
-    pass
+    url = ""
+
+    def on_release(self):
+        import webbrowser
+        webbrowser.open(self.url)
 
 
 class CustomThreeLineListItem(ThreeLineListItem):
-    pass
+    url = ""
+
+    def on_release(self):
+        # TODO try except invalid url
+        import webbrowser
+        webbrowser.open(self.url)
 
 
 class CustomMDCard(MDCard):
-    pass
+    url = ""
+
+    def on_release(self):
+        import webbrowser
+        webbrowser.open(self.url)
 
 
 class CustomButton(MDCard):
@@ -103,6 +120,7 @@ class SpotifyUserScreen(MDScreen):
                 track_name = track["name"]
                 artist_name = track["artists"][0]["name"]
                 url = track["album"]["images"][0]["url"]
+                card.url = track["external_urls"]["spotify"]
                 card.ids.title_name.text = f"Title:  {track_name}"
                 card.ids.artist_name.text = f"Artist: {artist_name}"
                 card.ids.image_url.source = url
@@ -147,6 +165,7 @@ class SpotifyUserScreen(MDScreen):
                 secondary_text=f"{row[2]}",
                 tertiary_text=f"{row[3]}",
             )
+            list_item.url = row[4]
             custom_list.add_widget(list_item)
         self.manager.get_screen("spotifyuserscreen").ids.scrollview.add_widget(custom_list)
 
@@ -218,6 +237,7 @@ class SpotifyUserScreen(MDScreen):
             list_item = CustomTwoLineListItem(
                 text=f"{index}. {row[1]}", secondary_text=f"Artist: {row[2]}"
             )
+            list_item.url = row[3]
             index += 1
             custom_list.add_widget(list_item, 2)
 
@@ -225,6 +245,7 @@ class SpotifyUserScreen(MDScreen):
         index = 1
         for i, row in data_array.iterrows():
             list_item = CustomOneLineListItem(text=f"{index}. {row[1]}")
+            list_item.url = row[2]
             index += 1
             custom_list.add_widget(list_item, 1)
 
@@ -234,6 +255,7 @@ class SpotifyUserScreen(MDScreen):
             list_item = CustomTwoLineListItem(
                 text=f"{index}. {row[1]}", secondary_text=f"Artist: {row[2]}"
             )
+            list_item.url = row[3]
             index += 1
             custom_list.add_widget(list_item, 0)
 
