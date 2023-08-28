@@ -1,6 +1,5 @@
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.gridlayout import MDGridLayout
-from kivy.core.window import Window
 from kivy.config import Config
 
 Config.set('kivy', 'exit_on_escape', '0')
@@ -31,8 +30,9 @@ class CustomOneLineListItem(OneLineListItem):
     url = ""
 
     def on_release(self):
-        import webbrowser
-        webbrowser.open(self.url)
+        if self.url:
+            import webbrowser
+            webbrowser.open(self.url)
 
 
 class CustomMoreListItem(OneLineListItem):
@@ -43,25 +43,27 @@ class CustomTwoLineListItem(TwoLineListItem):
     url = ""
 
     def on_release(self):
-        import webbrowser
-        webbrowser.open(self.url)
+        if self.url:
+            import webbrowser
+            webbrowser.open(self.url)
 
 
 class CustomThreeLineListItem(ThreeLineListItem):
     url = ""
 
     def on_release(self):
-        # TODO try except invalid url
-        import webbrowser
-        webbrowser.open(self.url)
+        if self.url:
+            import webbrowser
+            webbrowser.open(self.url)
 
 
 class CustomMDCard(MDCard):
     url = ""
 
     def on_release(self):
-        import webbrowser
-        webbrowser.open(self.url)
+        if self.url:
+            import webbrowser
+            webbrowser.open(self.url)
 
 
 class CustomButton(MDCard):
